@@ -1,7 +1,7 @@
-const { Router } = require('express');
+import { Router } from 'express';
 
 const router = Router();
 
 // TODO add api routers
 
-module.exports = router;
+export default router;

@@ -1,13 +1,14 @@
-const path = require('path');
-const express = require('express');
+import path from 'path';
+import express, { Request, Response, NextFunction, Express } from 'express';
 
-const apiRouter = require('./routes/apiRouter');
+import MiddlewareError from './utils/MiddlewareError';
+import apiRouter from './routes/apiRouter';
 
 
-const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || 'localhost';
+const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+const HOST: string = process.env.HOST || 'localhost';
 
-const app = express();
+const app: Express = express();
 
 
 /* MIDDLEWARE */
@@ -30,15 +31,12 @@ app.use('/api', apiRouter);
 
 /* GLOBAL ERROR HANDLER */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err: Error, req, res, next) => {
+app.use((err: MiddlewareError, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
 
-  const defaultClientError = {
-    status: 500,
-    message: { error: 'Unknown server error. Please check server log.' },
-  };
+  const defaultClientError = new MiddlewareError('Unknown server error. Please check server log.', 500);
   const clientError = Object.assign(defaultClientError, err);
-  res.status(clientError.status).send(JSON.stringify(clientError.message));
+  res.status(clientError.status).send(JSON.stringify({ error: clientError.error }));
 });
 
 
@@ -46,4 +44,4 @@ app.use((err: Error, req, res, next) => {
 app.listen(PORT, HOST, () => console.log(`Server listening on http://${HOST}:${PORT}`));
 
 
-module.exports = app;
+export default app;
