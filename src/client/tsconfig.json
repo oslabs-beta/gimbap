@@ -4,11 +4,15 @@
     "allowJs": true,
     "esModuleInterop": true,
     "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "paths": {
+      "*.ts": ["./*"]
+    }
   },
 }
