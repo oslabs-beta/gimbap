@@ -1,22 +1,22 @@
 const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
   entry: {
-    index: "./client/index.tsx",
+    index: './src/client/index.tsx',
   },
   output: {
     filename: 'scripts/[name].bundle.js',
-    path: path.resolve(__dirname, 'build'),
+    path: path.resolve(__dirname, 'build/client'),
   },
-  mode: process.env.NODE_ENV || "production",
+  mode: process.env.NODE_ENV || 'production',
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: './client/assets/index.html',
+      template: './src/client/assets/index.html',
       //favicon: "./client/assets/icons/favicon.png"
     }),
     new MiniCssExtractPlugin({
@@ -34,13 +34,13 @@ module.exports = {
             presets: [
               '@babel/preset-env',
               '@babel/preset-react',
-              "@babel/preset-typescript"
+              '@babel/preset-typescript'
             ],
-            "plugins": [
+            'plugins': [
               [
-                "@babel/plugin-transform-runtime",
+                '@babel/plugin-transform-runtime',
                 {
-                  "regenerator": true
+                  'regenerator': true
                 }
               ]
             ]
@@ -50,16 +50,16 @@ module.exports = {
       {
         test: /\.s[ac]ss$/i,
         use: [
-          process.env.NODE_ENV === "production" ? MiniCssExtractPlugin.loader : "style-loader",
-          "css-loader",
-          "sass-loader"
+          process.env.NODE_ENV === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
+          'css-loader',
+          'sass-loader'
         ],
       },
       {
         test: /\.css$/i,
         use: [
-          process.env.NODE_ENV === "production" ? MiniCssExtractPlugin.loader : "style-loader",
-          "css-loader"
+          process.env.NODE_ENV === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
+          'css-loader'
         ],
       },
       {
@@ -90,6 +90,9 @@ module.exports = {
       '...',
       new CssMinimizerPlugin(),
     ],
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js']
   },
   devServer: {
     publicPath: '/',

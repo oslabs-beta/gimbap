@@ -16,8 +16,10 @@ app.use(express.json());
 
 /* STATIC SERVER */
 if (process.env.NODE_ENV === 'production') {
-  app.use('/', express.static(path.resolve(__dirname, './../build')));
+  app.use('/', express.static(path.resolve(__dirname, './../client')));
 }
+
+app.get('/', (req, res) => res.send('Hello World'));
 
 
 /* ROUTES */
@@ -30,7 +32,7 @@ app.use('/api', apiRouter);
 
 /* GLOBAL ERROR HANDLER */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err, req, res, next) => {
+app.use((err: Error, req, res, next) => {
   console.error(err);
 
   const defaultClientError = {

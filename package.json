@@ -2,11 +2,11 @@
   "name": "gimbap",
   "version": "0.0.1",
   "description": "",
-  "main": "server/index.js",
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack",
-    "start": "cross-env NODE_ENV=production node server/index.js",
-    "dev": "cross-env NODE_ENV=development concurrently \"webpack serve\" \"nodemon --watch server server/index.js\"",
+    "build": "cross-env NODE_ENV=production concurrently \"webpack\" \"tsc -p ./src/server/tsconfig.json\"",
+    "start": "cross-env NODE_ENV=production node build/server/index.js",
+    "watch-build-server": "tsc -p ./src/server/tsconfig.json --watch",
+    "dev": "cross-env NODE_ENV=development concurrently \"webpack serve\" \"nodemon --watch build/server build/server/index.js\" \"npm run watch-build-server\"",
     "test": "jest"
   },
   "repository": {
