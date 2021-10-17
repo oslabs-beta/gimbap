@@ -1,0 +1,21 @@
+{
+  "name": "gimbap",
+  "version": "0.0.1",
+  "description": "Express endpoint logging tool.",
+  "main": "index.js",
+  "keywords": [
+    "express",
+    "gimbap",
+    "logging"
+  ],
+  "author": "Miguel Hernandez (miguelh72@outlook.com)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oslabs-beta/gimbap.git"
+  },
+  "bugs": {
+    "url": "https://github.com/oslabs-beta/gimbap/issues"
+  },
+  "homepage": "https://github.com/oslabs-beta/gimbap#readme"
+}

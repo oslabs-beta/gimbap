@@ -17,6 +17,7 @@ describe('gimbap logs route request to MongoDB', () => {
   });
 
   afterAll(async () => {
+    await EndpointModel.deleteMany();
     return gimbap.stop();
   });
 

@@ -5,6 +5,7 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es2021",
+    "declaration": true,
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
