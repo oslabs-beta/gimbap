@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+// TODO abstract so it can work with either MongoDB or PostgreSQL depending on how setup is called.
+
 export type Endpoint = { method: string, endpoint: string, callTime: string };
 
 export const EndpointModel = mongoose.model<Endpoint>('Endpoint', new mongoose.Schema<Endpoint>({

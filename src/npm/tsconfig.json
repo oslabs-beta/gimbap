@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./../../build/npm",
+    "outDir": "./../../build",
     
     "module": "commonjs",
     "esModuleInterop": true,
@@ -20,6 +20,7 @@
     }
   },
   "include": [
-    "./**/*"
+    "./**/*",
+    "../shared/models"
   ]
 }

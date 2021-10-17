@@ -8,7 +8,7 @@
     "build": "cross-env NODE_ENV=production concurrently \"npm run build-client\" \"npm run build-server\" \"npm run build-npm\"",
     "build-client": "webpack",
     "build-server": "tsc -p ./src/server/tsconfig.json",
-    "build-npm": "tsc -p ./src/middleware/tsconfig.json; cp ./src/middleware/package.json ./build/npm/package.json",
+    "build-npm": "tsc -p ./src/npm/tsconfig.json; cp ./src/npm/package.json ./build/npm/package.json",
     "dev": "cross-env NODE_ENV=development concurrently \"webpack serve\" \"nodemon --watch build/server build/server/index.js\" \"npm run watch-build-server\"",
     "watch-build-server": "tsc -p ./src/server/tsconfig.json --watch",
     "watch-build-npm": "tsc -p ./src/middleware/tsconfig.json --watch",

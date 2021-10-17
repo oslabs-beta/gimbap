@@ -1,6 +1,6 @@
 import { Application, Request, Response } from 'express';
-import { logEndpoint } from './models/mongoEndpointModel';
-import { connect, disconnect } from './models/mongoSetup';
+import { logEndpoint } from '../shared/models/endpointModel';
+import { connect, disconnect } from '../shared/models/mongoSetup';
 
 let appRef: InternalApplication | null = null;
 let originalHandleFunction: HandleFunction | null = null;

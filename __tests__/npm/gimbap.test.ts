@@ -1,7 +1,7 @@
 import express, { Application } from 'express';
 import request from 'supertest';
-import gimbap from './../../src/middleware';
-import { EndpointModel, Endpoint } from './../../src/middleware/models/mongoEndpointModel';
+import gimbap from './../../src/npm';
+import { EndpointModel, Endpoint } from './../../src/shared/models/endpointModel';
 
 describe('gimbap logs route request to MongoDB', () => {
   let app: Application;
