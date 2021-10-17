@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "outDir": "./../../build/server",
+    "outDir": "./../../build/npm",
     
     "module": "commonjs",
     "esModuleInterop": true,
-    "target": "es6",
+    "target": "es2021",
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
+    "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "sourceMap": true,
