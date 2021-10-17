@@ -34,7 +34,7 @@ export default function gimbap(
   originalHandleFunction = appRef.handle;
 
   appRef.handle = function handleGimbapMiddleware(req: Request, res: Response, callback: DoneCallback): void {
-    logEndpoint(req.method, req.originalUrl || req.url, Date.now().toString());
+    logEndpoint(req.method, req.originalUrl || req.url, Date.now());
 
     return (originalHandleFunction as HandleFunction).call(appRef, req, res, callback);
   };

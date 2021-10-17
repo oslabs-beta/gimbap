@@ -26,7 +26,7 @@ describe('gimbap logs route request to MongoDB', () => {
   });
 
   test('single endpoint correctly logged to database', async () => {
-    const callTime: string = Date.now().toString();
+    const callTime: number = Date.now();
 
     return request(app)
       .get('/')
@@ -37,7 +37,7 @@ describe('gimbap logs route request to MongoDB', () => {
         const endpoints: Endpoint[] = await EndpointModel.find();
         expect(endpoints).toHaveLength(1);
         expect(endpoints[0]).toMatchObject({ method: 'GET', endpoint: '/' });
-        expect(endpoints[0].callTime.slice(0, -3)).toBe(callTime.slice(0, -3)); // allow some ms difference
+        expect(endpoints[0].callTime - callTime).toBeLessThan(100); // allow 100 ms difference 
       });
   });
 

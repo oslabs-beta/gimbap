@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./../../build",
+    "outDir": "./../../build/npm",
     
     "module": "commonjs",
     "esModuleInterop": true,

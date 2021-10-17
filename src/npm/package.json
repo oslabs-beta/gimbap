@@ -1,8 +1,8 @@
 {
   "name": "gimbap",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Express endpoint logging tool.",
-  "main": "index.js",
+  "main": "./npm/index.js",
   "keywords": [
     "express",
     "gimbap",
