@@ -7,6 +7,7 @@ import apiRouter from './routes/apiRouter';
 
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const HOST: string = process.env.HOST || 'localhost';
+const MONGODB_URI = 'mongodb+srv://nodeuser:nodeuser@dev-cluster.pqpcc.mongodb.net/express-compute?retryWrites=true&w=majority';
 
 const app: Express = express();
 
