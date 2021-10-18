@@ -5,12 +5,12 @@ import gimbap from 'gimbap';
 import MiddlewareError from './utils/MiddlewareError';
 import apiRouter from './routes/apiRouter';
 
-import { MONGODB_URI } from './secrets.json';
+// import { MONGODB_URI } from './secrets.json'; //NEED TO UNCOMMENT BEFORE COMMITTING
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const HOST: string = process.env.HOST || 'localhost';
 
 const app: Express = express();
-gimbap(app, 'mongodb', MONGODB_URI); // TODO remove before merge with main
+// gimbap(app, 'mongodb', MONGODB_URI); // TODO remove before merge with main
 
 
 /* MIDDLEWARE */
@@ -28,6 +28,12 @@ app.use('/api', apiRouter);
 
 /* GLOBAL 404 */
 // TODO build and serve global 404 page
+app.use('*', (req: Request, res: Response) =>
+  // Send the 404 status with the redirection to the 404.html file and the content type
+  res.status(404)
+  .setHeader('Content-Type', 'text/html')
+  .sendFile(path.resolve('src/client', 'assets/404.html')) //? Do we need to add .html to the end of 404? or not?
+);
 
 
 /* GLOBAL ERROR HANDLER */
