@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
 
-export type Endpoint = { method: string, endpoint: string, callTime: string };
+// TODO abstract so it can work with either MongoDB or PostgreSQL depending on how setup is called.
+
+export type Endpoint = { method: string, endpoint: string, callTime: number };
 
 export const EndpointModel = mongoose.model<Endpoint>('Endpoint', new mongoose.Schema<Endpoint>({
   method: { type: String, required: true },
   endpoint: { type: String, required: true },
-  callTime: { type: String, required: true }, // unix timestamp
+  callTime: { type: Number, required: true }, // unix timestamp
   //response_time: { type: Number, required: true }, // ms
 }));
 // TODO add validation for call_time to be convertible to Date
@@ -18,7 +20,7 @@ export const EndpointModel = mongoose.model<Endpoint>('Endpoint', new mongoose.S
  * 
  * @public
  */
-export async function logEndpoint(method: string, endpoint: string, callTime: string): Promise<void> {
+export async function logEndpoint(method: string, endpoint: string, callTime: number): Promise<void> {
   // TODO validate inputs
 
   try {

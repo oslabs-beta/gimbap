@@ -1,15 +1,16 @@
 import path from 'path';
 import express, { Request, Response, NextFunction, Express } from 'express';
+import gimbap from 'gimbap';
 
 import MiddlewareError from './utils/MiddlewareError';
 import apiRouter from './routes/apiRouter';
 
-
+import { MONGODB_URI } from './secrets.json';
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const HOST: string = process.env.HOST || 'localhost';
-const MONGODB_URI = 'mongodb+srv://nodeuser:nodeuser@dev-cluster.pqpcc.mongodb.net/express-compute?retryWrites=true&w=majority';
 
 const app: Express = express();
+gimbap(app, 'mongodb', MONGODB_URI); // TODO remove before merge with main
 
 
 /* MIDDLEWARE */
@@ -20,7 +21,6 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'production') {
   app.use('/', express.static(path.resolve(__dirname, './../client')));
 }
-
 
 /* ROUTES */
 app.use('/api', apiRouter);

@@ -1,7 +1,7 @@
 import express, { Application } from 'express';
 import request from 'supertest';
-import gimbap from './../../src/middleware';
-import { EndpointModel, Endpoint } from './../../src/middleware/models/mongoEndpointModel';
+import gimbap from './../../src/npm';
+import { EndpointModel, Endpoint } from './../../src/shared/models/endpointModel';
 
 describe('gimbap logs route request to MongoDB', () => {
   let app: Application;
@@ -17,6 +17,7 @@ describe('gimbap logs route request to MongoDB', () => {
   });
 
   afterAll(async () => {
+    await EndpointModel.deleteMany();
     return gimbap.stop();
   });
 
@@ -25,7 +26,7 @@ describe('gimbap logs route request to MongoDB', () => {
   });
 
   test('single endpoint correctly logged to database', async () => {
-    const callTime: string = Date.now().toString();
+    const callTime: number = Date.now();
 
     return request(app)
       .get('/')
@@ -36,7 +37,7 @@ describe('gimbap logs route request to MongoDB', () => {
         const endpoints: Endpoint[] = await EndpointModel.find();
         expect(endpoints).toHaveLength(1);
         expect(endpoints[0]).toMatchObject({ method: 'GET', endpoint: '/' });
-        expect(endpoints[0].callTime.slice(0, -3)).toBe(callTime.slice(0, -3)); // allow some ms difference
+        expect(endpoints[0].callTime - callTime).toBeLessThan(100); // allow 100 ms difference 
       });
   });
 

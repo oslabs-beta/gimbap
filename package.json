@@ -1,13 +1,14 @@
 {
-  "name": "gimbap",
+  "name": "gimbap-dev",
   "version": "0.0.1",
+  "private": true,
   "description": "",
   "scripts": {
-    "clean": "cross-env rm -rf build/*",
+    "clean": "cross-env rm -rf build",
     "build": "cross-env NODE_ENV=production concurrently \"npm run build-client\" \"npm run build-server\" \"npm run build-npm\"",
     "build-client": "webpack",
     "build-server": "tsc -p ./src/server/tsconfig.json",
-    "build-npm": "tsc -p ./src/middleware/tsconfig.json",
+    "build-npm": "tsc -p ./src/npm/tsconfig.json; cp ./src/npm/package.json ./build/npm/package.json",
     "dev": "cross-env NODE_ENV=development concurrently \"webpack serve\" \"nodemon --watch build/server build/server/index.js\" \"npm run watch-build-server\"",
     "watch-build-server": "tsc -p ./src/server/tsconfig.json --watch",
     "watch-build-npm": "tsc -p ./src/middleware/tsconfig.json --watch",
@@ -81,6 +82,7 @@
   },
   "dependencies": {
     "express": "^4.17.1",
+    "gimbap": "^0.0.3",
     "mongoose": "^6.0.11",
     "normalize.css": "^8.0.1",
     "react": "^17.0.2",

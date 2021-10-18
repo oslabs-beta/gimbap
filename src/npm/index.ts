@@ -1,6 +1,6 @@
 import { Application, Request, Response } from 'express';
-import { logEndpoint } from './models/mongoEndpointModel';
-import { connect, disconnect } from './models/mongoSetup';
+import { logEndpoint } from '../shared/models/endpointModel';
+import { connect, disconnect } from '../shared/models/mongoSetup';
 
 let appRef: InternalApplication | null = null;
 let originalHandleFunction: HandleFunction | null = null;
@@ -34,7 +34,7 @@ export default function gimbap(
   originalHandleFunction = appRef.handle;
 
   appRef.handle = function handleGimbapMiddleware(req: Request, res: Response, callback: DoneCallback): void {
-    logEndpoint(req.method, req.originalUrl || req.url, Date.now().toString());
+    logEndpoint(req.method, req.originalUrl || req.url, Date.now());
 
     return (originalHandleFunction as HandleFunction).call(appRef, req, res, callback);
   };
