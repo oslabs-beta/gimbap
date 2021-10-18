@@ -2,9 +2,7 @@ import clustering from 'density-clustering';
 
 import { Endpoint } from './../models/endpointModel';
 
-export type Cluster = {
-  routes: Route[],
-}
+export type Cluster = Route[];
 
 export type Route = {
   method: string,
@@ -28,7 +26,7 @@ interface TimeDomainEndpoint extends Endpoint {
 export function determineClusters(serverResponses: Endpoint[], step = 1): Cluster[] {
   // group data by endpoints and add hour property that is decimal of hour
   const byEndpoint: { [key: string]: TimeDomainEndpoint[] } = serverResponses.reduce((grouped, response) => {
-    const date = new Date(response.callTime);
+    const date: Date = new Date(response.callTime);
 
     grouped[response.method + response.endpoint] ??= [];
     grouped[response.method + response.endpoint].push({
@@ -39,16 +37,16 @@ export function determineClusters(serverResponses: Endpoint[], step = 1): Cluste
     return grouped;
   }, Object.create(null));
 
-  const uniqueRoutes = getUniqueRoutes(serverResponses);
+  const uniqueRoutes: Route[] = getUniqueRoutes(serverResponses);
 
   // vectorize endpoint array into 24 data points with number of calls in that hour.
   // same order as uniqueRoutes
-  const vectors = [];
+  const vectors: number[][] = [];
   let totalNumCalls = 0;
   for (const route of uniqueRoutes) {
-    const responses = byEndpoint[route.method + route.endpoint];
+    const responses: TimeDomainEndpoint[] = byEndpoint[route.method + route.endpoint];
 
-    const vector = [];
+    const vector: number[] = [];
     for (let hourStart = 0; hourStart < 24; hourStart += step) {
       const numCalls: number = responses.filter(endpoint => endpoint.hour > hourStart && endpoint.hour < hourStart + step).length;
 
@@ -63,7 +61,7 @@ export function determineClusters(serverResponses: Endpoint[], step = 1): Cluste
   const analyzer = new clustering.OPTICS();
 
   const averageCallsPerBucket = totalNumCalls / vectors[0].length; // use as neighborhood radius
-  const result = analyzer.run(vectors, averageCallsPerBucket);
+  const result: number[][] = analyzer.run(vectors, averageCallsPerBucket);
 
   return result.map(clusterIndices => clusterIndices.map(i => uniqueRoutes[i]));
 }
