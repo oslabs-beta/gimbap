@@ -14,9 +14,10 @@ export const EndpointModel = mongoose.model<Endpoint>('Endpoint', new mongoose.S
 
 /**
  * Log an endpoint request data point to external database.
+ * 
  * @param {String} method - HTTP method type
  * @param {String} endpoint - HTTP request relative endpoint
- * @param {String} callTime - UNIX timestamp of when request first communicated with the server
+ * @param {number} callTime - UNIX timestamp of when request first communicated with the server
  * 
  * @public
  */
