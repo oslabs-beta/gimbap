@@ -351,3 +351,5 @@ MigrationBackup/
 
 # Custom
 build
+package-lock.json
+secrets.json

@@ -25,7 +25,7 @@
       "react-hooks/exhaustive-deps": "warn",
       "react/prop-types": "off",
       "@typescript-eslint/no-var-requires": 0,
-      "@typescript-eslint/no-require-imports": 1,
+      "@typescript-eslint/no-require-imports": 0,
       "react/jsx-uses-react": 1,
       "quotes": [1, "single", { "avoidEscape": true }],
       "semi": 1,
