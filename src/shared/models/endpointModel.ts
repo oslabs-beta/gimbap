@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 // TODO abstract so it can work with either MongoDB or PostgreSQL depending on how setup is called.
 
-export type Endpoint = { method: string, endpoint: string, callTime: number };
+export interface Endpoint { method: string, endpoint: string, callTime: number }
 
 export const EndpointModel = mongoose.model<Endpoint>('Endpoint', new mongoose.Schema<Endpoint>({
   method: { type: String, required: true },
@@ -35,4 +35,8 @@ export async function logEndpoint(method: string, endpoint: string, callTime: nu
     console.error(error);
     console.log('\n\n');
   }
+}
+
+export async function getAllEndpoints(): Promise<Endpoint[]> {
+  return await EndpointModel.find({});
 }
