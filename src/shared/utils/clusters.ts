@@ -16,11 +16,66 @@ interface TimeDomainEndpoint extends Endpoint {
 }
 
 /**
+ * Utilize OPTICS algorithm to cluster endpoints based on covariant time utilization.
+ * https://en.wikipedia.org/wiki/OPTICS_algorithm
  * 
- * @param endpoints 
- * @returns 
+ * @param {Endpoint[]} serverResponses - Array of server responses.
+ * @param {number} step - step size for bucket vectorization in hours. Defaults to 1.
+ * @returns Array of Cluster recommendations.
+ * 
+ * @public
  */
-// todo add doc
+export function determineClusters(serverResponses: Endpoint[], step = 1): Cluster[] {
+  // group data by endpoints and add hour property that is decimal of hour
+  const byEndpoint: { [key: string]: TimeDomainEndpoint[] } = serverResponses.reduce((grouped, response) => {
+    const date = new Date(response.callTime);
+
+    grouped[response.method + response.endpoint] ??= [];
+    grouped[response.method + response.endpoint].push({
+      ...response,
+      hour: date.getHours() + (date.getMinutes() / 60)
+    });
+
+    return grouped;
+  }, Object.create(null));
+
+  const uniqueRoutes = getUniqueRoutes(serverResponses);
+
+  // vectorize endpoint array into 24 data points with number of calls in that hour.
+  // same order as uniqueRoutes
+  const vectors = [];
+  let totalNumCalls = 0;
+  for (const route of uniqueRoutes) {
+    const responses = byEndpoint[route.method + route.endpoint];
+
+    const vector = [];
+    for (let hourStart = 0; hourStart < 24; hourStart += step) {
+      const numCalls: number = responses.filter(endpoint => endpoint.hour > hourStart && endpoint.hour < hourStart + step).length;
+
+      totalNumCalls += numCalls;
+
+      vector.push(numCalls);
+    }
+
+    vectors.push(vector);
+  }
+
+  const analyzer = new clustering.OPTICS();
+
+  const averageCallsPerBucket = totalNumCalls / vectors[0].length; // use as neighborhood radius
+  const result = analyzer.run(vectors, averageCallsPerBucket);
+
+  return result.map(clusterIndices => clusterIndices.map(i => uniqueRoutes[i]));
+}
+
+/**
+ * Find all unique routes in the endpoint array.
+ * 
+ * @param {Endpoint} endpoints - Array of Endpoint.
+ * @returns Array of unique Route in Endpoint array.
+ * 
+ * @private
+ */
 function getUniqueRoutes(endpoints: Endpoint[]): Route[] {
   const routes: Route[] = [];
   const foundRoutes: Set<string> = new Set();
@@ -34,57 +89,4 @@ function getUniqueRoutes(endpoints: Endpoint[]): Route[] {
   });
 
   return routes;
-}
-
-export function determineClusters(serverResponses: Endpoint[]): Cluster[] {
-  // TODO clean up logic below into fewer passes
-
-  // convert to 24 hour time domain
-  const timeDomainServerResponses: TimeDomainEndpoint[] = serverResponses.map(response => {
-    const date = new Date(response.callTime);
-
-    return {
-      ...response,
-      hour: date.getHours() + (date.getMinutes() / 60)
-    };
-  });
-
-  // group data by endpoints
-  const byEndpoint: { [key: string]: TimeDomainEndpoint[] } = timeDomainServerResponses.reduce((grouped, endpoint) => {
-    grouped[endpoint.method + endpoint.endpoint] ??= [];
-    grouped[endpoint.method + endpoint.endpoint].push(endpoint);
-
-    return grouped;
-  }, Object.create(null));
-
-  const uniqueRoutes = getUniqueRoutes(timeDomainServerResponses);
-
-  // vectorize endpoint array into 24 data points with number of calls in that hour.
-  // same order as uniqueRoutes
-  const vectors = [];
-  let totalNumCalls = 0;
-  for (const route of uniqueRoutes) {
-    const responses = byEndpoint[route.method + route.endpoint];
-
-    const vector = [];
-    const step = 1; // hours
-    for (let hourStart = 0; hourStart < 24; hourStart += step) {
-      const numCalls: number = responses.filter(endpoint => endpoint.hour > hourStart && endpoint.hour < hourStart + step).length;
-
-      totalNumCalls += numCalls;
-
-      vector.push(numCalls);
-    }
-
-    vectors.push(vector);
-  }
-
-  const dbscan = new clustering.OPTICS();
-
-  const averageCallsPerBucket = totalNumCalls / vectors[0].length; // use as neighborhood radius
-  const result = dbscan.run(vectors, averageCallsPerBucket);
-
-  //console.log({ result, noise: dbscan.noise, dbscan }); // ! remove 
-
-  return result.map(clusterIndices => clusterIndices.map(i => uniqueRoutes[i]));
 }
