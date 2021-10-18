@@ -36,7 +36,7 @@
     "mongodb",
     "mongoose"
   ],
-  "author": "Miguel Hernandez (miguelh72@outlook.com)",
+  "author": "Miguel Hernandez (miguelh72@outlook.com), add your names here...",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/oslabs-beta/gimbap/issues"
@@ -58,6 +58,7 @@
     "@typescript-eslint/parser": "^5.0.0",
     "babel-jest": "^27.2.5",
     "babel-loader": "^8.2.2",
+    "chi-squared-test": "^1.1.0",
     "concurrently": "^6.3.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.4.0",
