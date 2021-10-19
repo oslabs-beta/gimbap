@@ -35,3 +35,13 @@ export async function logEndpoint(method: string, endpoint: string, callTime: nu
     console.log('\n\n');
   }
 }
+
+export async function logAllEndpoints(arrayOfObjects: Endpoint[]): Promise<void> {
+  try {
+    await EndpointModel.insertMany(arrayOfObjects);
+  } catch(error) {
+    console.error('\n\nERROR LOGGING RESPONSES TO DATABASE - LOG MANY');
+    console.error(error);
+    console.log('\n\n');
+  }
+}
