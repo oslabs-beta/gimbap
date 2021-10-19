@@ -21,7 +21,6 @@ export async function connectToDatabase() {
     // Apply schema validation to the collection
     //await applySchemaValidation(db);
 
-
     // Connect to the collection with the specific name from .env, found in the database previously specified
     const webusageCollection: mongoDB.Collection = db.collection('webusage');
 
