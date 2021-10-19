@@ -23,7 +23,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 /* ROUTES */
-app.use('/api', apiRouter);
+// Landing page route handler
+app.use('/', express.static(path.resolve(__dirname, './../client')));
+
+// app.use('/api', apiRouter);
+
 
 
 /* GLOBAL 404 */
