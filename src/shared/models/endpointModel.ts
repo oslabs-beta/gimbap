@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 // TODO abstract so it can work with either MongoDB or PostgreSQL depending on how setup is called.
 
-export type Endpoint = { method: string, endpoint: string, callTime: number };
+export interface Endpoint { method: string, endpoint: string, callTime: number }
 
 export const EndpointModel = mongoose.model<Endpoint>('Endpoint', new mongoose.Schema<Endpoint>({
   method: { type: String, required: true },
@@ -14,9 +14,10 @@ export const EndpointModel = mongoose.model<Endpoint>('Endpoint', new mongoose.S
 
 /**
  * Log an endpoint request data point to external database.
+ * 
  * @param {String} method - HTTP method type
  * @param {String} endpoint - HTTP request relative endpoint
- * @param {String} callTime - UNIX timestamp of when request first communicated with the server
+ * @param {number} callTime - UNIX timestamp of when request first communicated with the server
  * 
  * @public
  */
@@ -44,4 +45,8 @@ export async function logAllEndpoints(arrayOfObjects: Endpoint[]): Promise<void>
     console.error(error);
     console.log('\n\n');
   }
+}
+
+export async function getAllEndpoints(): Promise<Endpoint[]> {
+  return await EndpointModel.find({});
 }

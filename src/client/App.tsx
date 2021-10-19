@@ -1,5 +1,7 @@
 import React from 'react';
 
 export default function App() {
-  return <h1>Hello GIMBAP WORLD</h1>;
+  return <div>
+          <h1>Hello GIMBAP WORLD</h1>
+        </div>;
 }

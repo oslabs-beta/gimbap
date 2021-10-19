@@ -21,6 +21,12 @@ module.exports = {
       template: './src/client/assets/index.html',
       //favicon: "./client/assets/icons/favicon.png"
     }),
+    new HtmlWebpackPlugin({
+      filename: '404.html',
+      template: './src/client/assets/404.html',
+      inject: false,
+      //favicon: "./client/assets/icons/favicon.png"
+    }),
     new MiniCssExtractPlugin({
       filename: 'styles/[name].css'
     }),
