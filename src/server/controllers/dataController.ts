@@ -8,7 +8,10 @@ interface dataController {}
 dataController.getAllData = async (req: Request, res: Response, next: NextFunction) => {
   await Endpoint.find({}, (error, data) => {
     if (error) return next('Error in dataController.getAllData: ' + JSON.stringify(error));
-  }
+
+  res.locals.Data = data;
+  return next();
+  });
 };
 
 module.exports = dataController;
