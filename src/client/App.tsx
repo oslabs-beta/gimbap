@@ -1,7 +1,13 @@
 import React from 'react';
+// import * as ReactDOM from 'react-dom';
+import MainContainer from './components/MainContainer';
+import NavigationBar from './components/NavigationBar';
 
 export default function App() {
-  return <div>
-          <h1>Hello GIMBAP WORLD</h1>
-        </div>;
+  return(
+    <div id="app">
+      <NavigationBar />
+      <MainContainer />
+    </div>
+  );
 }
