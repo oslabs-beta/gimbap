@@ -23,12 +23,16 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 /* ROUTES */
-app.use('/api', apiRouter);
+// Landing page route handler
+app.use('/', express.static(path.resolve(__dirname, './../client')));
+
+// app.use('/api', apiRouter);
+
 
 
 /* GLOBAL 404 */
 // TODO build and serve global 404 page
-app.use('*', (req: Request, res: Response) =>
+app.use((req: Request, res: Response) =>
   // Send the 404 status with the redirection to the 404.html file and the content type
   res.status(404)
   .setHeader('Content-Type', 'text/html')
