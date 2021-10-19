@@ -1,6 +1,6 @@
 import clustering from 'density-clustering';
 
-import { Endpoint } from './../models/endpointModel';
+import { Endpoint } from '../../shared/models/endpointModel';
 
 export type Cluster = Route[];
 
@@ -61,7 +61,7 @@ export function determineClusters(serverResponses: Endpoint[], step = 1): Cluste
   const analyzer = new clustering.OPTICS();
 
   const averageCallsPerBucket = totalNumCalls / vectors[0].length; // use as neighborhood radius
-  const result: number[][] = analyzer.run(vectors, averageCallsPerBucket);
+  const result: number[][] = analyzer.run(vectors, averageCallsPerBucket, 1);
 
   return result.map(clusterIndices => clusterIndices.map(i => uniqueRoutes[i]));
 }
