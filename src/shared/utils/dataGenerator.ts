@@ -58,7 +58,7 @@ function simulateSingleDayResponses(endpoints: EndpointPDF[], numCallsDist: Dist
   const numIntervals = (24 * 60) / granularity;
   const intervalStartTime = new Date(dayStart);
 
-  const dayResponses = [];
+  const dayResponses: Endpoint[] = [];
   for (let i = 0; i < numIntervals; i++) {
     const intervalStartHour: number = intervalStartTime.getHours() + (intervalStartTime.getMinutes() / 60);
     const intervalEndHour: number = intervalStartTime.getHours() + ((intervalStartTime.getMinutes() + granularity) / 60);
