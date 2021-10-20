@@ -5,7 +5,7 @@ import express, { Request, Response, NextFunction, Express } from 'express';
 import MiddlewareError from './utils/MiddlewareError';
 import apiRouter from './routes/apiRouter';
 
-import { MONGODB_URI } from './secrets.json';
+//import { MONGODB_URI } from './secrets.json';
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const HOST: string = process.env.HOST || 'localhost';
 
