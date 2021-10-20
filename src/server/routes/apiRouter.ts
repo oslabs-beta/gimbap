@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import endpointRouter from './endpointRouter';
-import clusterRouter from  './clusterRouter';
+import clusterRouter from './clusterRouter';
 
 const router = Router();
 

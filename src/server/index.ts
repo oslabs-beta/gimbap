@@ -27,6 +27,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use('/api', apiRouter);
 
 
+
 /* GLOBAL 404 */
 app.use('*', (req: Request, res: Response) => res.status(404).sendFile(path.resolve(__dirname, './../client/404.html')));
 // TODO improve 404 layout
