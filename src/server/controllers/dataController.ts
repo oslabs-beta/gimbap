@@ -6,11 +6,11 @@ let clusters: Cluster[] | null = null; // used to store last calculated cluster 
 
 /**
  * Middleware: If successful, `res.locals.endpoints` will contain Route[].
- * 
+ *
  * @param {Request} req - express's HTTP request object
  * @param {Response} res - express's HTTP response object
  * @param {NextFunction} next - express's next function
- * 
+ *
  * @public
  */
 export async function getEndpointList(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -33,11 +33,11 @@ export async function getEndpointList(req: Request, res: Response, next: NextFun
 /**
  * Middleware: Depends on parameter method and route to be set in request object.
  * If successful, `res.locals.loadGraphData` will contain LoadData.
- * 
+ *
  * @param {Request} req - express's HTTP request object
  * @param {Response} res - express's HTTP response object
  * @param {NextFunction} next - express's next function
- * 
+ *
  * @public
  */
 export async function getEndpointLoadGraphData(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -65,11 +65,11 @@ export async function getEndpointLoadGraphData(req: Request, res: Response, next
 
 /**
  * Middleware: If successful, 'res.locals.clusters' will contain Cluster[].
- * 
+ *
  * @param {Request} req - express's HTTP request object
  * @param {Response} res - express's HTTP response object
  * @param {NextFunction} next - express's next function
- * 
+ *
  * @public
  */
 export async function getClusterList(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -94,11 +94,11 @@ export async function getClusterList(req: Request, res: Response, next: NextFunc
 /**
  * Middleware: Depends on parameter clusterId to be set in request object.
  * If successful, `res.locals.loadGraphData` will contain LoadData.
- * 
+ *
  * @param {Request} req - express's HTTP request object
  * @param {Response} res - express's HTTP response object
  * @param {NextFunction} next - express's next function
- * 
+ *
  * @public
  */
 export async function getClusterLoadGraphData(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -143,11 +143,11 @@ export async function getClusterLoadGraphData(req: Request, res: Response, next:
 
 /**
  * If successful, `res.locals.treeGraphData` will contain treeNode.
- * 
+ *
  * @param {Request} req - express's HTTP request object
  * @param {Response} res - express's HTTP response object
  * @param {NextFunction} next - express's next function
- * 
+ *
  * @public
  */
 export async function getClusterTreeGraphData(req: Request, res: Response, next: NextFunction): Promise<void> {

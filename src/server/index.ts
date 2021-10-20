@@ -1,6 +1,6 @@
 import path from 'path';
 import express, { Request, Response, NextFunction, Express } from 'express';
-import gimbap from 'gimbap';
+// import gimbap from 'gimbap';
 
 import MiddlewareError from './utils/MiddlewareError';
 import apiRouter from './routes/apiRouter';
@@ -10,7 +10,7 @@ const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const HOST: string = process.env.HOST || 'localhost';
 
 const app: Express = express();
-gimbap(app, 'mongodb', MONGODB_URI); // TODO remove before merge with main
+// gimbap(app, 'mongodb', MONGODB_URI); // TODO remove before merge with main
 
 
 /* MIDDLEWARE */
@@ -22,6 +22,10 @@ if (process.env.NODE_ENV === 'production') {
   app.use('/', express.static(path.resolve(__dirname, './../client')));
 }
 
+// app.get('/', (req, res) => {
+//   res.send('Hello world!!');
+// });
+
 
 /* ROUTES */
 app.use('/api', apiRouter);
@@ -29,13 +33,16 @@ app.use('/api', apiRouter);
 
 
 /* GLOBAL 404 */
-app.use('*', (req: Request, res: Response) => res.status(404).sendFile(path.resolve(__dirname, './../client/404.html')));
+if (process.env.NODE_ENV !== 'test') {
+  app.use('*', (req: Request, res: Response) => res.status(404).sendFile(path.resolve(__dirname, './../client/404.html')));
+}
 // TODO improve 404 layout
 
 
 /* GLOBAL ERROR HANDLER */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: MiddlewareError, req: Request, res: Response, next: NextFunction) => {
+  console.error(err.stack);
   console.error(err);
 
   const defaultClientError = new MiddlewareError('Unknown server error. Please check server log.', 500);
@@ -45,7 +52,9 @@ app.use((err: MiddlewareError, req: Request, res: Response, next: NextFunction) 
 
 
 /* INIT SERVER */
-app.listen(PORT, HOST, () => console.log(`Server listening on http://${HOST}:${PORT}`));
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, HOST, () => console.log(`Server listening on http://${HOST}:${PORT}`));
+}
 
 
 export default app;

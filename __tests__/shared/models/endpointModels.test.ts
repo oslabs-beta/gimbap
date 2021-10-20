@@ -4,7 +4,7 @@ import { Route } from './../../../src/server/utils/endpoints';
 
 describe('Test storing endpoints', () => {
   beforeAll(async () => {
-    await connect('mongodb://localhost:27017/gimbap-test');
+    await connect('mongodb+srv://admin:test@cluster0.dopf4.mongodb.net/DePaul?retryWrites=true&w=majority');
   });
 
   afterAll(async () => {
