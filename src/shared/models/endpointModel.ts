@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+import { Route } from './../../server/utils/endpoints';
+
 // TODO abstract so it can work with either MongoDB or PostgreSQL depending on how setup is called.
 
 export interface Endpoint { method: string, endpoint: string, callTime: number }
@@ -8,7 +10,6 @@ export const EndpointModel = mongoose.model<Endpoint>('Endpoint', new mongoose.S
   method: { type: String, required: true },
   endpoint: { type: String, required: true },
   callTime: { type: Number, required: true }, // unix timestamp
-  //response_time: { type: Number, required: true }, // ms
 }));
 // TODO add validation for call_time to be convertible to Date
 
@@ -37,6 +38,32 @@ export async function logEndpoint(method: string, endpoint: string, callTime: nu
   }
 }
 
-export async function getAllEndpoints(): Promise<Endpoint[]> {
+/**
+ * Get a list of all endpoints. If no method or endpoint is specified, it will return all endpoints in the database.
+ * 
+ * @param {String} method - (optional) HTTP method
+ * @param {String} endpoint - (optional) HTTP request relative endpoint
+ * @returns Promise of array of endpoints
+ * 
+ * @public
+ */
+export async function getAllEndpoints(method?: string, endpoint?: string): Promise<Endpoint[]> {
+  if (method && endpoint) return await EndpointModel.find({ method, endpoint });
   return await EndpointModel.find({});
+}
+
+/**
+ * Get a distinct list of endpoints.
+ *
+ * @returns Promise of array of Route
+ * 
+ * @public
+ */
+export async function getDistinctEndpoints(): Promise<Route[]> {
+  return await EndpointModel.aggregate<Route>([
+    // group by key, score to get distinct
+    { '$group': { _id: { method: '$method', endpoint: '$endpoint' } } },
+    // Clean up the output
+    { '$project': { _id: 0, method: '$_id.method', endpoint: '$_id.endpoint' } }
+  ]);
 }
