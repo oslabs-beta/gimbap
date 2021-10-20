@@ -36,7 +36,7 @@
     "mongodb",
     "mongoose"
   ],
-  "author": "Miguel Hernandez (miguelh72@outlook.com), Sebastien Fauque (sbfauque@gmail.com),  Angelynn Truong (angelynn.trng@gmail.com)",
+  "author": "Miguel Hernandez (miguelh72@outlook.com), Sebastien Fauque (sbfauque@gmail.com),  Angelynn Truong (angelynn.trng@gmail.com), Parker Hutcheson (pdhutcheson@gmail.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/oslabs-beta/gimbap/issues"
@@ -76,6 +76,7 @@
     "sass-loader": "^12.2.0",
     "style-loader": "^3.3.0",
     "supertest": "^6.1.6",
+    "ts-node": "^10.3.0",
     "typescript": "^4.4.4",
     "webpack": "^5.58.2",
     "webpack-cli": "^4.9.0",

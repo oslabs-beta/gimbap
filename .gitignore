@@ -353,3 +353,5 @@ MigrationBackup/
 build
 package-lock.json
 secrets.json
+*.txt
+*.zip
