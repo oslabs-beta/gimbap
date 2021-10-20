@@ -59,7 +59,7 @@ export default function NavigationBar(){
             gimbap
           </Typography>
         </Toolbar>
-      </AppBar>
+    </AppBar>
     <Drawer
       sx={{
         width: drawerWidth,
@@ -107,11 +107,12 @@ export default function NavigationBar(){
           <ListItemText primary="Documentation" />
         </ListItem>
           {['Introduction',
+          'NPM package',
           'Installation',
           'Getting Started',
+          'Clusters',
           'Testing your App',
-          'FAQs',
-          'Credits']
+          'FAQs',]
           .map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>
