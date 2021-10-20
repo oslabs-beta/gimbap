@@ -2,6 +2,6 @@ import React from 'react';
 
 export default function App() {
   return <div>
-          <h1>Hello GIMBAP WORLD</h1>
-        </div>;
+    <h1>Hello GIMBAP WORLD</h1>
+  </div>;
 }

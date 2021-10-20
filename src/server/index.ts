@@ -22,11 +22,9 @@ if (process.env.NODE_ENV === 'production') {
   app.use('/', express.static(path.resolve(__dirname, './../client')));
 }
 
-/* ROUTES */
-// Landing page route handler
-app.use('/', express.static(path.resolve(__dirname, './../client')));
 
-// app.use('/api', apiRouter);
+/* ROUTES */
+app.use('/api', apiRouter);
 
 
 

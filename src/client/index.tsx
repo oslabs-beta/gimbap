@@ -7,6 +7,6 @@ import 'normalize.css';
 import App from './App';
 
 ReactDOM.render(
-  <App />,
+  <App width={600} height={600} />,
   document.getElementById('root')
 );
