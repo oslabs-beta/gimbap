@@ -1,16 +1,17 @@
 {
   "compilerOptions": {
-    "outDir": "./../../build/server",
+    "outDir": "./../../build",
+    
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es6",
     "strict": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "strictNullChecks": true,
-    "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "sourceMap": true,
+    "resolveJsonModule": true,
     "paths": {
       "*": [
         "node_modules/*"
@@ -18,6 +19,7 @@
     }
   },
   "include": [
-    "./**/*"
+    "./**/*",
+    "../shared/models"
   ]
 }
