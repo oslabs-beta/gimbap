@@ -1,6 +1,6 @@
 import path from 'path';
 import express, { Request, Response, NextFunction, Express } from 'express';
-import gimbap from 'gimbap';
+// import gimbap from 'gimbap';
 
 import MiddlewareError from './utils/MiddlewareError';
 import apiRouter from './routes/apiRouter';
@@ -10,7 +10,8 @@ const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const HOST: string = process.env.HOST || 'localhost';
 
 const app: Express = express();
-gimbap(app, 'mongodb', MONGODB_URI); // TODO remove before merge with main
+//gimbap(app, 'mongodb', MONGODB_URI); // TODO remove before merge with main
+// TODO figure out why this causes Endpoint to be overwritten and conflict
 
 
 /* MIDDLEWARE */
