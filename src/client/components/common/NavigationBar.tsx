@@ -4,23 +4,12 @@ import { styled, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 
-import List from '@mui/material/List';
-import ListSubheader from '@mui/material/ListSubheader';
-import Collapse from '@mui/material/Collapse';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 
-import {SvgIconTypeMap} from '@mui/material/SvgIcon';
 
 
 import {Page} from './../../types';
@@ -105,19 +94,7 @@ export default function MiniDrawer({
         <Divider />
         <NavItem title='Metrics' isActive={false} icon={InboxIcon} subLinks={['Clusters Time-Series', 'Routes Time-Series']} />
         <NavItem title='Clusters' isActive={false} icon={InboxIcon} subLinks={['What is this', 'I dont know']} />
-        {/* <List>
-          {[
-            {title:'Clusters', icon:'InboxIcon'},
-            {title:'Metrics', icon:'InboxIcon', sublinks:['Clusters Time-Series', 'Routes Time-Series']},
-            {title: 'Documentation', icon:'InboxIcon', sublinks: ['Introduction', 'Installation', 'Getting Started', 'Clusters', 'NPM Package', 'FAQs']}
-          ].map(({title, subLinks}) => (
-            <ListItem button key={title}>
-              <ListItemText primary={title} />
-            </ListItem>
 
-          ))}
-
-        </List> */}
       </Drawer>
 
       <PageHeader
