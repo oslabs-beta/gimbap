@@ -5,7 +5,7 @@ import loadDePaulEndpointData from './../../../src/server/utilities/loadDePaulEn
 import { EndpointModel, Endpoint } from './../../../src/shared/models/endpointModel';
 import { connect, disconnect } from '../../../src/shared/models/mongoSetup';
 
-describe('Populate database with DePaul CTI data and verify data is in DB', () => {
+xdescribe('Populate database with DePaul CTI data and verify data is in DB', () => {
   jest.setTimeout(15 * 60 * 1000);
 
   beforeAll(async () => {
@@ -35,7 +35,7 @@ describe('Populate database with DePaul CTI data and verify data is in DB', () =
 
       if (isNaN(timeStamp) || !entry[8] || !entry[9]) continue;
 
-      const check: boolean = await EndpointModel.exists(expected); 
+      const check: boolean = await EndpointModel.exists(expected);
       expect(check).toBe(true); // expected endpoint to be in DB
     }
   });

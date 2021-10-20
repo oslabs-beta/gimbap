@@ -114,7 +114,13 @@ export async function getClusterLoadGraphData(req: Request, res: Response, next:
     message: 'Reached getClusterLoadGraphData middleware without clusterId parameters set in request object.',
     error: 'Internal server error.'
   });
+
   const clusterId: number = parseInt(clusterIdStr);
+
+  if (isNaN(clusterId)) next({
+    status: 400,
+    error: 'ClusterId parameter must be a number.'
+  });
 
   try {
     const routes: Route[] = clusters[clusterId];
@@ -136,7 +142,6 @@ export async function getClusterLoadGraphData(req: Request, res: Response, next:
 }
 
 /**
- * Middleware: Depends on parameter clusterId to be set in request object.
  * If successful, `res.locals.treeGraphData` will contain treeNode.
  * 
  * @param {Request} req - express's HTTP request object

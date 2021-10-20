@@ -39,6 +39,25 @@ export async function logEndpoint(method: string, endpoint: string, callTime: nu
 }
 
 /**
+ * Log an array of endpoint request data point to external database.
+ * 
+ * @param {Endpoint[]} endpoints - Array of endpoints to be added to database.
+ * 
+ * @public
+ */
+export async function logAllEndpoints(endpoints: Endpoint[]): Promise<void> {
+  // TODO validate inputs
+
+  try {
+    await EndpointModel.insertMany(endpoints);
+  } catch (error) {
+    console.error('\n\nERROR LOGGING RESPONSES TO DATABASE - LOG MANY');
+    console.error(error);
+    console.log('\n\n');
+  }
+}
+
+/**
  * Get a list of all endpoints. If no method or endpoint is specified, it will return all endpoints in the database.
  * 
  * @param {String} method - (optional) HTTP method
