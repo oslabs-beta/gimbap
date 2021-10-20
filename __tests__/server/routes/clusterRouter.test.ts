@@ -20,6 +20,10 @@ afterAll(async () => {
 
 test('GET / (getClusterList)', async () => {
 
+  // setup a db
+  // delete before testing
+  // populate data, then test for that data existence
+
 
   return request(app)
     .get('/banana')
