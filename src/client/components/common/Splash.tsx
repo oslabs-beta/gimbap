@@ -5,8 +5,10 @@ import Box from '@mui/material/Box';
 
 export default function Splash() {
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CircularProgress />
+    <Box sx={{
+      mx: 'auto', width: 40, mt: 5
+    }}>
+      < CircularProgress />
     </Box>
   );
 }
