@@ -1,4 +1,4 @@
-import { ClientError,Cluster } from './../../shared/types';
+import { ClientError, Cluster, Route, LoadData } from './../../shared/types';
 
 /**
  * Makes a GET fetch request.
@@ -6,9 +6,9 @@ import { ClientError,Cluster } from './../../shared/types';
  * @param url - URL to make fetch request to.
  * @returns Promise to generic data type or void if fetch failed.
  *
- * @public
+ * @private
  */
-export async function fetchWrapper<T>(url: string): Promise<T | void> {
+async function fetchWrapper<T>(url: string): Promise<T | void> {
   const response: Response = await fetch(url, {
     method: 'GET',
     headers: {
@@ -16,10 +16,7 @@ export async function fetchWrapper<T>(url: string): Promise<T | void> {
     }
   });
 
-
   const body: T | ClientError = await response.json();
-  console.log(typeof body);
-  console.log({body});
 
   if (response.status !== 200) {
     console.error(`Server responded with status ${response.status}`);
@@ -29,27 +26,68 @@ export async function fetchWrapper<T>(url: string): Promise<T | void> {
   return body as T;
 }
 
+/**
+ * Make a fetch request to backend to load unique routes.
+ * 
+ * @param setRoutes - state setter function for Route[]
+ * 
+ * @public
+ */
+export async function fetchRoutes(setRoutes: React.Dispatch<React.SetStateAction<Route[] | null>>): Promise<void> {
+  const routes: Route[] | void = await fetchWrapper<Route[]>('/api/graph/endpoint');
+  if (routes) setRoutes(routes);
+}
 
 /**
- * Gets clusters
+ * Make a fetch request to backend for LoadData for a particular route.
+ * 
+ * @param {Route} route - Route to fetch LoadData for.  
+ * @param {number} index - index in setRoutesLoadData object to store the LoadData at
+ * @param {React.Dispatch<React.SetStateAction} setRoutesLoadData - state setter function for { [key: number]: LoadData }
+ * 
+ * @public
+ */
+export async function fetchRouteLoadData(
+  route: Route,
+  index: number,
+  setRoutesLoadData: React.Dispatch<React.SetStateAction<{ [key: number]: LoadData }>>
+): Promise<void> {
+  const loadData: LoadData | void = await fetchWrapper<LoadData>(`/api/graph/endpoint/load?method=${encodeURIComponent(route.method)}&route=${encodeURIComponent(route.endpoint)}`);
+  if (loadData) setRoutesLoadData(routesLoadData => {
+    const nextRoutesLoadData = Object.assign(Object.create(null), routesLoadData);
+    nextRoutesLoadData[index] = loadData;
+    return nextRoutesLoadData;
+  });
+}
+
+/**
+ * Make fetch request to backend to load clusters.
  *
- * @param setClusters: updates state with Clusters
- * @returns returns an array of clusters.
+ * @param setClusters - updates state with Clusters
  *
  * @public
  */
-export async function getClusters(setClusters: React.Dispatch<React.SetStateAction<Cluster | null>>): Promise<void>{
-  const allClusters: Cluster | void = await fetchWrapper<Cluster>('api/graph/cluster');
-  console.log(allClusters);
-  if (allClusters) setClusters(allClusters);
+export async function fetchClusters(setClusters: React.Dispatch<React.SetStateAction<Cluster[] | null>>): Promise<void> {
+  const clusters: Cluster[] | void = await fetchWrapper<Cluster[]>('api/graph/cluster');
+  if (clusters) setClusters(clusters);
 }
 
-// /**
-//  * Get endpoint data
-//  *
-//  * @param a single cluster
-//  * @returns All of the endpoints for that cluster
-//  *
-//  * @public
-//  */
-// export async function getClusterEndpoints() {}
+/**
+ * Make a fetch request to backend for LoadData for a particular cluster.
+ * 
+ * @param {number} index - index in setClusterLoadData object to store the LoadData at
+ * @param {React.Dispatch<React.SetStateAction} setClusterLoadData - state setter function for { [key: number]: LoadData }
+ * 
+ * @public
+ */
+export async function fetchClusterLoadData(
+  index: number,
+  setClusterLoadData: React.Dispatch<React.SetStateAction<{ [key: number]: LoadData }>>
+): Promise<void> {
+  const loadData: LoadData | void = await fetchWrapper<LoadData>(`/api/graph/cluster/load/${index}`);
+  if (loadData) setClusterLoadData(clusterLoadData => {
+    const nextClustersLoadData = Object.assign(Object.create(null), clusterLoadData);
+    nextClustersLoadData[index] = loadData;
+    return nextClustersLoadData;
+  });
+}

@@ -32,12 +32,15 @@ function getStyles(index: number, selected: number[], theme: Theme) {
 export default function ChipSelector({
   itemLabels,
   selected,
+  label,
   setSelected,
 }: {
   itemLabels: string[],
   selected: number[];
+  label: string;
   setSelected: React.Dispatch<React.SetStateAction<number[]>>
 }): JSX.Element {
+
   const theme = useTheme();
 
   const handleChange = useCallback((event: SelectChangeEvent<number[]>) => {
@@ -50,14 +53,14 @@ export default function ChipSelector({
 
   return (
     <FormControl sx={{ m: 1, maxWidth: 500 }}>
-      <InputLabel id="multiple-routes-label">Routes</InputLabel>
+      <InputLabel id={`multiple-${label.toLowerCase()}-label`}>{label}</InputLabel>
       <Select
-        labelId="multiple-routes-label"
-        id="multiple-routes"
+        labelId={`multiple-${label.toLowerCase()}-label`}
+        id={`multiple-${label.toLowerCase()}`}
         multiple
         value={selected}
         onChange={handleChange}
-        input={<OutlinedInput id="select-multiple-route" label="Route" />}
+        input={<OutlinedInput id={`select-multiple-${label.toLowerCase()}`} label={label} />}
         renderValue={(selected: number[]) => (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
             {selected.map((index: number) => {

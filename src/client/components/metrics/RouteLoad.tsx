@@ -6,34 +6,8 @@ import Splash from './../common/Splash';
 import LoadGraph from './LoadGraph';
 
 import { Route, LoadData } from './../../../shared/types';
-import { fetchWrapper } from './../../utils/ajax';
+import { fetchRoutes, fetchRouteLoadData } from './../../utils/ajax';
 import ChipSelector from './../common/ChipSelector';
-
-/**
- * Make a fetch request to backend to load unique routes.
- * 
- * @param setRoutes - state setter function for Route[]
- * 
- * @private
- */
-async function fetchRoutes(setRoutes: React.Dispatch<React.SetStateAction<Route[] | null>>): Promise<void> {
-  const routes: Route[] | void = await fetchWrapper<Route[]>('/api/graph/endpoint');
-  if (routes) setRoutes(routes);
-}
-
-// TODO add comment
-async function fetchRouteLoadData(
-  url: string,
-  index: number,
-  setRoutesLoadData: React.Dispatch<React.SetStateAction<{ [key: number]: LoadData }>>
-): Promise<void> {
-  const loadData: LoadData | void = await fetchWrapper<LoadData>(url);
-  if (loadData) setRoutesLoadData(routesLoadData => {
-    const nextRoutesLoadData = Object.assign(Object.create(null), routesLoadData);
-    nextRoutesLoadData[index] = loadData;
-    return nextRoutesLoadData;
-  });
-}
 
 export default function RouteLoad({
   useLightTheme,
@@ -55,12 +29,7 @@ export default function RouteLoad({
 
     for (const index of selectedRoutes) {
       if (!routesLoadData[index]) {
-        const route: Route = routes[index];
-        fetchRouteLoadData(
-          `/api/graph/endpoint/load?method=${encodeURIComponent(route.method)}&route=${encodeURIComponent(route.endpoint)}`,
-          index,
-          setRoutesLoadData
-        );
+        fetchRouteLoadData(routes[index], index, setRoutesLoadData);
       }
     }
   }, [routes, routesLoadData, selectedRoutes]);
@@ -86,6 +55,7 @@ export default function RouteLoad({
           itemLabels={routeLabels}
           selected={selectedRoutes}
           setSelected={setSelectedRoutes}
+          label='Routes'
         />
 
         {Object.entries(selectedLoadData).map(([index, loadData]) => {

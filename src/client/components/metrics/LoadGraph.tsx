@@ -20,7 +20,7 @@ export default function LoadGraph({
   width: number;
   loadData: LoadData;
   label: string
-}) {
+}): JSX.Element {
 
   const accessors = {
     xAccessor: (d: [number, number]): number => d[0],
@@ -30,7 +30,7 @@ export default function LoadGraph({
   // TODO change size of graph depending on screen size
 
   return (
-    <Stack className='load-graph'>
+    <Stack className='load-graph' mb={3}>
       <Typography variant='body1' sx={{ mb: 0 }}>{label}</Typography>
       <XYChart
         theme={useLightTheme ? lightTheme : darkTheme}
