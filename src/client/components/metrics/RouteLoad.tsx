@@ -61,7 +61,11 @@ async function fetchRouteLoadData(
   });
 }
 
-export default function RouteLoad() {
+export default function RouteLoad({
+  useLightTheme,
+}: {
+  useLightTheme: boolean
+}) {
 
   const theme = useTheme();
 
@@ -102,6 +106,8 @@ export default function RouteLoad() {
     if (selectedRoutes.includes(parseInt(index))) selected[index] = loadData;
     return selected;
   }, Object.create(null));
+
+  // TODO when user has graph selected, but data is not available, show splash
 
   return (<>
     {!routes && <Splash />}
@@ -160,9 +166,19 @@ export default function RouteLoad() {
           </Select>
         </FormControl>
 
-        {Object.entries(selectedLoadData).map(([index, loadData]) =>
-          <LoadGraph key={index} loadData={loadData} />
-        )}
+        {Object.entries(selectedLoadData).map(([index, loadData]) => {
+          const i: number = parseInt(index);
+          const label = `${routes[i].method} ${routes[i].endpoint}`;
+
+          return (<LoadGraph
+            key={index}
+            useLightTheme={useLightTheme}
+            height={340}
+            width={420}
+            loadData={loadData}
+            label={label}
+          />);
+        })}
       </Stack>
     }
   </>);
