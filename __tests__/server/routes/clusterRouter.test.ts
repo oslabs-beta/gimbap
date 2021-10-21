@@ -8,7 +8,7 @@ describe('test out all our routes', () => {
 
 beforeAll(async () => {
   await connect('mongodb+srv://admin:test@cluster0.dopf4.mongodb.net/DePaul?retryWrites=true&w=majority');
-  app.get('/', (req, res) => res.status(200).send({ method: 'GET', endpoint: '/api/example' }));
+  app.get('/', (req, res) => res.status(200).send([{ method: 'GET', endpoint: '/api/example' }, { method: 'POST', endpoint: '/api/example2' }]));
   app.get('/load/1', (req, res) => res.status(200).send({ x: [1, 20, 12], y: [420, 300, 200]}));
   app.get('/tree/1', (req, res) => res.status(200).send({name: 'Cluster1', children: [{name: 'get', children: [{name: '/api/login'}, {name:'/api/logout'}]}]}));
   await EndpointModel.deleteMany();
@@ -27,7 +27,8 @@ test('Route: / || Middleware: getClusterList', async () => {
     .get('/')
     .expect(200)
     .then(async (response) => {
-      expect(response.text).toBe(JSON.stringify({ method: 'GET', endpoint: '/api/example' }));
+      console.log(response.text);
+      expect(response.text).toBe(JSON.stringify([{ method: 'GET', endpoint: '/api/example' }, { method: 'POST', endpoint: '/api/example2' }]));
     });
   });
 
