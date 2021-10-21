@@ -13,7 +13,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import DescriptionIcon from '@mui/icons-material/Description';
 
 
-import { Page } from './../../types';
+import { Page, SubPage } from './../../types';
 import NavItem from './NavItem';
 
 export const drawerWidth = 240;
@@ -67,17 +67,24 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export default function NavigationBar({
   page,
+  setMetricSubPage,
   setPage,
 }: {
   page: Page;
+  setMetricSubPage: React.Dispatch<React.SetStateAction<SubPage>>;
   setPage: React.Dispatch<React.SetStateAction<Page>>;
 }): JSX.Element {
   const [open, setOpen] = React.useState<boolean>(true);
 
   const handleDrawerOpen: () => void = useCallback(() => setOpen(true), []);
   const handleDrawerClose: () => void = useCallback(() => setOpen(false), []);
+
   const showClustersPage: () => void = useCallback(() => setPage(Page.Clusters), [setPage]);
+
   const showMetricsPage: () => void = useCallback(() => setPage(Page.Metrics), [setPage]);
+  const showClusterLoadPage: () => void = useCallback(() => setMetricSubPage(SubPage.ClusterLoad), [setMetricSubPage]);
+  const showRouteLoadPage: () => void = useCallback(() => setMetricSubPage(SubPage.RouteLoads), [setMetricSubPage]);
+
   const showDocumentationPage: () => void = useCallback(() => setPage(Page.Documentation), [setPage]);
 
   return (
@@ -118,14 +125,28 @@ export default function NavigationBar({
           title='Metrics'
           isActive={page === Page.Metrics && open}
           icon={AssessmentIcon}
-          subLinks={['Clusters Time-Series', 'Routes Time-Series']}
+          subLinks={[
+            {
+              title: 'Cluster Loads',
+              onClick: showClusterLoadPage,
+            },
+            {
+              title: 'Route Loads',
+              onClick: showRouteLoadPage,
+            }
+          ]}
           onClick={showMetricsPage}
         />
         <NavItem
           title='Documentation'
           isActive={page === Page.Documentation && open}
           icon={DescriptionIcon}
-          subLinks={['TODO add pages']}
+          subLinks={[
+            {
+              title: 'TODO add pages',
+              onClick: () => console.log('TODO'),
+            }
+          ]}
           onClick={showDocumentationPage}
         />
       </Drawer>
