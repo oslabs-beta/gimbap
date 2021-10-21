@@ -40,9 +40,9 @@ describe('Testing middleware', () => {
       { method: 'POST', endpoint: '/api/4', pdf: () => 1 / 24 }
     ];
     const callDist: DistributionFunction = () => 100;
-    const singleEndpointServerResponses: Endpoint[] = simulateServerResponses(endpointsPDF, callDist, 5, 60);
+    const multipleEndpointServerResponses: Endpoint[] = simulateServerResponses(endpointsPDF, callDist, 5, 60);
 
-    const clusters: Cluster[] = determineClusters(singleEndpointServerResponses);
+    const clusters: Cluster[] = determineClusters(multipleEndpointServerResponses);
     mockResponse.locals.clusters = clusters;
     getClusterList(mockRequest as Request, mockResponse as Response, mockNext as NextFunction);
     expect(mockResponse.locals.clusters).toHaveLength(2); //TODO: Need to relook at this
