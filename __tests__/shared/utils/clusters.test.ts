@@ -1,6 +1,6 @@
 import { determineClusters, Cluster } from '../../../src/server/utils/endpoints';
 import { EndpointModel, Endpoint } from './../../../src/shared/models/endpointModel';
-import { connect, disconnect } from './../../../src/shared//mongoSetup';
+import { connect, disconnect } from './../../../src/shared/models/mongoSetup';
 import { simulateServerResponses, EndpointPDF, DistributionFunction } from './../../../src/shared/utils/dataGenerator';
 
 
@@ -132,3 +132,6 @@ describe('Correctness of clustering algorithm using step function pdf', () => {
 
   // TODO thoroughly test clustering results to different types of biasing pdf functions
 });
+
+
+module deafults = {endpointsPDF, singleEndpointServerResponses, clusters}
