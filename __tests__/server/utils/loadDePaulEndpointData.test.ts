@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import loadDePaulEndpointData from './../../../src/server/utilities/loadDePaulEndpointData';
+import loadDePaulEndpointData from './../../../src/server/utils/loadDePaulEndpointData';
 import { EndpointModel, Endpoint } from './../../../src/shared/models/endpointModel';
 import { connect, disconnect } from '../../../src/shared/models/mongoSetup';
 
