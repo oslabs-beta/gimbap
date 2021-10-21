@@ -7,20 +7,20 @@ const router = Router();
 router.get('/',
   getEndpointList,
   (req: Request, res: Response, next: NextFunction): void => {
-    if (!res.locals.endpoint) return next({
+    if (!res.locals.endpoints) return next({
       status: 500,
       error: 'Middleware getEndpointList did not return expected data.'
     });
 
-    res.json(res.locals.endpoint);
+    res.json(res.locals.endpoints);
   }
 );
 
 // To get endpoint load line graph data
-router.get('/load/:method/:route',
+router.get('/load',
   getEndpointLoadGraphData,
   (req: Request, res: Response, next: NextFunction): void => {
-    if (!res.locals.endpoint) return next({
+    if (!res.locals.loadGraphData) return next({
       status: 500,
       error: 'Middleware getEndpointLoadGraphData did not return expected data.'
     });

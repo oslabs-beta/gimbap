@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { Endpoint, getAllEndpoints } from './../../shared/models/endpointModel';
-import { getUniqueRoutes, getLoadData, determineClusters, theSuperHappyTreeGenerator, Cluster, Route } from './../utils/endpoints';
+import { getUniqueRoutes, getLoadData, determineClusters, theSuperHappyTreeGenerator } from './../utils/endpoints';
+import { Cluster, Route } from './../../shared/types';
 
 let clusters: Cluster[] | null = null; // used to store last calculated cluster result
 
@@ -31,7 +32,7 @@ export async function getEndpointList(req: Request, res: Response, next: NextFun
 }
 
 /**
- * Middleware: Depends on parameter method and route to be set in request object.
+ * Middleware: Depends on query parameter method and route to be set in request object.
  * If successful, `res.locals.loadGraphData` will contain LoadData.
  *
  * @param {Request} req - express's HTTP request object
@@ -41,9 +42,9 @@ export async function getEndpointList(req: Request, res: Response, next: NextFun
  * @public
  */
 export async function getEndpointLoadGraphData(req: Request, res: Response, next: NextFunction): Promise<void> {
-  const { method, route } = req.params;
+  const { method, route } = req.query;
 
-  if (!method || !route) return next({
+  if (typeof method !== 'string' || typeof route !== 'string') return next({
     status: 500,
     message: 'Reached getEndpointLoadGraphData middleware without method and route parameters set in request object.',
     error: 'Internal server error.'
@@ -64,8 +65,8 @@ export async function getEndpointLoadGraphData(req: Request, res: Response, next
 }
 
 /**
- * Middleware: If successful, 'res.locals.clusters' will contain Cluster[].
- *
+ * Middleware: If successful, `res.locals.clusters` will contain Cluster[].
+ * 
  * @param {Request} req - express's HTTP request object
  * @param {Response} res - express's HTTP response object
  * @param {NextFunction} next - express's next function
@@ -80,6 +81,7 @@ export async function getClusterList(req: Request, res: Response, next: NextFunc
 
   try {
     const endpoints: Endpoint[] = await getAllEndpoints();
+
     clusters = res.locals.clusters = determineClusters(endpoints);
   } catch (error) {
     return next(Object.assign(error, {
