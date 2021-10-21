@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { Route } from './../../server/utils/endpoints';
+import { Route } from './../../shared/types';
 
 // TODO abstract so it can work with either MongoDB or PostgreSQL depending on how setup is called.
 

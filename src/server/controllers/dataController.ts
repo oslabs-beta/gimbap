@@ -109,7 +109,7 @@ export async function getClusterLoadGraphData(req: Request, res: Response, next:
     error: 'Can not return cluster graph data before a call to get clusters is made.'
   });
 
-  const { clusterIdStr } = req.params;
+  const { clusterId: clusterIdStr } = req.params;
 
   if (!clusterIdStr) return next({
     status: 500,

@@ -10,11 +10,11 @@ interface TimeDomainEndpoint extends Endpoint {
 /**
  * Utilize OPTICS algorithm to cluster endpoints based on covariant time utilization.
  * https://en.wikipedia.org/wiki/OPTICS_algorithm
- * 
+ *
  * @param {Endpoint[]} serverResponses - Array of server responses.
  * @param {number} step - step size for bucket vectorization in hours. Defaults to 1.
  * @returns Array of Cluster recommendations.
- * 
+ *
  * @public
  */
 export function determineClusters(serverResponses: Endpoint[], step = 1): Cluster[] {
@@ -62,10 +62,10 @@ export function determineClusters(serverResponses: Endpoint[], step = 1): Cluste
 
 /**
  * Find all unique routes in the endpoint array.
- * 
+ *
  * @param {Endpoint} endpoints - Array of Endpoint.
  * @returns Array of unique Route in Endpoint array.
- * 
+ *
  * @private
  */
 export function getUniqueRoutes(endpoints: Endpoint[]): Route[] {
@@ -84,7 +84,7 @@ export function getUniqueRoutes(endpoints: Endpoint[]): Route[] {
 }
 
 /**
- * Generate the x and y for a load data graph for a set of server responses.
+ * Generate DataPoints for a load data graph for a set of server responses.
  * 
  * @param endpoints - Array of Endpoint
  * @param granularity - time interval in minutes between data points
@@ -111,21 +111,20 @@ export function getLoadData(endpoints: Endpoint[], granularity = 30): LoadData {
   let numDays: number = (lastDay - firstDay) / (24 * 60 * 60 * 1000);
   numDays = numDays === 0 ? 1 : Math.ceil(numDays);
 
-  const y: number[] = [], x: number[] = [];
+  const loadData: LoadData = [];
   for (let hourStart = 0; hourStart < 24; hourStart += (granularity / 60)) {
     const numCalls: number = responses
       .filter(endpoint => endpoint.hour > hourStart && endpoint.hour < hourStart + (granularity / 60)).length / numDays;
 
-    x.push(hourStart);
-    y.push(numCalls);
+    loadData.push([hourStart, numCalls]);
   }
 
-  return { x, y };
+  return loadData;
 }
 
 /**
  * Generate a D3 compatible nested node object for graphing tree graphs (dendrogram).
- * 
+ *
  * @param clusters - Array of Cluster recommendations.
  */
 export function theSuperHappyTreeGenerator(clusters: Cluster[]): TreeNode {
