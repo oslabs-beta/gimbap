@@ -1,5 +1,17 @@
 import React from 'react';
 
-export default function Metrics() {
-  return <h1>TODO Metrics page</h1>;
+import { SubPage } from './../../types';
+
+import RouteLoad from './RouteLoad';
+import ClusterLoad from './ClusterLoad';
+
+export default function Metrics({
+  metricSubPage,
+}: {
+  metricSubPage: SubPage;
+}) {
+  return (<>
+    {metricSubPage === SubPage.RouteLoads && <RouteLoad />}
+    {metricSubPage === SubPage.ClusterLoad && <ClusterLoad />}
+  </>);
 }
