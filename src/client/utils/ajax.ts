@@ -1,11 +1,11 @@
-import { ClientError } from './../../shared/types';
+import { ClientError,Cluster } from './../../shared/types';
 
 /**
  * Makes a GET fetch request.
- * 
+ *
  * @param url - URL to make fetch request to.
  * @returns Promise to generic data type or void if fetch failed.
- * 
+ *
  * @public
  */
 export async function fetchWrapper<T>(url: string): Promise<T | void> {
@@ -18,6 +18,8 @@ export async function fetchWrapper<T>(url: string): Promise<T | void> {
 
 
   const body: T | ClientError = await response.json();
+  console.log(typeof body);
+  console.log({body});
 
   if (response.status !== 200) {
     console.error(`Server responded with status ${response.status}`);
@@ -26,3 +28,28 @@ export async function fetchWrapper<T>(url: string): Promise<T | void> {
 
   return body as T;
 }
+
+
+/**
+ * Gets clusters
+ *
+ * @param setClusters: updates state with Clusters
+ * @returns returns an array of clusters.
+ *
+ * @public
+ */
+export async function getClusters(setClusters: React.Dispatch<React.SetStateAction<Cluster | null>>): Promise<void>{
+  const allClusters: Cluster | void = await fetchWrapper<Cluster>('api/graph/cluster');
+  console.log(allClusters);
+  if (allClusters) setClusters(allClusters);
+}
+
+// /**
+//  * Get endpoint data
+//  *
+//  * @param a single cluster
+//  * @returns All of the endpoints for that cluster
+//  *
+//  * @public
+//  */
+// export async function getClusterEndpoints() {}
