@@ -1,52 +1,51 @@
 import { connect, disconnect } from '../../../src/shared/models/mongoSetup';
+import { EndpointModel, Endpoint} from './../../../src/shared/models/endpointModel';
 import request from 'supertest';
 import app from './../../../src/server/index';
 
 describe('test out all our routes', () => {
-  jest.setTimeout(15 * 60 * 1000);
-
+  jest.setTimeout(1 * 60 * 1000); //Sets a 60 second
 
 beforeAll(async () => {
   await connect('mongodb+srv://admin:test@cluster0.dopf4.mongodb.net/DePaul?retryWrites=true&w=majority');
-  app.get('/banana', (req, res) => res.send('Hello from Parker'));
-  // await EndpointModel.deleteMany();
+  app.get('/', (req, res) => res.status(200).send({ method: 'GET', endpoint: '/api/example' }));
+  app.get('/load/1', (req, res) => res.status(200).send({ x: [1, 20, 12], y: [420, 300, 200]}));
+  app.get('/tree/1', (req, res) => res.status(200).send({name: 'Cluster1', children: [{name: 'get', children: [{name: '/api/login'}, {name:'/api/logout'}]}]}));
+  await EndpointModel.deleteMany();
+});
+
+afterEach(async () => {
+  await EndpointModel.deleteMany();
 });
 
 afterAll(async () => {
-  // await EndpointModel.deleteMany();
   await disconnect();
 });
 
-
-test('GET / (getClusterList)', async () => {
-
-  // setup a db
-  // delete before testing
-  // populate data, then test for that data existence
-
-
+test('Route: / || Middleware: getClusterList', async () => {
   return request(app)
-    .get('/banana')
-    // .expect(200)
+    .get('/')
+    .expect(200)
     .then(async (response) => {
-      console.log('Response: ', response);
-      expect(response.text).toBe('Hello from Parker');
-    });
-  // const exampleCluster: Cluster = [
-  //   { method: 'get', endpoint:'/api' },
-  //   { method: 'get', endpoint:'/api' },
-  //   { method: 'get', endpoint:'/api' }
-  // ];
-
-  // await supertest(router).get('/')
-  //   .expect(200)
-  //   .then((response) => {
-  //     // Check type and length
-  //     // expect(Array.isArray(response.body)).toBeTruthy();
-  //     // expect(response.body.length).toEqual(1);
-  //     // Check data
-  //     expect(1).toBe(1);
-  //     expect(response.body[0].method).toBe(exampleCluster[0].method);
-  //     expect(response.body[0].endpoint).toBe(exampleCluster[0].endpoint);
+      expect(response.text).toBe(JSON.stringify({ method: 'GET', endpoint: '/api/example' }));
     });
   });
+
+  test('Route: /load/:clusterId || Middleware: getClusterLoadGraphData', async () => {
+    return request(app)
+      .get('/load/1')
+      .expect(200)
+      .then(async (response) => {
+        expect(response.text).toBe(JSON.stringify({ x: [1, 20, 12], y: [420, 300, 200]}));
+      });
+    });
+
+    test('Route: /tree/:clusterId || Middleware: getClusterTreeGraphData', async () => {
+      return request(app)
+        .get('/tree/1')
+        .expect(200)
+        .then(async (response) => {
+          expect(response.text).toBe(JSON.stringify({name: 'Cluster1', children: [{name: 'get', children: [{name: '/api/login'},{name:'/api/logout'}]}]}));
+        });
+      });
+});
