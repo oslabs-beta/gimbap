@@ -61,7 +61,7 @@ describe('Testing middleware', () => {
   });
 
   test('getClusterLoadGraphData: Retrieves correct x and y coordinates', async () => {
-    const loadData: LoadData[] = [     // was endpoint data
+    const loadData: LoadData[] = [
       { x: [1, 20, 12], y: [420, 300, 200]},
       { x: [2, 46, 6], y: [30, 202, 314]},
       { x: [23, 29, 0], y: [16, 714, 238]},
@@ -79,28 +79,35 @@ describe('Testing middleware', () => {
 
   });
 
-  test('getClusterTreeGraphData: Retrieves correct x and y coordinates', async () => {
-    const loadData: LoadData[] = [     // was endpoint data
-      { x: [1, 20, 12], y: [420, 300, 200]},
-      { x: [2, 46, 6], y: [30, 202, 314]},
-      { x: [23, 29, 0], y: [16, 714, 238]},
-      { x: [3, 90, 42], y: [1738, 5, 7]}
-    ];
+  test('getClusterTreeGraphData: Retrieves correct cluster and appropriate children', async () => {
+    const treeNode: TreeNode = {
+      name: 'Cluster1',
+      children: [
+        {
+          name: 'get',
+          children: [
+            {name: '/api/login'},
+            {name:'/api/logout'}
+          ]
+        }
+      ]
+    };
 
-    mockResponse.locals.loadGraphData = loadData;
-    getClusterLoadGraphData(mockRequest as Request, mockResponse as Response, mockNext as NextFunction);
-    expect(mockResponse.locals.loadGraphData).toHaveLength(4);
+    mockResponse.locals.treeGraphData = treeNode;
+    getClusterTreeGraphData(mockRequest as Request, mockResponse as Response, mockNext as NextFunction);
 
-      expect(mockResponse.locals.loadGraphData[0]).toEqual({ x: [1, 20, 12], y: [420, 300, 200]});
-      expect(mockResponse.locals.loadGraphData[1]).toEqual({ x: [2, 46, 6], y: [30, 202, 314]});
-      expect(mockResponse.locals.loadGraphData[2]).toEqual({ x: [23, 29, 0], y: [16, 714, 238]});
-      expect(mockResponse.locals.loadGraphData[3]).toEqual({ x: [3, 90, 42], y: [1738, 5, 7]});
-
+      expect(mockResponse.locals.treeGraphData).toEqual({
+        name: 'Cluster1',
+        children: [
+          {
+            name: 'get',
+            children: [
+              {name: '/api/login'},
+              {name:'/api/logout'}
+            ]
+          }
+        ]
+      });
   });
-  // return object of root node and cluster node and all the child nodes
-  const treeNode: TreeNode = {
-    name: 'Cluster1',
-    children: [{ name: 'get', children: [name: '/api/login', '/api/logout'] }]
-  }
 });
 
