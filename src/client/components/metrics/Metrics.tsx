@@ -6,12 +6,14 @@ import RouteLoad from './RouteLoad';
 import ClusterLoad from './ClusterLoad';
 
 export default function Metrics({
+  useLightTheme,
   metricSubPage,
 }: {
+  useLightTheme: boolean;
   metricSubPage: SubPage;
 }) {
   return (<>
-    {metricSubPage === SubPage.RouteLoads && <RouteLoad />}
-    {metricSubPage === SubPage.ClusterLoad && <ClusterLoad />}
+    {metricSubPage === SubPage.RouteLoads && <RouteLoad useLightTheme={useLightTheme} />}
+    {metricSubPage === SubPage.ClusterLoad && <ClusterLoad useLightTheme={useLightTheme} />}
   </>);
 }

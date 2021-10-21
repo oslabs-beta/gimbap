@@ -27,11 +27,13 @@ export default function LoadGraph({
     yAccessor: (d: [number, number]): number => d[1],
   };
 
+  // TODO change size of graph depending on screen size
+
   return (
     <Stack className='load-graph'>
       <Typography variant='body1' sx={{ mb: 0 }}>{label}</Typography>
       <XYChart
-        theme={!useLightTheme ? lightTheme : darkTheme}
+        theme={useLightTheme ? lightTheme : darkTheme}
         height={height}
         width={width}
         xScale={{ type: 'band' }}

@@ -21,7 +21,7 @@ export default function App() {
       <Stack id="app" direction='row'>
         <NavigationBar page={page} setPage={setPage} setMetricSubPage={setMetricSubPage} />
         {page === Page.Clusters && <Clusters />}
-        {page === Page.Metrics && <Metrics metricSubPage={metricSubPage} />}
+        {page === Page.Metrics && <Metrics useLightTheme={useLightTheme} metricSubPage={metricSubPage} />}
         {page === Page.Documentation && <Documentation />}
       </Stack>
     </ThemeProvider>
