@@ -3,3 +3,8 @@ export enum Page {
   Metrics,
   Documentation,
 }
+
+export enum SubPage {
+  RouteLoads,
+  ClusterLoad,
+}

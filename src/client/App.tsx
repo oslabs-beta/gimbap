@@ -1,6 +1,10 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-import { Page } from './types';
+import { darkTheme, lightTheme } from './theme';
+import { ThemeProvider } from '@mui/material/styles';
+import Stack from '@mui/material/Stack';
+
+import { Page, SubPage } from './types';
 
 import NavigationBar from './components/common/NavigationBar';
 import Clusters from './components/clusters/Clusters';
@@ -10,9 +14,9 @@ import TreeGraph from './components/clusters/treegraph/TreeGraph';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 
 export default function App() {
-
+  const [useLightTheme, setUseLightTheme] = useState(true); // TODO hook up theme toggle
   const [page, setPage] = useState<Page>(Page.Clusters);
-  const [pageHeader, setPageHeader] = useState<string>('Temp Page Header');
+  const [metricSubPage, setMetricSubPage] = useState<SubPage>(SubPage.ClusterLoad);
 
   return(
     <div id="app" >

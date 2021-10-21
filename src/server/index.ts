@@ -1,16 +1,20 @@
 import path from 'path';
 import express, { Request, Response, NextFunction, Express } from 'express';
+import { connect } from './../shared/models/mongoSetup';
 // import gimbap from 'gimbap';
+
+import { MONGODB_URI } from './secrets.json';
 
 import MiddlewareError from './utils/MiddlewareError';
 import apiRouter from './routes/apiRouter';
 
-// import { MONGODB_URI } from './secrets.json';
+//import { MONGODB_URI } from './secrets.json';
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const HOST: string = process.env.HOST || 'localhost';
 
 const app: Express = express();
-// gimbap(app, 'mongodb', MONGODB_URI); // TODO remove before merge with main
+//gimbap(app, 'mongodb', MONGODB_URI); // TODO remove before merge with main
+// TODO figure out why this causes Endpoint to be overwritten and conflict
 
 
 /* MIDDLEWARE */
@@ -25,7 +29,6 @@ if (process.env.NODE_ENV === 'production') {
 
 /* ROUTES */
 app.use('/api', apiRouter);
-
 
 
 /* GLOBAL 404 */
@@ -45,7 +48,10 @@ app.use((err: MiddlewareError, req: Request, res: Response, next: NextFunction) 
 
 
 /* INIT SERVER */
-app.listen(PORT, HOST, () => console.log(`Server listening on http://${HOST}:${PORT}`));
-
+if (process.env.NODE_ENV !== 'test') {
+  connect(MONGODB_URI).then(() =>
+    app.listen(PORT, HOST, () => console.log(`Server listening on http://${HOST}:${PORT}`))
+  );
+}
 
 export default app;
