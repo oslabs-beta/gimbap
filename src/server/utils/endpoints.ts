@@ -84,7 +84,7 @@ export function getUniqueRoutes(endpoints: Endpoint[]): Route[] {
 }
 
 /**
- * Generate the x and y for a load data graph for a set of server responses.
+ * Generate DataPoints for a load data graph for a set of server responses.
  * 
  * @param endpoints - Array of Endpoint
  * @param granularity - time interval in minutes between data points
@@ -111,16 +111,15 @@ export function getLoadData(endpoints: Endpoint[], granularity = 30): LoadData {
   let numDays: number = (lastDay - firstDay) / (24 * 60 * 60 * 1000);
   numDays = numDays === 0 ? 1 : Math.ceil(numDays);
 
-  const y: number[] = [], x: number[] = [];
+  const loadData: LoadData = [];
   for (let hourStart = 0; hourStart < 24; hourStart += (granularity / 60)) {
     const numCalls: number = responses
       .filter(endpoint => endpoint.hour > hourStart && endpoint.hour < hourStart + (granularity / 60)).length / numDays;
 
-    x.push(hourStart);
-    y.push(numCalls);
+    loadData.push([hourStart, numCalls]);
   }
 
-  return { x, y };
+  return loadData;
 }
 
 /**

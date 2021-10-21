@@ -1,14 +1,7 @@
 import React from 'react';
 import { LoadData } from '../../../shared/types';
 
-import {
-  Axis,
-  LineSeries,
-  XYChart,
-  Tooltip,
-  lightTheme,
-  darkTheme,
-} from '@visx/xychart';
+import { Axis, LineSeries, XYChart, Tooltip, lightTheme, darkTheme } from '@visx/xychart';
 import { curveLinear } from '@visx/curve';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -29,14 +22,10 @@ export default function LoadGraph({
   label: string
 }) {
 
-  const data: [number, number][] = loadData.x.map((x, i) => [x, loadData.y[i]]);
   const accessors = {
     xAccessor: (d: [number, number]): number => d[0],
     yAccessor: (d: [number, number]): number => d[1],
   };
-
-  // TODO add legends, title, axis labels
-  // TODO fix typescript types
 
   return (
     <Stack className='load-graph'>
@@ -60,7 +49,7 @@ export default function LoadGraph({
         />
         <LineSeries
           dataKey={label}
-          data={data}
+          data={loadData}
           curve={curveLinear}
           {...accessors}
         />
