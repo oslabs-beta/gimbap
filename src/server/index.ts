@@ -1,6 +1,6 @@
 import path from 'path';
 import express, { Request, Response, NextFunction, Express } from 'express';
-import gimbap from 'gimbap';
+// import gimbap from 'gimbap';
 
 import MiddlewareError from './utils/MiddlewareError';
 import apiRouter from './routes/apiRouter';
