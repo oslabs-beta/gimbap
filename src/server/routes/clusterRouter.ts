@@ -8,12 +8,12 @@ const router = Router();
 router.get('/',
   getClusterList,
   (req: Request, res: Response, next: NextFunction): void => {
-    if (!res.locals.cluster) return next({
+    if (!res.locals.clusters) return next({
       status: 500,
       error: 'Middleware getClusterList did not return expected data.'
     });
 
-    res.json(res.locals.cluster);
+    res.json(res.locals.clusters);
   }
 );
 
@@ -21,7 +21,7 @@ router.get('/',
 router.get('/load/:clusterId',
   getClusterLoadGraphData,
   (req: Request, res: Response, next: NextFunction): void => {
-    if (!res.locals.cluster) return next({
+    if (!res.locals.clusters) return next({
       status: 500,
       error: 'Middleware getClusterLoadGraphData did not return expected data.'
     });
@@ -34,7 +34,7 @@ router.get('/load/:clusterId',
 router.get('/tree/:clusterId',
   getClusterTreeGraphData,
   (req: Request, res: Response, next: NextFunction): void => {
-    if (!res.locals.cluster) return next({
+    if (!res.locals.clusters) return next({
       status: 500,
       error: 'Middleware getClusterTreeGraphData did not return expected data.'
     });

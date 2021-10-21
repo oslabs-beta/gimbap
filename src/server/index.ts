@@ -1,6 +1,9 @@
 import path from 'path';
 import express, { Request, Response, NextFunction, Express } from 'express';
+import { connect } from './../shared/models/mongoSetup';
 // import gimbap from 'gimbap';
+
+import { MONGODB_URI } from './secrets.json';
 
 import MiddlewareError from './utils/MiddlewareError';
 import apiRouter from './routes/apiRouter';
@@ -46,7 +49,9 @@ app.use((err: MiddlewareError, req: Request, res: Response, next: NextFunction) 
 
 /* INIT SERVER */
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, HOST, () => console.log(`Server listening on http://${HOST}:${PORT}`));
+  connect(MONGODB_URI).then(() =>
+    app.listen(PORT, HOST, () => console.log(`Server listening on http://${HOST}:${PORT}`))
+  );
 }
 
 export default app;
