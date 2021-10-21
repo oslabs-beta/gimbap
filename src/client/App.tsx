@@ -10,19 +10,20 @@ import NavigationBar from './components/common/NavigationBar';
 import Clusters from './components/clusters/Clusters';
 import Metrics from './components/metrics/Metrics';
 import Documentation from './components/documentation/Documentation';
+import TreeGraph from './components/clusters/treegraph/TreeGraph';
+import ParentSize from '@visx/responsive/lib/components/ParentSize';
 
 export default function App() {
   const [useLightTheme, setUseLightTheme] = useState(true); // TODO hook up theme toggle
   const [page, setPage] = useState<Page>(Page.Clusters);
 
-  return (
-    <ThemeProvider theme={useLightTheme ? lightTheme : darkTheme}>
-      <Stack id="app" direction='row'>
-        <NavigationBar page={page} setPage={setPage} />
-        {page === Page.Clusters && <Clusters />}
-        {page === Page.Metrics && <Metrics />}
-        {page === Page.Documentation && <Documentation />}
-      </Stack>
-    </ThemeProvider>
+  return(
+    <div id="app" >
+      {/* <NavigationBar pageHeader={pageHeader} setPage={setPage} setPageHeader={setPageHeader} />
+      {page === Page.Clusters && <Clusters />}
+      {page === Page.Metrics && <Metrics />}
+      {page === Page.Documentation && <Documentation />} */}
+      <ParentSize>{({ width, height }) => <TreeGraph width={ window.innerWidth} height={ window.innerHeight - 400} />}</ParentSize>,
+    </div>
   );
 }
