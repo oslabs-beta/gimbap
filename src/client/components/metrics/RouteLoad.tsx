@@ -21,13 +21,13 @@ const ITEM_PADDING_TOP = 8;
 
 /**
  * Used to style chip menu item.
- * 
+ *
  * @param index - Index of current item in routes
  * @param selected - List of indices of selected items in routes
  * @param theme - MUI theme
- * 
+ *
  * @returns Typography theme settings
- * 
+ *
  * @private
  */
 function getStyles(index: number, selected: number[], theme: Theme) {
@@ -38,9 +38,9 @@ function getStyles(index: number, selected: number[], theme: Theme) {
 
 /**
  * Make a fetch request to backend to load unique routes.
- * 
+ *
  * @param setRoutes - state setter function for Route[]
- * 
+ *
  * @private
  */
 async function fetchRoutes(setRoutes: React.Dispatch<React.SetStateAction<Route[] | null>>): Promise<void> {

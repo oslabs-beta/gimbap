@@ -7,6 +7,10 @@ import useForceUpdate from './useForceUpdate';
 //import LinkControls from './LinkControls';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
+import { getClusters } from '../../../utils/ajax';
+import { Cluster } from './../../../../shared/types';
+
+
 
 interface TreeNode {
   name: string;
@@ -75,6 +79,8 @@ export default function TreeGraph({
   const [orientation, setOrientation] = useState<string>('horizontal');
   const [linkType, setLinkType] = useState<string>('diagonal');
   const [stepPercent, setStepPercent] = useState<number>(0.5);
+
+  const [clusters, setClusters] = useState<Cluster | null>([]);
   const forceUpdate = useForceUpdate();
 
   const innerWidth = totalWidth - margin.left - margin.right;
@@ -84,29 +90,17 @@ export default function TreeGraph({
   let sizeWidth: number;
   let sizeHeight: number;
 
-  // Fetch request zone
+  // Fetch request zon
+  useEffect(()=>{
+    getClusters(setClusters);
+
+  }, []);
 
   useEffect(()=>{
-    const allClusters = fetch('http://localhost:3000/api/graph/cluster', {
-      method: 'GET',
-      headers: {'accept': 'application/json'},
-      // index will be iD, then call the to get clusters tree graph data
-    })
-    .then(resp => resp.json())
-    .then((resp) => console.log(resp))
-    .catch(err => console.log('Error in TreeGraph.tsx PopulateTreeGraph fetch1'));
+    getClusters(setClusters);
 
-    // Second fetch request
-    // Send out the clusters
-    // Get back organized tree data
-    // const singleTree = fetch('/api/graph/cluster/tree/:clusterId', {
-    //   method: 'POST',
-    //   headers: {'Content-Type': 'application/json',
-    //             'accept': 'application/json'},
-    //   body: JSON.stringify(allClusters)
-    // }).
-    console.log('all clusters: ', allClusters);
   }, []);
+
 
   if (layout === 'polar') {
     origin = {
