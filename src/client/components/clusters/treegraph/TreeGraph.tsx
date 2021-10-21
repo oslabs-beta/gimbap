@@ -93,6 +93,7 @@ export default function TreeGraph({
       // index will be iD, then call the to get clusters tree graph data
     })
     .then(resp => resp.json())
+    .then((resp) => console.log(resp))
     .catch(err => console.log('Error in TreeGraph.tsx PopulateTreeGraph fetch1'));
 
     // Second fetch request
