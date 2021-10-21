@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 
-import { darkTheme, lightTheme } from './theme';
 import { ThemeProvider } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 
 import { Page, SubPage } from './types';
-
+import { darkTheme, lightTheme } from './theme';
 import NavigationBar from './components/common/NavigationBar';
 import Clusters from './components/clusters/Clusters';
 import Metrics from './components/metrics/Metrics';

@@ -10,11 +10,11 @@ interface TimeDomainEndpoint extends Endpoint {
 /**
  * Utilize OPTICS algorithm to cluster endpoints based on covariant time utilization.
  * https://en.wikipedia.org/wiki/OPTICS_algorithm
- * 
+ *
  * @param {Endpoint[]} serverResponses - Array of server responses.
  * @param {number} step - step size for bucket vectorization in hours. Defaults to 1.
  * @returns Array of Cluster recommendations.
- * 
+ *
  * @public
  */
 export function determineClusters(serverResponses: Endpoint[], step = 1): Cluster[] {
@@ -62,10 +62,10 @@ export function determineClusters(serverResponses: Endpoint[], step = 1): Cluste
 
 /**
  * Find all unique routes in the endpoint array.
- * 
+ *
  * @param {Endpoint} endpoints - Array of Endpoint.
  * @returns Array of unique Route in Endpoint array.
- * 
+ *
  * @private
  */
 export function getUniqueRoutes(endpoints: Endpoint[]): Route[] {
@@ -124,7 +124,7 @@ export function getLoadData(endpoints: Endpoint[], granularity = 30): LoadData {
 
 /**
  * Generate a D3 compatible nested node object for graphing tree graphs (dendrogram).
- * 
+ *
  * @param clusters - Array of Cluster recommendations.
  */
 export function theSuperHappyTreeGenerator(clusters: Cluster[]): TreeNode {
