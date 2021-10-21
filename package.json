@@ -36,7 +36,7 @@
     "mongodb",
     "mongoose"
   ],
-  "author": "Miguel Hernandez (miguelh72@outlook.com), Sebastien Fauque (sbfauque@gmail.com),  Angelynn Truong (angelynn.trng@gmail.com), Parker Hutcheson (pdhutcheson@gmail.com)",
+  "author": "Miguel Hernandez (miguelh72@outlook.com), Sebastien Fauque (sbfauque@gmail.com), Angelynn Truong (angelynn.trng@gmail.com), Parker Hutcheson (pdhutcheson@gmail.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/oslabs-beta/gimbap/issues"

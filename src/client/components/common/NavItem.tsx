@@ -10,23 +10,25 @@ export default function NavItem({
 	title,
 	subLinks,
 	icon,
+	onClick,
 }: {
-    isActive: boolean;
+	isActive: boolean;
 	title: string;
 	subLinks: string[];
 	icon: FunctionComponent;
+	onClick: () => void;
 }) {
 	return (
-		<List>
+		<List onClick={onClick}>
 			<ListItem button key={title}>
 				<ListItemIcon>{React.createElement(icon)}</ListItemIcon>
 				<ListItemText primary={title} />
 			</ListItem>
-			{isActive &&
+			{isActive && subLinks.length > 0 &&
 				<List>
 					{subLinks.map((subLink: string) => {
 						return (
-							<ListItem button key={subLink} sx={{ pl: 10 }}>
+							<ListItem button key={subLink} sx={{ pl: 5 }}>
 								<ListItemText primary={subLink} />
 							</ListItem>
 						);

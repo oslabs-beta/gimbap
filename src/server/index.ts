@@ -28,7 +28,6 @@ if (process.env.NODE_ENV === 'production') {
 app.use('/api', apiRouter);
 
 
-
 /* GLOBAL 404 */
 app.use('*', (req: Request, res: Response) => res.status(404).sendFile(path.resolve(__dirname, './../client/404.html')));
 // TODO improve 404 layout
@@ -46,7 +45,8 @@ app.use((err: MiddlewareError, req: Request, res: Response, next: NextFunction) 
 
 
 /* INIT SERVER */
-app.listen(PORT, HOST, () => console.log(`Server listening on http://${HOST}:${PORT}`));
-
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, HOST, () => console.log(`Server listening on http://${HOST}:${PORT}`));
+}
 
 export default app;
