@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { LoadData } from '../../../shared/types';
 
 import { Axis, LineSeries, XYChart, Tooltip, lightTheme, darkTheme } from '@visx/xychart';

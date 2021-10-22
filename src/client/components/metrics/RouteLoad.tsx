@@ -7,13 +7,20 @@ import LoadGraph from './LoadGraph';
 
 import { Route, LoadData } from './../../../shared/types';
 import { fetchRoutes, fetchRouteLoadData } from './../../utils/ajax';
+import { drawerWidth } from './../common/NavigationBar';
+import useWindowDimensions from './../../hooks/useWindowDimensions';
 import ChipSelector from './../common/ChipSelector';
 
 export default function RouteLoad({
+  isNavBarOpen,
   useLightTheme,
 }: {
+  isNavBarOpen: boolean;
   useLightTheme: boolean
 }): JSX.Element {
+
+  const { width: windowWidth } = useWindowDimensions();
+
   const [routes, setRoutes] = useState<Route[] | null>(null);
   const [selectedRoutes, setSelectedRoutes] = useState<number[]>([]); // indices in routes
   const [routesLoadData, setRoutesLoadData] = useState<{ [key: number]: LoadData }>(Object.create(null));
@@ -36,10 +43,7 @@ export default function RouteLoad({
 
   // TODO when user has graph selected, but data is not available, show splash
 
-  const selectedLoadData: { [key: number]: LoadData } = Object.entries(routesLoadData).reduce((selected, [index, loadData]) => {
-    if (selectedRoutes.includes(parseInt(index))) selected[index] = loadData;
-    return selected;
-  }, Object.create(null));
+  const selectedLoadData: { [key: number]: LoadData | undefined } = selectedRoutes.map((index: number) => routesLoadData[index]);
 
   const routeLabels = routes ? routes.map(route => `${route.method} ${route.endpoint}`) : [];
 
@@ -59,14 +63,16 @@ export default function RouteLoad({
         />
 
         {Object.entries(selectedLoadData).map(([index, loadData]) => {
+          if (!loadData) return <Splash />;
+
           const i: number = parseInt(index);
           const label = routeLabels[i];
 
           return (<LoadGraph
             key={index}
             useLightTheme={useLightTheme}
-            height={340}
-            width={420}
+            height={400}
+            width={windowWidth - (isNavBarOpen ? drawerWidth : 0) - 100}
             loadData={loadData}
             label={label}
           />);
