@@ -4,22 +4,28 @@ import { Route } from './../../server/utils/endpoints';
 
 // TODO abstract so it can work with either MongoDB or PostgreSQL depending on how setup is called.
 
-export interface Endpoint { method: string, endpoint: string, callTime: number }
+export interface Endpoint {
+  method: string,
+  endpoint: string,
+  callTime: number
+}
 
-export const EndpointModel = mongoose.model<Endpoint>('Endpoint', new mongoose.Schema<Endpoint>({
+const schema = new mongoose.Schema<Endpoint>({
   method: { type: String, required: true },
   endpoint: { type: String, required: true },
   callTime: { type: Number, required: true }, // unix timestamp
-}));
+});
+
+export const EndpointModel = mongoose.model<Endpoint>('Endpoint', schema);
 // TODO add validation for call_time to be convertible to Date
 
 /**
  * Log an endpoint request data point to external database.
- * 
+ *
  * @param {String} method - HTTP method type
  * @param {String} endpoint - HTTP request relative endpoint
  * @param {number} callTime - UNIX timestamp of when request first communicated with the server
- * 
+ *
  * @public
  */
 export async function logEndpoint(method: string, endpoint: string, callTime: number): Promise<void> {
@@ -40,9 +46,9 @@ export async function logEndpoint(method: string, endpoint: string, callTime: nu
 
 /**
  * Log an array of endpoint request data point to external database.
- * 
+ *
  * @param {Endpoint[]} endpoints - Array of endpoints to be added to database.
- * 
+ *
  * @public
  */
 export async function logAllEndpoints(endpoints: Endpoint[]): Promise<void> {
@@ -59,11 +65,11 @@ export async function logAllEndpoints(endpoints: Endpoint[]): Promise<void> {
 
 /**
  * Get a list of all endpoints. If no method or endpoint is specified, it will return all endpoints in the database.
- * 
+ *
  * @param {String} method - (optional) HTTP method
  * @param {String} endpoint - (optional) HTTP request relative endpoint
  * @returns Promise of array of endpoints
- * 
+ *
  * @public
  */
 export async function getAllEndpoints(method?: string, endpoint?: string): Promise<Endpoint[]> {
@@ -74,8 +80,8 @@ export async function getAllEndpoints(method?: string, endpoint?: string): Promi
 /**
  * Get a distinct list of endpoints.
  *
- * @returns Promise of array of Route
- * 
+ * @returns Promise of array of Route(s)
+ *
  * @public
  */
 export async function getDistinctEndpoints(): Promise<Route[]> {
