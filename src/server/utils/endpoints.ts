@@ -1,23 +1,7 @@
 import clustering from 'density-clustering';
 
 import { Endpoint } from '../../shared/models/endpointModel';
-
-export type Cluster = Route[];
-
-export type Route = {
-  method: string;
-  endpoint: string;
-};
-
-export type LoadData = {
-  x: number[];
-  y: number[];
-};
-
-export type TreeNode = {
-  name: string;
-  children?: TreeNode[];
-}
+import { Route, Cluster, LoadData, TreeNode } from './../../shared/types';
 
 interface TimeDomainEndpoint extends Endpoint {
   hour: number;
