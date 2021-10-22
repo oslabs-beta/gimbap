@@ -22,8 +22,10 @@ export default function App() {
         <NavigationBar
           page={page} setPage={setPage}
           open={isNavBarOpen}
+          useLightTheme={useLightTheme}
           setMetricSubPage={setMetricSubPage}
           setOpen={setIsNavBarOpen}
+          setUseLightTheme={setUseLightTheme}
         />
         {page === Page.Clusters && <Clusters />}
         {page === Page.Metrics &&

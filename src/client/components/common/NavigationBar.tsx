@@ -11,10 +11,15 @@ import MenuIcon from '@mui/icons-material/Menu';
 import BubbleChartIcon from '@mui/icons-material/BubbleChart';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import DescriptionIcon from '@mui/icons-material/Description';
-
+import Switch from '@mui/material/Switch';
+import Stack from '@mui/material/Stack';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import NightlightIcon from '@mui/icons-material/Nightlight';
 
 import { Page, SubPage } from './../../types';
 import NavItem from './NavItem';
+
+import './NavigationBar.scss';
 
 export const drawerWidth = 240;
 
@@ -62,22 +67,31 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
       ...closedMixin(theme),
       '& .MuiDrawer-paper': closedMixin(theme),
     }),
-  }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  }) as any, // remove typescript complaint together with above line TODO determine how to fix this
 );
 
 export default function NavigationBar({
   page,
   open,
+  useLightTheme,
   setOpen,
   setMetricSubPage,
   setPage,
+  setUseLightTheme,
 }: {
   page: Page;
   open: boolean;
+  useLightTheme: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setMetricSubPage: React.Dispatch<React.SetStateAction<SubPage>>;
   setPage: React.Dispatch<React.SetStateAction<Page>>;
+  setUseLightTheme: React.Dispatch<React.SetStateAction<boolean>>;
 }): JSX.Element {
+
+  const handleThemeChange: (event: React.ChangeEvent<HTMLInputElement>) => void = useCallback((event) => {
+    setUseLightTheme(event.target.checked);
+  }, [setUseLightTheme]);
 
   const handleDrawerOpen: () => void = useCallback(() => setOpen(true), [setOpen]);
   const handleDrawerClose: () => void = useCallback(() => setOpen(false), [setOpen]);
@@ -116,6 +130,17 @@ export default function NavigationBar({
         </DrawerHeader>
 
         <Divider />
+
+        <Stack direction='row' id='theme-select'>
+          <NightlightIcon />
+          <Switch
+            size='small'
+            checked={useLightTheme}
+            onChange={handleThemeChange}
+            inputProps={{ 'aria-label': 'light theme' }}
+          />
+          <LightModeIcon />
+        </Stack>
 
         <NavItem
           title='Clusters'
