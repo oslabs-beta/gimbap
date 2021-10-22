@@ -15,7 +15,7 @@ export default function Metrics({
   metricSubPage: SubPage;
 }) {
   return (<>
-    {metricSubPage === SubPage.RouteLoads && <RouteLoad useLightTheme={useLightTheme} />}
+    {metricSubPage === SubPage.RouteLoads && <RouteLoad useLightTheme={useLightTheme} isNavBarOpen={isNavBarOpen} />}
     {metricSubPage === SubPage.ClusterLoad && <ClusterLoad useLightTheme={useLightTheme} isNavBarOpen={isNavBarOpen} />}
   </>);
 }

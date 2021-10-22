@@ -6,10 +6,10 @@ import Splash from './../common/Splash';
 
 import { Cluster, LoadData } from './../../../shared/types';
 import { fetchClusters, fetchClusterLoadData } from './../../utils/ajax';
+import { drawerWidth } from './../common/NavigationBar';
+import useWindowDimensions from './../../hooks/useWindowDimensions';
 import ChipSelector from './../common/ChipSelector';
 import LoadGraph from './LoadGraph';
-import useWindowDimensions from './../../hooks/useWindowDimensions';
-import { drawerWidth } from './../common/NavigationBar';
 
 export default function ClusterLoad({
   isNavBarOpen,
@@ -41,12 +41,8 @@ export default function ClusterLoad({
     }
   }, [clusters, clustersLoadData, selectedClusters]);
 
-  // TODO when user has graph selected, but data is not available, show splash
-
-  const selectedLoadData: { [key: number]: LoadData } = Object.entries(clustersLoadData).reduce((selected, [index, loadData]) => {
-    if (selectedClusters.includes(parseInt(index))) selected[index] = loadData;
-    return selected;
-  }, Object.create(null));
+  // will be undefined if data has not finished transferring from back-end
+  const selectedLoadData: { [key: number]: LoadData | undefined } = selectedClusters.map((index: number) => clustersLoadData[index]);
 
   const clusterLabels = clusters ? clusters.map((_, i: number) => `Cluster ${i}`) : [];
 
@@ -66,6 +62,8 @@ export default function ClusterLoad({
         />
 
         {Object.entries(selectedLoadData).map(([index, loadData]) => {
+          if (!loadData) return <Splash />;
+
           const i: number = parseInt(index);
           const label = clusterLabels[i];
 
