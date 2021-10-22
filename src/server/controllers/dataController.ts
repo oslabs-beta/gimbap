@@ -66,7 +66,7 @@ export async function getEndpointLoadGraphData(req: Request, res: Response, next
 
 /**
  * Middleware: If successful, `res.locals.clusters` will contain Cluster[].
- * 
+ *
  * @param {Request} req - express's HTTP request object
  * @param {Response} res - express's HTTP response object
  * @param {NextFunction} next - express's next function
@@ -110,7 +110,7 @@ export async function getClusterLoadGraphData(req: Request, res: Response, next:
   });
 
   const { clusterIdStr } = req.params;
-
+// id of 1 is passed
   if (!clusterIdStr) return next({
     status: 500,
     message: 'Reached getClusterLoadGraphData middleware without clusterId parameters set in request object.',
@@ -118,6 +118,7 @@ export async function getClusterLoadGraphData(req: Request, res: Response, next:
   });
 
   const clusterId: number = parseInt(clusterIdStr);
+  // 1 is now a number
 
   if (isNaN(clusterId)) next({
     status: 400,
@@ -126,11 +127,18 @@ export async function getClusterLoadGraphData(req: Request, res: Response, next:
 
   try {
     const routes: Route[] = clusters[clusterId];
+    //creates array of routes [ {}, {}, {} ]
+     // stores in variable routes a specific cluster
+
+    //  [{method: 'POST', endpoint: 'api/'}, {method: 'POST', endpoint: '/api/cats'}]
+    // const routes = {method: 'POST', endpoint: '/api/cats'}
 
     const endpoints: Endpoint[] = [];
     for (const route of routes) {
       endpoints.push(...(await getAllEndpoints(route.method, route.endpoint)));
     }
+
+    // [true, false]]
 
     res.locals.loadGraphData = getLoadData(endpoints);
   } catch (error) {
