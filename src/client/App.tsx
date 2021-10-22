@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 
-import { darkTheme, lightTheme } from './theme';
 import { ThemeProvider } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 
 import { Page, SubPage } from './types';
-
+import { darkTheme, lightTheme } from './theme';
 import NavigationBar from './components/common/NavigationBar';
 import Clusters from './components/clusters/Clusters';
 import Metrics from './components/metrics/Metrics';
@@ -21,7 +20,7 @@ export default function App() {
       <Stack id="app" direction='row'>
         <NavigationBar page={page} setPage={setPage} setMetricSubPage={setMetricSubPage} />
         {page === Page.Clusters && <Clusters />}
-        {page === Page.Metrics && <Metrics metricSubPage={metricSubPage} />}
+        {page === Page.Metrics && <Metrics useLightTheme={useLightTheme} metricSubPage={metricSubPage} />}
         {page === Page.Documentation && <Documentation />}
       </Stack>
     </ThemeProvider>

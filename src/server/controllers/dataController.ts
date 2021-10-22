@@ -74,7 +74,7 @@ export async function getEndpointLoadGraphData(req: Request, res: Response, next
  * @public
  */
 export async function getClusterList(req: Request, res: Response, next: NextFunction): Promise<void> {
-  if (clusters) {
+  if (clusters && process.env.NODE_ENV !== 'test') {
     res.locals.clusters = clusters;
     return next();
   }
@@ -104,13 +104,16 @@ export async function getClusterList(req: Request, res: Response, next: NextFunc
  * @public
  */
 export async function getClusterLoadGraphData(req: Request, res: Response, next: NextFunction): Promise<void> {
+  console.log('Clusters: ', clusters);
   if (!clusters) return next({
     status: 400,
     error: 'Can not return cluster graph data before a call to get clusters is made.'
   });
 
-  const { clusterIdStr } = req.params;
-// id of 1 is passed
+  const { clusterId: clusterIdStr } = req.params;
+  console.log('Cluster ID String: ', clusterIdStr);
+
+
   if (!clusterIdStr) return next({
     status: 500,
     message: 'Reached getClusterLoadGraphData middleware without clusterId parameters set in request object.',
@@ -118,7 +121,6 @@ export async function getClusterLoadGraphData(req: Request, res: Response, next:
   });
 
   const clusterId: number = parseInt(clusterIdStr);
-  // 1 is now a number
 
   if (isNaN(clusterId)) next({
     status: 400,
@@ -127,19 +129,11 @@ export async function getClusterLoadGraphData(req: Request, res: Response, next:
 
   try {
     const routes: Route[] = clusters[clusterId];
-    //creates array of routes [ {}, {}, {} ]
-     // stores in variable routes a specific cluster
-
-    //  [{method: 'POST', endpoint: 'api/'}, {method: 'POST', endpoint: '/api/cats'}]
-    // const routes = {method: 'POST', endpoint: '/api/cats'}
 
     const endpoints: Endpoint[] = [];
     for (const route of routes) {
       endpoints.push(...(await getAllEndpoints(route.method, route.endpoint)));
     }
-
-    // [true, false]]
-
     res.locals.loadGraphData = getLoadData(endpoints);
   } catch (error) {
     return next(Object.assign(error, {
@@ -174,6 +168,5 @@ export async function getClusterTreeGraphData(req: Request, res: Response, next:
       error: 'Internal server error reading database.'
     }));
   }
-
   return next();
 }

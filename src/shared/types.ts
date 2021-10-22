@@ -5,10 +5,9 @@ export type Route = {
   endpoint: string;
 };
 
-export type LoadData = {
-  x: number[];
-  y: number[];
-};
+export type LoadData = DataPoint[];
+
+export type DataPoint = [number, number];
 
 export type TreeNode = {
   name: string;
