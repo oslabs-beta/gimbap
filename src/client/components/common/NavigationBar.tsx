@@ -67,17 +67,20 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export default function NavigationBar({
   page,
+  open,
+  setOpen,
   setMetricSubPage,
   setPage,
 }: {
   page: Page;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setMetricSubPage: React.Dispatch<React.SetStateAction<SubPage>>;
   setPage: React.Dispatch<React.SetStateAction<Page>>;
 }): JSX.Element {
-  const [open, setOpen] = React.useState<boolean>(true);
 
-  const handleDrawerOpen: () => void = useCallback(() => setOpen(true), []);
-  const handleDrawerClose: () => void = useCallback(() => setOpen(false), []);
+  const handleDrawerOpen: () => void = useCallback(() => setOpen(true), [setOpen]);
+  const handleDrawerClose: () => void = useCallback(() => setOpen(false), [setOpen]);
 
   const showClustersPage: () => void = useCallback(() => setPage(Page.Clusters), [setPage]);
 

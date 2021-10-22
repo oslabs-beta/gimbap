@@ -8,12 +8,18 @@ import { Cluster, LoadData } from './../../../shared/types';
 import { fetchClusters, fetchClusterLoadData } from './../../utils/ajax';
 import ChipSelector from './../common/ChipSelector';
 import LoadGraph from './LoadGraph';
+import useWindowDimensions from './../../hooks/useWindowDimensions';
+import { drawerWidth } from './../common/NavigationBar';
 
 export default function ClusterLoad({
+  isNavBarOpen,
   useLightTheme
 }: {
+  isNavBarOpen: boolean;
   useLightTheme: boolean;
 }): JSX.Element {
+
+  const { width: windowWidth } = useWindowDimensions();
 
   const [clusters, setClusters] = useState<Cluster[] | null>(null);
   const [selectedClusters, setSelectedClusters] = useState<number[]>([]); // indices in clusters
@@ -47,7 +53,7 @@ export default function ClusterLoad({
   return (<>
     {!clusters && <Splash />}
     {clusters &&
-      <Stack sx={{ padding: 2 }}>
+      <Stack id='cluster-load' sx={{ padding: 2 }}>
         <Typography variant='h4'>Cluster Load Graphs</Typography>
         <Typography variant='body1'>Average number of server calls to a particular cluster per 24-hour time period.</Typography>
         <Typography variant='body1' mt={4}>Select clusters to view graphs.</Typography>
@@ -66,8 +72,8 @@ export default function ClusterLoad({
           return (<LoadGraph
             key={index}
             useLightTheme={useLightTheme}
-            height={340}
-            width={420}
+            height={400}
+            width={windowWidth - (isNavBarOpen ? drawerWidth : 0) - 100}
             loadData={loadData}
             label={label}
           />);
