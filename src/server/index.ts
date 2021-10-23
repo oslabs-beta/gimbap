@@ -26,11 +26,6 @@ if (process.env.NODE_ENV === 'production') {
   app.use('/', express.static(path.resolve(__dirname, './../client')));
 }
 
-// app.get('/', (req, res) => {
-//   res.send('Hello world!!');
-// });
-
-
 /* ROUTES */
 app.use('/api', apiRouter);
 
