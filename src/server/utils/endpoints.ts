@@ -85,7 +85,7 @@ export function getUniqueRoutes(endpoints: Endpoint[]): Route[] {
 
 /**
  * Generate DataPoints for a load data graph for a set of server responses.
- * 
+ *
  * @param endpoints - Array of Endpoint
  * @param granularity - time interval in minutes between data points
  */
@@ -128,6 +128,7 @@ export function getLoadData(endpoints: Endpoint[], granularity = 30): LoadData {
  * @param clusters - Array of Cluster recommendations.
  */
 export function theSuperHappyTreeGenerator(clusters: Cluster[]): TreeNode {
+  console.log('Inside HappyTrees: ', clusters)
   const root: TreeNode = {
     name: 'Clusters',
     children: []
@@ -164,6 +165,5 @@ export function theSuperHappyTreeGenerator(clusters: Cluster[]): TreeNode {
       clusterRoot.children.push(methodCluster);
     }
   }
-
   return root;
 }

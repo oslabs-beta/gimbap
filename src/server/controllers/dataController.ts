@@ -104,7 +104,7 @@ export async function getClusterList(req: Request, res: Response, next: NextFunc
  * @public
  */
 export async function getClusterLoadGraphData(req: Request, res: Response, next: NextFunction): Promise<void> {
-  console.log('Clusters: ', clusters);
+  console.log('getCLusterLoadGraphData: Clusters: ', clusters);
   if (!clusters) return next({
     status: 400,
     error: 'Can not return cluster graph data before a call to get clusters is made.'
@@ -155,6 +155,7 @@ export async function getClusterLoadGraphData(req: Request, res: Response, next:
  * @public
  */
 export async function getClusterTreeGraphData(req: Request, res: Response, next: NextFunction): Promise<void> {
+  console.log('Needed Clusters: ', clusters);
   if (!clusters) return next({
     status: 400,
     error: 'Can not return cluster tree data before a call to get clusters is made.'
@@ -162,6 +163,7 @@ export async function getClusterTreeGraphData(req: Request, res: Response, next:
 
   try {
     res.locals.treeGraphData = theSuperHappyTreeGenerator(clusters);
+    console.log('Test within: ', clusters)
   } catch (error) {
     return next(Object.assign(error, {
       status: 500,
