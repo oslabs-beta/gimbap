@@ -132,6 +132,3 @@ describe('Correctness of clustering algorithm using step function pdf', () => {
 
   // TODO thoroughly test clustering results to different types of biasing pdf functions
 });
-
-
-module deafults = {endpointsPDF, singleEndpointServerResponses, clusters}
