@@ -7,7 +7,7 @@ import useForceUpdate from './useForceUpdate';
 //import LinkControls from './LinkControls';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
-import { getClusters } from '../../../utils/ajax';
+import { fetchClusters, fetchClusterTree } from '../../../utils/ajax';
 import { Cluster } from './../../../../shared/types';
 
 
@@ -79,7 +79,7 @@ export default function TreeGraph({
   const [orientation, setOrientation] = useState<string>('horizontal');
   const [linkType, setLinkType] = useState<string>('diagonal');
   const [stepPercent, setStepPercent] = useState<number>(0.5);
-
+  //const [trees, setTreeGraphData] = useState<Cluster[] | null>([]);
   const [clusters, setClusters] = useState<Cluster | null>([]);
   const forceUpdate = useForceUpdate();
 
@@ -90,16 +90,14 @@ export default function TreeGraph({
   let sizeWidth: number;
   let sizeHeight: number;
 
-  // Fetch request zon
+  // Fetch request zone
   useEffect(()=>{
-    getClusters(setClusters);
-
+    fetchClusters(setClusters);
   }, []);
 
-  useEffect(()=>{
-    getClusters(setClusters);
-
-  }, []);
+  // useEffect(()=>{
+  //   fetchClusterTree(setTreeGraphData);
+  // }, []);
 
 
   if (layout === 'polar') {

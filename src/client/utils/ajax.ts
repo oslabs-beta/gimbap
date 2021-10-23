@@ -1,3 +1,4 @@
+import React from 'react';
 import { ClientError,Cluster } from './../../shared/types';
 
 /**
@@ -31,7 +32,7 @@ export async function fetchWrapper<T>(url: string): Promise<T | void> {
 
 
 /**
- * Gets clusters
+ * 2s clusters
  *
  * @param setClusters: updates state with Clusters
  * @returns returns an array of clusters.
@@ -40,19 +41,20 @@ export async function fetchWrapper<T>(url: string): Promise<T | void> {
  */
 export async function fetchClusters(setClusters: React.Dispatch<React.SetStateAction<Cluster | null>>): Promise<void>{
   const allClusters: Cluster | void = await fetchWrapper<Cluster>('api/graph/cluster');
-  console.log(allClusters);
+  console.log('allClusters', allClusters);
   if (allClusters) setClusters(allClusters);
 }
 
 /**
- * Get endpoint data
+ * Get endpoint data for tree each cluster's branches
  *
- * @param a single clusterId (arrayIndex)
  * @returns All of the endpoints for that cluster
  *
  * @public
  */
-export async function fetchSingleCluster(clusterId) { // 1 2 3 4
-  // we are getting an array of routes
-  fetchWrapper(`/api/graph/cluster/tree/${clusterId}`);
-}
+// export async function fetchClusterTree(setTreeGraphData: React.Dispatch<React.SetStateAction<Cluster | null>>): Promise<void> { // 1 2 3 4
+//   // we are getting an array of routes
+//   const treeGraphData: Cluster | void = await fetchWrapper<Cluster>('/api/graph/cluster/tree');
+//   console.log('treeGraphData', treeGraphData);
+//   if (treeGraphData) setTreeGraphData(treeGraphData);
+// }

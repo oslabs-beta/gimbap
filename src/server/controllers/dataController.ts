@@ -83,6 +83,7 @@ export async function getClusterList(req: Request, res: Response, next: NextFunc
     const endpoints: Endpoint[] = await getAllEndpoints();
 
     clusters = res.locals.clusters = determineClusters(endpoints);
+    console.log('is this working? clusters: 'clusters);
   } catch (error) {
     return next(Object.assign(error, {
       status: 500,
