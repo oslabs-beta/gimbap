@@ -6,14 +6,20 @@ import Splash from './../common/Splash';
 
 import { Cluster, LoadData } from './../../../shared/types';
 import { fetchClusters, fetchClusterLoadData } from './../../utils/ajax';
+import { drawerWidth } from './../common/NavigationBar';
+import useWindowDimensions from './../../hooks/useWindowDimensions';
 import ChipSelector from './../common/ChipSelector';
 import LoadGraph from './LoadGraph';
 
 export default function ClusterLoad({
+  isNavBarOpen,
   useLightTheme
 }: {
+  isNavBarOpen: boolean;
   useLightTheme: boolean;
 }): JSX.Element {
+
+  const { width: windowWidth } = useWindowDimensions();
 
   const [clusters, setClusters] = useState<Cluster[] | null>(null);
   const [selectedClusters, setSelectedClusters] = useState<number[]>([]); // indices in clusters
@@ -35,19 +41,15 @@ export default function ClusterLoad({
     }
   }, [clusters, clustersLoadData, selectedClusters]);
 
-  // TODO when user has graph selected, but data is not available, show splash
-
-  const selectedLoadData: { [key: number]: LoadData } = Object.entries(clustersLoadData).reduce((selected, [index, loadData]) => {
-    if (selectedClusters.includes(parseInt(index))) selected[index] = loadData;
-    return selected;
-  }, Object.create(null));
+  // will be undefined if data has not finished transferring from back-end
+  const selectedLoadData: { [key: number]: LoadData | undefined } = selectedClusters.map((index: number) => clustersLoadData[index]);
 
   const clusterLabels = clusters ? clusters.map((_, i: number) => `Cluster ${i}`) : [];
 
   return (<>
     {!clusters && <Splash />}
     {clusters &&
-      <Stack sx={{ padding: 2 }}>
+      <Stack id='cluster-load' sx={{ padding: 2 }}>
         <Typography variant='h4'>Cluster Load Graphs</Typography>
         <Typography variant='body1'>Average number of server calls to a particular cluster per 24-hour time period.</Typography>
         <Typography variant='body1' mt={4}>Select clusters to view graphs.</Typography>
@@ -60,14 +62,16 @@ export default function ClusterLoad({
         />
 
         {Object.entries(selectedLoadData).map(([index, loadData]) => {
+          if (!loadData) return <Splash />;
+
           const i: number = parseInt(index);
           const label = clusterLabels[i];
 
           return (<LoadGraph
             key={index}
             useLightTheme={useLightTheme}
-            height={340}
-            width={420}
+            height={400}
+            width={windowWidth - (isNavBarOpen ? drawerWidth : 0) - 100}
             loadData={loadData}
             label={label}
           />);

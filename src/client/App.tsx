@@ -12,15 +12,29 @@ import Documentation from './components/documentation/Documentation';
 
 export default function App() {
   const [useLightTheme, setUseLightTheme] = useState(true); // TODO hook up theme toggle
+  const [isNavBarOpen, setIsNavBarOpen] = React.useState<boolean>(true);
   const [page, setPage] = useState<Page>(Page.Clusters);
   const [metricSubPage, setMetricSubPage] = useState<SubPage>(SubPage.ClusterLoad);
 
   return (
     <ThemeProvider theme={useLightTheme ? lightTheme : darkTheme}>
       <Stack id="app" direction='row'>
-        <NavigationBar page={page} setPage={setPage} setMetricSubPage={setMetricSubPage} />
+        <NavigationBar
+          page={page} setPage={setPage}
+          open={isNavBarOpen}
+          useLightTheme={useLightTheme}
+          setMetricSubPage={setMetricSubPage}
+          setOpen={setIsNavBarOpen}
+          setUseLightTheme={setUseLightTheme}
+        />
         {page === Page.Clusters && <Clusters />}
-        {page === Page.Metrics && <Metrics useLightTheme={useLightTheme} metricSubPage={metricSubPage} />}
+        {page === Page.Metrics &&
+          <Metrics
+            useLightTheme={useLightTheme}
+            metricSubPage={metricSubPage}
+            isNavBarOpen={isNavBarOpen}
+          />
+        }
         {page === Page.Documentation && <Documentation />}
       </Stack>
     </ThemeProvider>
