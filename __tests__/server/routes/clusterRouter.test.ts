@@ -1,28 +1,14 @@
 import { connect, disconnect } from '../../../src/shared/models/mongoSetup';
-import { EndpointModel, Endpoint, logAllEndpoints} from './../../../src/shared/models/endpointModel';
+import { EndpointModel, logAllEndpoints} from './../../../src/shared/models/endpointModel';
 import { getLoadData, theSuperHappyTreeGenerator, determineClusters } from '../../../src/server/utils/endpoints';
-
 import request from 'supertest';
 import app from './../../../src/server/index';
 import { MONGODB_URI_TESTING } from './../../../src/server/secrets.json';
-import { getClusterList, getClusterLoadGraphData, getClusterTreeGraphData } from './../../../src/server/controllers/dataController';
-// import { Request, Response, NextFunction } from 'express';
 
 
 
 
 describe('Testing all Cluster Router\'s endpoints', () => {
-  // jest.setTimeout(1 * 60 * 1000); //Sets a 60 second test
-  // let mockRequest: Partial<Request>;
-  // let mockResponse: Partial<Response>;
-  // let mockNext: NextFunction;
-
-  // beforeEach(async () => {
-  //   mockRequest = {};
-  //   mockResponse = {
-  //     locals: {},
-  //   };
-  // })
 
 beforeAll(async () => {
   await connect(MONGODB_URI_TESTING);
@@ -73,7 +59,7 @@ test('Route: / || Middleware: getClusterList', async () => {
       });
     });
 
-    test('Route: /tree/:clusterId || Middleware: getClusterTreeGraphData', async () => {
+    test('Route: /tree/ || Middleware: getClusterTreeGraphData', async () => {
       const exampleData = [{method: 'POST', endpoint: '/api/login', callTime: Date.now()}, {method: 'GET', endpoint: '/api', callTime: Date.now()+1}, {method: 'GET', endpoint: '/api/login', callTime: Date.now()+2}];
 
       await logAllEndpoints(exampleData);
@@ -82,18 +68,16 @@ test('Route: / || Middleware: getClusterList', async () => {
       await request(app)
       .get('/api/graph/cluster')
       .expect(200)
-      .expect('Content-Type', 'application/json; charset=utf-8')
-
+      .expect('Content-Type', 'application/json; charset=utf-8');
 
       const clustered = determineClusters(exampleData);
       const generateDemTrees = theSuperHappyTreeGenerator(clustered);
-
 
       await request(app)
         .get('/api/graph/cluster/tree/')
         .expect(200)
         .then(async (response) => {
-          expect(response.body).toBe({name: 'Cluster1', children: [{name: 'get', children: [{name: '/api/login'},{name:'/api/logout'}]}]});
+          expect(response.body).toEqual(generateDemTrees);
         });
       });
 });

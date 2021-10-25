@@ -138,7 +138,8 @@ export function theSuperHappyTreeGenerator(clusters: Cluster[]): TreeNode {
       name: 'Cluster ' + i,
       children: []
     };
-    if (!clusterRoot.children) continue; // typescript issue with line 181
+
+    if (!clusterRoot.children) continue;// typescript issue with line 181
 
     const cluster: Cluster = clusters[i];
     const cache: { [key: string]: string[] } = Object.create(null);
@@ -149,7 +150,6 @@ export function theSuperHappyTreeGenerator(clusters: Cluster[]): TreeNode {
       // add method to cache object as key and the value as an empty array
       // push end point to array
       cache[cluster[j].method].push(cluster[j].endpoint);
-      // console.log('Current Cache: ', cache)
     }
 
     for (const method in cache) {
@@ -164,6 +164,7 @@ export function theSuperHappyTreeGenerator(clusters: Cluster[]): TreeNode {
 
       clusterRoot.children.push(methodCluster);
     }
+    root.children?.push(clusterRoot);
   }
   return root;
 }
