@@ -40,7 +40,7 @@ export default function App() {
             isNavBarOpen={isNavBarOpen}
           />
         }
-        {page === Page.Documentation && <Documentation subPage={docSubPage} useLightTheme={useLightTheme} showApiDocPage={showApiDocPage}/>}
+        {page === Page.Documentation && <Documentation subPage={docSubPage} useLightTheme={useLightTheme} showApiDocPage={showApiDocPage} />}
       </Stack>
     </ThemeProvider>
   );
