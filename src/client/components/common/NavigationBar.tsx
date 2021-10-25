@@ -75,7 +75,6 @@ export default function NavigationBar({
   useLightTheme,
   page,
   open,
-  // useLightTheme, TODO: not sure why this is mentioned twice
   setOpen,
   setMetricSubPage,
   setDocSubPage,
@@ -83,7 +82,6 @@ export default function NavigationBar({
   showApiDocPage,
   setUseLightTheme,
 }: {
-  // useLightTheme: boolean; TODO: mentioned twice
   page: Page;
   open: boolean;
   useLightTheme: boolean;
