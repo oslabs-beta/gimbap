@@ -18,46 +18,7 @@ interface TreeNode {
   children?: TreeNode[];
 }
 
-const data: TreeNode = {
-  name: 'T',
-  children: [
-    {
-      name: 'A',
-      children: [
-        { name: 'A1' },
-        { name: 'A2' },
-        { name: 'A3' },
-        {
-          name: 'C',
-          children: [
-            {
-              name: 'C1',
-            },
-            {
-              name: 'D',
-              children: [
-                {
-                  name: 'D1',
-                },
-                {
-                  name: 'D2',
-                },
-                {
-                  name: 'D3',
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    { name: 'Z' },
-    {
-      name: 'B',
-      children: [{ name: 'B1' }, { name: 'B2' }, { name: 'B3' }],
-    },
-  ],
-};
+
 
 
 
@@ -79,27 +40,27 @@ export default function TreeGraph({
   const [orientation, setOrientation] = useState<string>('horizontal');
   const [linkType, setLinkType] = useState<string>('diagonal');
   const [stepPercent, setStepPercent] = useState<number>(0.5);
-  //const [trees, setTreeGraphData] = useState<Cluster[] | null>([]);
+  const [trees, setTreeGraphData] = useState<Cluster | null>([]);
   const [clusters, setClusters] = useState<Cluster | null>([]);
   const forceUpdate = useForceUpdate();
 
   const innerWidth = totalWidth - margin.left - margin.right;
   const innerHeight = totalHeight - margin.top - margin.bottom;
+  // multiply the window height based on if the clusters and endpoints are shown. 
+  // const innerHeight2 = window.screen.availHeight * (trees.children.length);
 
   let origin: { x: number; y: number };
   let sizeWidth: number;
   let sizeHeight: number;
 
   // Fetch request zone
-  useEffect(()=>{
-    fetchClusters(setClusters);
+
+   useEffect(()=>{
+     fetchClusterTree(setTreeGraphData);
+     
   }, []);
 
-  // useEffect(()=>{
-  //   fetchClusterTree(setTreeGraphData);
-  // }, []);
-
-
+  const data = trees;
   if (layout === 'polar') {
     origin = {
       x: innerWidth / 2,
