@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { Endpoint, getAllEndpoints } from './../../shared/models/endpointModel';
-import { getUniqueRoutes, getLoadData, determineClusters, theSuperHappyTreeGenerator } from './../utils/endpoints';
+import { Endpoint, getAllEndpoints, getDistinctEndpoints } from './../../shared/models/endpointModel';
+import { getLoadData, determineClusters, theSuperHappyTreeGenerator } from './../utils/endpoints';
 import { Cluster, Route } from './../../shared/types';
 
 let clusters: Cluster[] | null = null; // used to store last calculated cluster result
@@ -16,9 +16,7 @@ let clusters: Cluster[] | null = null; // used to store last calculated cluster 
  */
 export async function getEndpointList(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const endpoints: Endpoint[] = await getAllEndpoints();
-    const routes: Route[] = getUniqueRoutes(endpoints);
-    // TODO can we make a request to mongo to just give us the unique matches ??
+    const routes: Route[] = await getDistinctEndpoints();
 
     res.locals.endpoints = routes;
   } catch (error) {

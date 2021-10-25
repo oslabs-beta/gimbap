@@ -12,6 +12,7 @@ import Documentation from './components/documentation/Documentation';
 
 export default function App() {
   const [useLightTheme, setUseLightTheme] = useState(true); // TODO hook up theme toggle
+  const [isNavBarOpen, setIsNavBarOpen] = React.useState<boolean>(true);
   const [page, setPage] = useState<Page>(Page.Clusters);
   const [metricSubPage, setMetricSubPage] = useState<SubPage>(SubPage.ClusterLoad);
   const [docSubPage, setDocSubPage] = useState<SubPage>(SubPage.None);
@@ -22,15 +23,24 @@ export default function App() {
     <ThemeProvider theme={useLightTheme ? lightTheme : darkTheme}>
       <Stack id="app" direction='row'>
         <NavigationBar
-          useLightTheme={useLightTheme}
           page={page} setPage={setPage}
+          open={isNavBarOpen}
+          useLightTheme={useLightTheme}
           setMetricSubPage={setMetricSubPage}
+          setOpen={setIsNavBarOpen}
+          setUseLightTheme={setUseLightTheme}
           setDocSubPage={setDocSubPage}
           showApiDocPage={showApiDocPage}
         />
         {page === Page.Clusters && <Clusters />}
-        {page === Page.Metrics && <Metrics useLightTheme={useLightTheme} metricSubPage={metricSubPage} />}
-        {page === Page.Documentation && <Documentation subPage={docSubPage} useLightTheme={useLightTheme} showApiDocPage={showApiDocPage} />}
+        {page === Page.Metrics &&
+          <Metrics
+            useLightTheme={useLightTheme}
+            metricSubPage={metricSubPage}
+            isNavBarOpen={isNavBarOpen}
+          />
+        }
+        {page === Page.Documentation && <Documentation subPage={docSubPage} useLightTheme={useLightTheme} showApiDocPage={showApiDocPage}/>}
       </Stack>
     </ThemeProvider>
   );

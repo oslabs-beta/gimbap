@@ -52,7 +52,7 @@ export default function ChipSelector({
   }, [setSelected]);
 
   return (
-    <FormControl sx={{ m: 1, maxWidth: 500 }}>
+    <FormControl sx={{ m: 1, maxWidth: 600 }}>
       <InputLabel id={`multiple-${label.toLowerCase()}-label`}>{label}</InputLabel>
       <Select
         labelId={`multiple-${label.toLowerCase()}-label`}
