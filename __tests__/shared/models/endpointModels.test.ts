@@ -1,10 +1,12 @@
 import { connect, disconnect } from './../../../src/shared/models/mongoSetup';
 import { EndpointModel, Endpoint, logEndpoint, getAllEndpoints, getDistinctEndpoints } from './../../../src/shared/models/endpointModel';
 import { Route } from './../../../src/server/utils/endpoints';
+import { MONGODB_URI_TESTING } from './../../../src/server/secrets.json';
+
 
 describe('Test storing endpoints', () => {
   beforeAll(async () => {
-    await connect('mongodb+srv://admin:test@cluster0.dopf4.mongodb.net/DePaul?retryWrites=true&w=majority');
+    await connect(MONGODB_URI_TESTING);
   });
 
   afterAll(async () => {
