@@ -150,6 +150,7 @@ export function theSuperHappyTreeGenerator(clusters: Cluster[]): TreeNode {
       // add method to cache object as key and the value as an empty array
       // push end point to array
       cache[cluster[j].method].push(cluster[j].endpoint);
+      // console.log('Current Cache: ', cache)
     }
 
     for (const method in cache) {
