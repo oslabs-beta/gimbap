@@ -9,6 +9,8 @@ import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 import { fetchClusters, fetchClusterTree } from '../../../utils/ajax';
 import { Cluster } from './../../../../shared/types';
+import EndpointList from './EndpointList';
+import Box from '@mui/material/Box'; 
 
 
 
@@ -40,7 +42,7 @@ export default function TreeGraph({
   const [orientation, setOrientation] = useState<string>('horizontal');
   const [linkType, setLinkType] = useState<string>('diagonal');
   const [stepPercent, setStepPercent] = useState<number>(0.5);
-  const [trees, setTreeGraphData] = useState<Cluster | null>([]);
+  const [trees, setTreeGraphData] = useState<Cluster[] | null>([]);
   const [clusters, setClusters] = useState<Cluster | null>([]);
   const forceUpdate = useForceUpdate();
 
@@ -93,6 +95,7 @@ export default function TreeGraph({
         setLinkType={setLinkType}
         setStepPercent={setStepPercent}
       />
+      <Box sx={{display: 'flex'}}>
       <svg width={totalWidth} height={totalHeight}>
         <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
         <rect width={totalWidth} height={totalHeight} rx={14} fill="#272b4d" />
@@ -183,6 +186,8 @@ export default function TreeGraph({
           </Tree>
         </Group>
       </svg>
+      <EndpointList/>
+      </Box>
     </div>
   );
 }
