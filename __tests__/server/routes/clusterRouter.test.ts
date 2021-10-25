@@ -87,15 +87,11 @@ test('Route: / || Middleware: getClusterList', async () => {
 
       const clustered = determineClusters(exampleData);
       const generateDemTrees = theSuperHappyTreeGenerator(clustered);
-      console.log('result of tree: ', generateDemTrees);
 
 
       await request(app)
         .get('/api/graph/cluster/tree/')
         .expect(200)
-        .then(async (response) => {
-          console.log('Response: ', response);
-        })
         .then(async (response) => {
           expect(response.body).toBe({name: 'Cluster1', children: [{name: 'get', children: [{name: '/api/login'},{name:'/api/logout'}]}]});
         });

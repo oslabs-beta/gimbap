@@ -128,7 +128,6 @@ export function getLoadData(endpoints: Endpoint[], granularity = 30): LoadData {
  * @param clusters - Array of Cluster recommendations.
  */
 export function theSuperHappyTreeGenerator(clusters: Cluster[]): TreeNode {
-  console.log('Inside HappyTrees: ', clusters)
   const root: TreeNode = {
     name: 'Clusters',
     children: []

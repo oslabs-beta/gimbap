@@ -60,7 +60,6 @@ describe('Testing middleware', () => {
     const generateDemTrees = theSuperHappyTreeGenerator(clustered);
 
     await getClusterTreeGraphData(mockRequest as Request, mockResponse as Response, mockNext as NextFunction);
-    console.log('Urgent: ', mockResponse.locals.treeGraphData, ' Next: ', generateDemTrees);
     expect(mockResponse.locals.treeGraphData).toEqual(generateDemTrees);
   });
 });

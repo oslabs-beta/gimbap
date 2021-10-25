@@ -35,7 +35,6 @@ router.get('/tree',
       status: 500,
       error: 'Middleware getClusterTreeGraphData did not return expected data.'
     });
-    console.log('From Router: ', res.locals.treeGraphData);
     res.json(res.locals.treeGraphData);
   }
 );

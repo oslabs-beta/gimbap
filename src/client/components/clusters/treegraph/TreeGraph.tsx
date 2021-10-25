@@ -105,7 +105,6 @@ export default function TreeGraph({
     //             'accept': 'application/json'},
     //   body: JSON.stringify(allClusters)
     // }).
-    console.log('all clusters: ', allClusters);
   }, []);
 
   if (layout === 'polar') {
