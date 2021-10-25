@@ -1,4 +1,3 @@
-
 import { Router, Request, Response, NextFunction } from 'express';
 import { getClusterList, getClusterLoadGraphData, getClusterTreeGraphData } from './../controllers/dataController';
 
@@ -22,7 +21,7 @@ router.get('/',
 router.get('/load/:clusterId',
   getClusterLoadGraphData,
   (req: Request, res: Response, next: NextFunction): void => {
-    if (!res.locals.clusters) return next({
+    if (!res.locals.loadGraphData) return next({
       status: 500,
       error: 'Middleware getClusterLoadGraphData did not return expected data.'
     });
@@ -31,8 +30,8 @@ router.get('/load/:clusterId',
   }
 );
 
-// To get tree graph data
-router.get('/tree/',
+// To get cluster tree graph data
+router.get('/tree',
   getClusterTreeGraphData,
   (req: Request, res: Response, next: NextFunction): void => {
     if (!res.locals.treeGraphData) return next({

@@ -6,12 +6,16 @@ import RouteLoad from './RouteLoad';
 import ClusterLoad from './ClusterLoad';
 
 export default function Metrics({
+  useLightTheme,
+  isNavBarOpen,
   metricSubPage,
 }: {
+  useLightTheme: boolean;
+  isNavBarOpen: boolean;
   metricSubPage: SubPage;
 }) {
   return (<>
-    {metricSubPage === SubPage.RouteLoads && <RouteLoad />}
-    {metricSubPage === SubPage.ClusterLoad && <ClusterLoad />}
+    {metricSubPage === SubPage.RouteLoads && <RouteLoad useLightTheme={useLightTheme} isNavBarOpen={isNavBarOpen} />}
+    {metricSubPage === SubPage.ClusterLoad && <ClusterLoad useLightTheme={useLightTheme} isNavBarOpen={isNavBarOpen} />}
   </>);
 }
