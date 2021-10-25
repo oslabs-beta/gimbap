@@ -40,7 +40,7 @@ export async function fetchWrapper<T>(url: string): Promise<T | void> {
  * @public
  */
 export async function fetchClusters(setClusters: React.Dispatch<React.SetStateAction<Cluster | null>>): Promise<void>{
-  const allClusters: Cluster | void = await fetchWrapper<Cluster>('api/graph/cluster');
+  const allClusters: Cluster | void = await fetchWrapper<Cluster >('/api/graph/cluster');
   console.log('allClusters', allClusters);
   if (allClusters) setClusters(allClusters);
 }
@@ -52,9 +52,12 @@ export async function fetchClusters(setClusters: React.Dispatch<React.SetStateAc
  *
  * @public
  */
-// export async function fetchClusterTree(setTreeGraphData: React.Dispatch<React.SetStateAction<Cluster | null>>): Promise<void> { // 1 2 3 4
-//   // we are getting an array of routes
-//   const treeGraphData: Cluster | void = await fetchWrapper<Cluster>('/api/graph/cluster/tree');
-//   console.log('treeGraphData', treeGraphData);
-//   if (treeGraphData) setTreeGraphData(treeGraphData);
-// }
+export async function fetchClusterTree(setTreeGraphData: React.Dispatch<React.SetStateAction<Cluster | null>>): Promise<void> { // 1 2 3 4
+  // we are getting an array of routes
+  console.log('hellow');
+  const clusters: Cluster | void = await fetchWrapper<Cluster>('/api/graph/cluster/');
+  console.log('We got clusters in fetchClusterTree', clusters);
+  const treeGraphData: Cluster | void = await fetchWrapper<Cluster>('/api/graph/cluster/tree');
+  console.log('treeGraphData', treeGraphData);
+  if (treeGraphData) setTreeGraphData(treeGraphData);
+}

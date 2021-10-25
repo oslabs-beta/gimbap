@@ -83,7 +83,7 @@ export async function getClusterList(req: Request, res: Response, next: NextFunc
     const endpoints: Endpoint[] = await getAllEndpoints();
 
     clusters = res.locals.clusters = determineClusters(endpoints);
-    console.log('is this working? clusters: 'clusters);
+    console.log('is this working? clusters: ', clusters);
   } catch (error) {
     return next(Object.assign(error, {
       status: 500,
@@ -160,7 +160,10 @@ export async function getClusterTreeGraphData(req: Request, res: Response, next:
   });
 
   try {
+    console.log('Withing treegraphdata middleware ', clusters);
+    console.log('one cluster', clusters[1]);
     res.locals.treeGraphData = theSuperHappyTreeGenerator(clusters);
+    //console.log(res.locals.treeGraphData);
   } catch (error) {
     return next(Object.assign(error, {
       status: 500,
