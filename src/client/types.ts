@@ -5,6 +5,8 @@ export enum Page {
 }
 
 export enum SubPage {
+  None,
   RouteLoads,
   ClusterLoad,
+  ApiDoc
 }
