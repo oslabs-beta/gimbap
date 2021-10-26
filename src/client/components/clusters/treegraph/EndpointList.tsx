@@ -4,6 +4,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
+import { getListItemIconUtilityClass } from '@mui/material';
 
 // function renderRow(props: ListChildComponentProps) {
 //   const { index, style } = props;
@@ -20,41 +21,43 @@ import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 export default function EndpointList(props) {
   const { endpoints } = props;
-  console.log(endpoints);
-  // const ourEndpoints = props.endpoints;
-  // const generateList = (endpoints) => {
-  //   endpoints.map((element, index)=>{
-  //     <ListItem key={index} component="div" disablePadding>
-  //       <ListItemText primary={element.name} />;
-  //     </ListItem>
-  //   });
-  // };
-  [{{}}, {{}}]
+
 
   function renderRow(props: ListChildComponentProps) {
     const { index, style } = props;
     return (
       <ListItem style={style} key={index} component="div" disablePadding>
         <ListItemButton>
-          <ListItemText primary={`${endpoints[index + 1][index + 1].name}`} />
+          <ListItemText primary={`${endpoints[index]?.name}`} />
         </ListItemButton>
       </ListItem>
     );
   }
 
-  return (
-    <Box
-      sx={{ width: '100%', height: 400, maxWidth: 360, bgcolor: 'background.paper'}}
-    >
-      <FixedSizeList
-        height={400}
-        width={360}
-        itemSize={46}
-        itemCount={200}
-        overscanCount={5}
+  const renderSingleRow = (props: ListChildComponentProps) => {
+    const { index, style } = props;
+    return (
+      <ListItem style={style} key={index} component="div" disablePadding>
+        <ListItemButton>
+          <ListItemText primary={'No endpoints to show...'} />
+        </ListItemButton>
+      </ListItem>
+    );
+  }
+
+    return (
+      <Box
+        sx={{ width: '100%', height: 400, maxWidth: 360, bgcolor: 'background.paper'}}
       >
-        {renderRow}
-      </FixedSizeList>
-    </Box>
-  );
-}
+        <FixedSizeList
+          height={window.innerHeight}
+          width={window.innerWidth}
+          itemSize={46}
+          itemCount={endpoints.length ? endpoints.length: 1}
+          overscanCount={5}
+        >
+          {endpoints.length === 0 ? renderSingleRow : renderRow}
+        </FixedSizeList>
+      </Box>
+    );
+   }

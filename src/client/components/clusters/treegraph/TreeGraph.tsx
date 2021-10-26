@@ -118,7 +118,7 @@ export default function TreeGraph({
                     fill="none"
                   />
                 ))}
-
+                {console.log(tree)}
                 {tree.descendants().map((node, key) => {
                   const width = 40;
                   const height = 20;
@@ -150,7 +150,7 @@ export default function TreeGraph({
                           }}
                         />
                       )}
-                      {node.depth !== 0 && (
+                      {node.depth > 0 && node.depth !== 3 &&(
                         <rect
                           height={height}
                           width={width}
@@ -163,7 +163,7 @@ export default function TreeGraph({
                           strokeOpacity={node.data.children ? 1 : 0.6}
                           rx={node.data.children ? 0 : 10}
                           onClick={() => {
-                            if(node.depth == 2){
+                            if(node.depth == 2) {
                               setEndPoints(node.data.children);
                             }
                             node.data.isExpanded = !node.data.isExpanded;
@@ -172,6 +172,7 @@ export default function TreeGraph({
                           }}
                         />
                       )}
+                      {node.depth !== 3 &&(
                       <text
                         dy=".33em"
                         fontSize={9}
@@ -182,6 +183,7 @@ export default function TreeGraph({
                       >
                         {node.data.name}
                       </text>
+                      )}
                     </Group>
                   );
                 })}
