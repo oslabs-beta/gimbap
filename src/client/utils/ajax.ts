@@ -91,3 +91,17 @@ export async function fetchClusterLoadData(
     return nextClustersLoadData;
   });
 }
+
+/**
+ * Make a fetch request to backend for LoadData for a particular cluster.
+ * 
+ * @param {number} index - index in setClusterLoadData object to store the LoadData at
+ * @param {React.Dispatch<React.SetStateAction} setClusterLoadData - state setter function for { [key: number]: LoadData }
+ * 
+ * @public
+ */
+ export async function fetchClusterTree(setTreeGraphData: React.Dispatch<React.SetStateAction<Cluster[] | null>>): Promise<void> {
+  const clusters: Cluster[] | void = await fetchWrapper<Cluster[]>('api/graph/cluster/');
+  const trees: Cluster[] | void = await fetchWrapper<Cluster[]>('api/graph/cluster/tree');
+  if (trees) setTreeGraphData(trees);
+}

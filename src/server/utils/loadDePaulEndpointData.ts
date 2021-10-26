@@ -1,14 +1,15 @@
 import fs, {promises as fsPromises} from 'fs';
 import path from 'path';
-
+import {connect, disconnect} from '../../shared/models/mongoSetup';
 import { logAllEndpoints, Endpoint } from '../../shared/models/endpointModel';
+import { MONGODB_URI } from '../secrets.json';
 
 /**
  * Data from https://cds.cdm.depaul.edu/resources/datasets/ using Non-Preprocessed DePaul CTI Web Usage Data.
  * Download zip file, and extract cti-april02-log.txt to the root directory before running this function.
- * 
+ *
  * @returns { | undefined} Returns undefined if cti-april02-log.txt file does not exist in root directory.
- * 
+ *
  * @public
  */
 export default async function loadDePaulEndpointData() {
@@ -17,7 +18,7 @@ export default async function loadDePaulEndpointData() {
         return;
     }
     const data = await fsPromises.readFile(path.resolve('cti-april02-log.txt'), 'utf8');
-  
+
     const entries = data.split('\n').slice(4);
 
     //we now have an array of relevant data, but each entry is a string.  We should split now based on spaces.  We should use a for loop to iterate over each entry.
@@ -42,3 +43,4 @@ export default async function loadDePaulEndpointData() {
         console.log(`Percent completed: ${(((begin + batchSize) / allEndpoints.length) * 100).toFixed(2)}`);
     }
 }
+connect(MONGODB_URI).then(loadDePaulEndpointData).then(disconnect);
