@@ -114,7 +114,7 @@ export function getLoadData(endpoints: Endpoint[], granularity = 30): LoadData {
   const loadData: LoadData = [];
   for (let hourStart = 0; hourStart < 24; hourStart += (granularity / 60)) {
     const numCalls: number = responses
-      .filter(endpoint => endpoint.hour > hourStart && endpoint.hour < hourStart + (granularity / 60)).length / numDays;
+      .filter(endpoint => endpoint.hour >= hourStart && endpoint.hour < hourStart + (granularity / 60)).length / numDays;
 
     loadData.push([hourStart, numCalls]);
   }
