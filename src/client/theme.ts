@@ -63,9 +63,6 @@ export const darkTheme: Theme = createTheme({
             primary: '#fff',
             secondary: '#fff',
           },
-          h4: {
-            primary: '#fff',
-            secondary: '#fff',
-          }
+
   }
 });
