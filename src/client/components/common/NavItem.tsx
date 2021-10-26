@@ -16,7 +16,7 @@ export default function NavItem({
 	title: string;
 	subLinks: { title: string, onClick: () => void }[];
 	icon: FunctionComponent;
-	onClick: () => void;
+	onClick: (event: React.MouseEvent<HTMLElement>) => void;
 }) {
 	return (
 		<List onClick={onClick}>
