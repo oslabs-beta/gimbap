@@ -7,7 +7,7 @@ import useForceUpdate from './useForceUpdate';
 //import LinkControls from './LinkControls';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
-import { fetchClusters, fetchClusterTree } from '../../../utils/ajax';
+import { fetchClusterTree } from '../../../utils/ajax';
 import { Cluster } from './../../../../shared/types';
 import EndpointList from './EndpointList';
 import Box from '@mui/material/Box';
@@ -61,7 +61,7 @@ export default function TreeGraph({
    useEffect(()=>{
      fetchClusterTree(setTreeGraphData);
 
-  }, []);
+  },[]);
 
   const data = trees;
   if (layout === 'polar') {
