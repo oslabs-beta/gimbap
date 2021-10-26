@@ -72,12 +72,14 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function NavigationBar({
+  useLightTheme,
   page,
   open,
-  useLightTheme,
   setOpen,
   setMetricSubPage,
+  setDocSubPage,
   setPage,
+  showApiDocPage,
   setUseLightTheme,
 }: {
   page: Page;
@@ -85,7 +87,9 @@ export default function NavigationBar({
   useLightTheme: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setMetricSubPage: React.Dispatch<React.SetStateAction<SubPage>>;
+  setDocSubPage: React.Dispatch<React.SetStateAction<SubPage>>;
   setPage: React.Dispatch<React.SetStateAction<Page>>;
+  showApiDocPage: () => void;
   setUseLightTheme: React.Dispatch<React.SetStateAction<boolean>>;
 }): JSX.Element {
 
@@ -102,7 +106,10 @@ export default function NavigationBar({
   const showClusterLoadPage: () => void = useCallback(() => setMetricSubPage(SubPage.ClusterLoad), [setMetricSubPage]);
   const showRouteLoadPage: () => void = useCallback(() => setMetricSubPage(SubPage.RouteLoads), [setMetricSubPage]);
 
-  const showDocumentationPage: () => void = useCallback(() => setPage(Page.Documentation), [setPage]);
+  const showDocumentationPage: (event: React.MouseEvent<HTMLElement>) => void = useCallback((event: React.SyntheticEvent<HTMLElement>) => {
+    if ((event.target as HTMLElement).innerHTML === 'Documentation') setDocSubPage(SubPage.None);
+    setPage(Page.Documentation);
+  }, [setPage, setDocSubPage]);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -170,10 +177,39 @@ export default function NavigationBar({
           isActive={page === Page.Documentation && open}
           icon={DescriptionIcon}
           subLinks={[
+            // TODO optimize with useCallback
             {
-              title: 'TODO add pages',
-              onClick: () => console.log('TODO'),
-            }
+              title: 'Intro',
+              onClick: () => {
+                setDocSubPage(SubPage.None);
+                window.location.href = '#intro';
+              },
+            },
+            {
+              title: 'Installation',
+              onClick: () => {
+                setDocSubPage(SubPage.None);
+                window.location.href = '#installation';
+              },
+            },
+            {
+              title: 'Visualizing Your Data',
+              onClick: () => {
+                setDocSubPage(SubPage.None);
+                window.location.href = '#visualizing-your-data';
+              },
+            },
+            {
+              title: 'API',
+              onClick: showApiDocPage,
+            },
+            {
+              title: 'Credits',
+              onClick: () => {
+                setDocSubPage(SubPage.None);
+                window.location.href = '#credits';
+              },
+            },
           ]}
           onClick={showDocumentationPage}
         />

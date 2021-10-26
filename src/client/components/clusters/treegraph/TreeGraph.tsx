@@ -7,10 +7,10 @@ import useForceUpdate from './useForceUpdate';
 //import LinkControls from './LinkControls';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
-import { fetchClusters, fetchClusterTree } from '../../../utils/ajax';
+import { fetchClusterTree } from '../../../utils/ajax';
 import { Cluster } from './../../../../shared/types';
 import EndpointList from './EndpointList';
-import Box from '@mui/material/Box'; 
+import Box from '@mui/material/Box';
 
 
 
@@ -43,12 +43,13 @@ export default function TreeGraph({
   const [linkType, setLinkType] = useState<string>('diagonal');
   const [stepPercent, setStepPercent] = useState<number>(0.5);
   const [trees, setTreeGraphData] = useState<Cluster[] | null>([]);
+  const [endpoints, setEndPoints] = useState<object[]>([]);
   const [clusters, setClusters] = useState<Cluster | null>([]);
   const forceUpdate = useForceUpdate();
 
   const innerWidth = totalWidth - margin.left - margin.right;
   const innerHeight = totalHeight - margin.top - margin.bottom;
-  // multiply the window height based on if the clusters and endpoints are shown. 
+  // multiply the window height based on if the clusters and endpoints are shown.
   // const innerHeight2 = window.screen.availHeight * (trees.children.length);
 
   let origin: { x: number; y: number };
@@ -59,8 +60,8 @@ export default function TreeGraph({
 
    useEffect(()=>{
      fetchClusterTree(setTreeGraphData);
-     
-  }, []);
+
+  },[]);
 
   const data = trees;
   if (layout === 'polar') {
@@ -112,12 +113,12 @@ export default function TreeGraph({
                     key={i}
                     data={link}
                     percent={stepPercent}
-                    stroke="rgb(254,110,158,0.6)"
+                    stroke="rgb(3, 136, 252)"
                     strokeWidth="1"
                     fill="none"
                   />
                 ))}
-
+                {console.log(tree)}
                 {tree.descendants().map((node, key) => {
                   const width = 40;
                   const height = 20;
@@ -149,7 +150,7 @@ export default function TreeGraph({
                           }}
                         />
                       )}
-                      {node.depth !== 0 && (
+                      {node.depth > 0 && node.depth !== 3 &&(
                         <rect
                           height={height}
                           width={width}
@@ -162,22 +163,27 @@ export default function TreeGraph({
                           strokeOpacity={node.data.children ? 1 : 0.6}
                           rx={node.data.children ? 0 : 10}
                           onClick={() => {
+                            if(node.depth == 2) {
+                              setEndPoints(node.data.children);
+                            }
                             node.data.isExpanded = !node.data.isExpanded;
                             console.log(node);
                             forceUpdate();
                           }}
                         />
                       )}
+                      {node.depth !== 3 &&(
                       <text
                         dy=".33em"
                         fontSize={9}
                         fontFamily="Arial"
                         textAnchor="middle"
                         style={{ pointerEvents: 'none' }}
-                        fill={node.depth === 0 ? '#71248e' : node.children ? 'white' : '#26deb0'}
+                        fill={node.depth === 0 ? '#fc0345' : node.children ? 'white' : '#fc0345'}
                       >
                         {node.data.name}
                       </text>
+                      )}
                     </Group>
                   );
                 })}
@@ -186,7 +192,7 @@ export default function TreeGraph({
           </Tree>
         </Group>
       </svg>
-      <EndpointList/>
+      <EndpointList endpoints={endpoints}/>
       </Box>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import { ThemeProvider } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
@@ -15,6 +15,9 @@ export default function App() {
   const [isNavBarOpen, setIsNavBarOpen] = React.useState<boolean>(true);
   const [page, setPage] = useState<Page>(Page.Clusters);
   const [metricSubPage, setMetricSubPage] = useState<SubPage>(SubPage.ClusterLoad);
+  const [docSubPage, setDocSubPage] = useState<SubPage>(SubPage.None);
+
+  const showApiDocPage: () => void = useCallback(() => setDocSubPage(SubPage.ApiDoc), [setDocSubPage]);
 
   return (
     <ThemeProvider theme={useLightTheme ? lightTheme : darkTheme}>
@@ -26,6 +29,8 @@ export default function App() {
           setMetricSubPage={setMetricSubPage}
           setOpen={setIsNavBarOpen}
           setUseLightTheme={setUseLightTheme}
+          setDocSubPage={setDocSubPage}
+          showApiDocPage={showApiDocPage}
         />
         {page === Page.Clusters && <Clusters />}
         {page === Page.Metrics &&
@@ -35,7 +40,7 @@ export default function App() {
             isNavBarOpen={isNavBarOpen}
           />
         }
-        {page === Page.Documentation && <Documentation />}
+        {page === Page.Documentation && <Documentation subPage={docSubPage} useLightTheme={useLightTheme} showApiDocPage={showApiDocPage} />}
       </Stack>
     </ThemeProvider>
   );
