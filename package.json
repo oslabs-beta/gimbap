@@ -95,6 +95,7 @@
     "express": "^4.17.1",
     "gimbap": "^0.0.3",
     "mongoose": "^6.0.11",
+    "mongoose-plugin-autoinc": "^1.1.9",
     "normalize.css": "^8.0.1",
     "react": "^17.0.2",
     "react-code-blocks": "0.0.9-0",

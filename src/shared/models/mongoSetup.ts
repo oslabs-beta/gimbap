@@ -13,8 +13,8 @@ export async function connect(mongoURI: string): Promise<void> {
   if (!mongoURI.match(/mongodb/i)) throw new Error(`Invalid MongoDB URI: ${mongoURI}`);
 
   if (!isConnected) {
-    await mongoose.connect(mongoURI);
     isConnected = true;
+    await mongoose.connect(mongoURI);
   }
 }
 

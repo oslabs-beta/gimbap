@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { autoIncrement } from 'mongoose-plugin-autoinc';
 
 import { Route } from './../../shared/types';
 
@@ -6,12 +7,19 @@ import { Route } from './../../shared/types';
 
 export interface Endpoint { method: string, endpoint: string, callTime: number }
 
-export const EndpointModel = mongoose.model<Endpoint>('Endpoint', new mongoose.Schema<Endpoint>({
+const EndpointSchema = new mongoose.Schema<Endpoint>({
   method: { type: String, required: true },
   endpoint: { type: String, required: true },
   callTime: { type: Number, required: true }, // unix timestamp
-}));
+});
+// use auto incrementing _id of type Number
+EndpointSchema.plugin(autoIncrement, {
+  model: 'Endpoint',
+  startAt: 0,
+  incrementBy: 1,
+});
 // TODO add validation for call_time to be convertible to Date
+export const EndpointModel = mongoose.model<Endpoint>('Endpoint', EndpointSchema);
 
 /**
  * Log an endpoint request data point to external database.
