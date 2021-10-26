@@ -50,9 +50,9 @@ export default function ClusterLoad({
     {!clusters && <Splash />}
     {clusters &&
       <Stack id='cluster-load' sx={{ padding: 2 }}>
-        <Typography variant='h4'>Cluster Load Graphs</Typography>
-        <Typography variant='body1'>Average number of server calls to a particular cluster per 24-hour time period.</Typography>
-        <Typography variant='body1' mt={4}>Select clusters to view graphs.</Typography>
+        <Typography variant='h4' color='textPrimary'>Cluster Load Graphs</Typography>
+        <Typography variant='body1' color='textPrimary'>Average number of server calls to a particular cluster per 24-hour time period.</Typography>
+        <Typography variant='body1' color='textPrimary' mt={4}>Select clusters to view graphs.</Typography>
 
         <ChipSelector
           itemLabels={clusterLabels}

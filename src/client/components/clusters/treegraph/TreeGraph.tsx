@@ -22,9 +22,6 @@ interface TreeNode {
 
 
 
-
-
-
 const defaultMargin = { top: 30, left: 30, right: 30, bottom: 70 };
 
 export type LinkTypesProps = {

@@ -21,6 +21,10 @@ export default function App() {
 
   return (
     <ThemeProvider theme={useLightTheme ? lightTheme : darkTheme}>
+      <div
+      style={{
+        backgroundImage: useLightTheme ? `url('https://coolbackgrounds.io/images/backgrounds/white/pure-white-background-85a2a7fd.jpg')`: `url('https://cdn.wallpapersafari.com/99/51/SXfiUY.jpg')`
+      }}>
       <Stack id="app" direction='row'>
         <NavigationBar
           page={page} setPage={setPage}
@@ -42,6 +46,7 @@ export default function App() {
         }
         {page === Page.Documentation && <Documentation subPage={docSubPage} useLightTheme={useLightTheme} showApiDocPage={showApiDocPage} />}
       </Stack>
+      </div>
     </ThemeProvider>
   );
 }

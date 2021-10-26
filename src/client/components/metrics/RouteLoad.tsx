@@ -51,9 +51,9 @@ export default function RouteLoad({
     {!routes && <Splash />}
     {routes &&
       <Stack sx={{ padding: 2 }}>
-        <Typography variant='h4'>Route Load Graphs</Typography>
-        <Typography variant='body1'>Average number of server calls to a particular endpoint per 24-hour time period.</Typography>
-        <Typography variant='body1' mt={4}>Select routes to view graphs.</Typography>
+        <Typography variant='h4' color='textPrimary'>Route Load Graphs</Typography>
+        <Typography variant='body1' color='textPrimary'>Average number of server calls to a particular endpoint per 24-hour time period.</Typography>
+        <Typography variant='body1' mt={4} color='textPrimary'>Select routes to view graphs.</Typography>
 
         <ChipSelector
           itemLabels={routeLabels}
@@ -68,7 +68,8 @@ export default function RouteLoad({
           const i: number = parseInt(index);
           const label = routeLabels[i];
 
-          return (<LoadGraph
+          return (
+          <LoadGraph
             key={index}
             useLightTheme={useLightTheme}
             height={400}
