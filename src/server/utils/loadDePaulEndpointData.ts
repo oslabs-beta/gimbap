@@ -1,5 +1,5 @@
-import fs, { promises as fsPromises } from 'fs';
 import path from 'path';
+import fs, { promises as fsPromises } from 'fs';
 
 import { logAllEndpoints, Endpoint } from '../../shared/models/endpointModel';
 
