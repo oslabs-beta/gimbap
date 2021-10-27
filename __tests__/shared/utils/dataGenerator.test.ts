@@ -172,5 +172,3 @@ describe('Simulate server responses using uniform distributions', () => {
     expect(probability.probability).toBeGreaterThan(0.10);
   });
 });
-
-// TODO tets using distributions functions

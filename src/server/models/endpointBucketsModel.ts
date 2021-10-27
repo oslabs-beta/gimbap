@@ -127,15 +127,29 @@ export async function getAllEndpointBuckets(): Promise<EndpointBuckets[]> {
  * @private
  */
 async function updateEndpointBuckets(method: string, endpoint: string): Promise<void> {
-  const bucketCalc = await getBuckets(method, endpoint);
-  if (bucketCalc === null) return;
+  const endpointBuckets = await getBuckets(method, endpoint);
+  if (endpointBuckets === null) return;
 
-  const { buckets, lastEndpointId, oldestDate, newestDate } = bucketCalc;
+  await EndpointBucketsModel.findOneAndUpdate({ method, endpoint }, endpointBuckets, { upsert: true, new: true });
+}
 
-  await EndpointBucketsModel.findOneAndUpdate(
-    { method, endpoint },
-    { method, endpoint, buckets, lastEndpointId, oldestDate, newestDate }
-    , { upsert: true, new: true });
+/**
+ * Calculate endpoint buckets for an array of server response endpoints.
+ * 
+ * @param endpoints - Array of server response endpoints
+ * @returns EndpointBuckets object for those endpoints.
+ */
+export function calculateEndpointBuckets(endpoints: Endpoint[]): EndpointBuckets {
+  let lastEndpointId = 0, oldestDate: number = endpoints[0].callTime, newestDate: number = endpoints[0].callTime;
+  endpoints.forEach(endpoint => {
+    if (endpoint._id && endpoint._id > lastEndpointId) lastEndpointId = endpoint._id;
+    if (endpoint.callTime < oldestDate) oldestDate = endpoint.callTime;
+    if (endpoint.callTime > newestDate) newestDate = endpoint.callTime;
+  });
+
+  const buckets: number[] = vectorizeEndpoints(endpoints, (24 * 60) / NUM_DAILY_DIVISIONS);
+
+  return { method: endpoints[0].method, endpoint: endpoints[0].endpoint, buckets, lastEndpointId, oldestDate, newestDate };
 }
 
 /**
@@ -147,30 +161,22 @@ async function updateEndpointBuckets(method: string, endpoint: string): Promise<
  * 
  * @private
  */
-async function getBuckets(method: string, endpoint: string):
-  Promise<{ buckets: number[], lastEndpointId: number, oldestDate: number, newestDate: number, } | null> {
-
+async function getBuckets(method: string, endpoint: string): Promise<EndpointBuckets | null> {
   const endpointBuckets: EndpointBuckets | null = await EndpointBucketsModel.findOne({ method, endpoint });
 
   // grab all matching endpoints
   const endpoints: Endpoint[] = await getAllEndpoints(method, endpoint, endpointBuckets !== null ? endpointBuckets.lastEndpointId : undefined);
   if (endpoints.length === 0) return null;
 
-  let lastEndpointId = 0, oldestDate: number = endpoints[0].callTime, newestDate: number = endpoints[0].callTime;
-  endpoints.forEach(endpoint => {
-    if (endpoint._id && endpoint._id > lastEndpointId) lastEndpointId = endpoint._id;
-    if (endpoint.callTime < oldestDate) oldestDate = endpoint.callTime;
-    if (endpoint.callTime > newestDate) newestDate = endpoint.callTime;
-  });
+  const newDataEndpointBuckets = calculateEndpointBuckets(endpoints);
 
-  let buckets: number[] = vectorizeEndpoints(endpoints, (24 * 60) / NUM_DAILY_DIVISIONS);
   if (endpointBuckets !== null) {
-    oldestDate = endpointBuckets.oldestDate;
+    newDataEndpointBuckets.oldestDate = endpointBuckets.oldestDate;
     // update bucket with new data
-    buckets = buckets.map((numCalls: number, i: number) => endpointBuckets.buckets[i] + numCalls);
+    newDataEndpointBuckets.buckets = newDataEndpointBuckets.buckets.map((numCalls: number, i: number) => endpointBuckets.buckets[i] + numCalls);
   }
 
-  return { buckets, lastEndpointId, oldestDate, newestDate };
+  return newDataEndpointBuckets;
 }
 
 startWatchingEndpointModel();
