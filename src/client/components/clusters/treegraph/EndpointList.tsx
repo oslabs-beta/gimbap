@@ -18,6 +18,7 @@ import { getListItemIconUtilityClass } from '@mui/material';
 //   );
 // }
 
+// Add the list bar
 
 export default function EndpointList(props) {
   const { endpoints } = props;
@@ -28,7 +29,7 @@ export default function EndpointList(props) {
     return (
       <ListItem style={style} key={index} component="div" disablePadding>
         <ListItemButton>
-          <ListItemText primary={`${endpoints[index]?.name}`} />
+          <ListItemText primary={`${index} : ${endpoints[index]?.name}`} />
         </ListItemButton>
       </ListItem>
     );
@@ -47,11 +48,12 @@ export default function EndpointList(props) {
 
     return (
       <Box
-        sx={{ width: '100%', height: 400, maxWidth: 360, bgcolor: 'background.paper'}}
+        sx={{ width: '100%', height: '100%', maxWidth: 360, bgcolor: 'background.paper', textAlign: 'center'}}
       >
+        <h2>{endpoints.length ?  endpoints.length : null}</h2>
         <FixedSizeList
-          height={window.innerHeight}
-          width={window.innerWidth}
+          height={(window.innerHeight * .80)}
+          width={(window.innerWidth * .90)}
           itemSize={46}
           itemCount={endpoints.length ? endpoints.length: 1}
           overscanCount={5}
