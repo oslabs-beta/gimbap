@@ -22,7 +22,7 @@ import { getListItemIconUtilityClass } from '@mui/material';
 
 export default function EndpointList(props) {
   const { endpoints } = props;
-
+  // endpoints = endpoints.sort;
 
   function renderRow(props: ListChildComponentProps) {
     const { index, style } = props;
@@ -53,7 +53,7 @@ export default function EndpointList(props) {
         <h2>{endpoints.length ?  endpoints.length : null}</h2>
         <FixedSizeList
           height={(window.innerHeight * .80)}
-          width={(window.innerWidth * .90)}
+          width={(window.innerWidth * .25)}
           itemSize={46}
           itemCount={endpoints.length ? endpoints.length: 1}
           overscanCount={5}
@@ -62,4 +62,4 @@ export default function EndpointList(props) {
         </FixedSizeList>
       </Box>
     );
-   }
+  }

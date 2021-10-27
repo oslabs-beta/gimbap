@@ -112,7 +112,6 @@ export default function TreeGraph({
                       fill="none"
                     />
                   ))}
-                  {console.log(tree)}
                   {tree.descendants().map((node, key) => {
                     const width = 40;
                     const height = 20;
@@ -139,7 +138,6 @@ export default function TreeGraph({
                             fill="url('#links-gradient')"
                             onClick={() => {
                               node.data.isExpanded = !node.data.isExpanded;
-                              console.log(node);
                               forceUpdate();
                             }}
                           />
@@ -158,11 +156,20 @@ export default function TreeGraph({
                             rx={node.data.children ? 0 : 10}
                             onClick={() => {
                               if(node.depth == 2) {
-                                console.log(node);
-                                setEndPoints(node.data.children);
+                                setEndPoints(node.data.children.sort((a, b) => {
+                                  let fa = a.name.toLowerCase(),
+                                      fb = b.name.toLowerCase();
+
+                                  if (fa < fb) {
+                                      return -1;
+                                  }
+                                  if (fa > fb) {
+                                      return 1;
+                                  }
+                                  return 0;
+                                }));
                               }
                               node.data.isExpanded = !node.data.isExpanded;
-                              console.log(node);
                               forceUpdate();
                             }}
                           />
