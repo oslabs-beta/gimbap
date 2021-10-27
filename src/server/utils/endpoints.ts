@@ -12,13 +12,11 @@ interface TimeDomainEndpoint extends Endpoint {
  * Utilize OPTICS algorithm to cluster endpoints based on covariant time utilization.
  * https://en.wikipedia.org/wiki/OPTICS_algorithm
  *
- * @param serverResponses - Array of server responses.
- * @param step - step size for bucket vectorization in hours. Defaults to 1.
+ * @param allEndpointBuckets - Array of endpoint buckets to use for clustering calculation.
  * @returns Array of Cluster recommendations.
  *
  * @public
  */
-// TODO update above
 export function determineClusters(allEndpointBuckets: EndpointBuckets[]): Cluster[] {
   // vectorize endpoint array into 24 data points with number of calls in that hour.
   // same order as endpointBuckets
@@ -42,6 +40,8 @@ export function determineClusters(allEndpointBuckets: EndpointBuckets[]): Cluste
  * 
  * @param endpointBuckets - EndpointBuckets object for a particular route.
  * @param granularity - time interval in minutes between data points
+ * 
+ * @public
  */
 export function getLoadData(endpointBuckets: EndpointBuckets, granularity = 30): LoadData {
   const granularityInHours: number = granularity / 60;
