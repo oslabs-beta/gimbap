@@ -38,7 +38,7 @@ export default function TreeGraph({
   const [linkType, setLinkType] = useState<string>('diagonal');
   const [stepPercent, setStepPercent] = useState<number>(0.5);
   const [trees, setTreeGraphData] = useState<Cluster[] | null>([]);
-  const [endpoints, setEndPoints] = useState<object[]>([]);
+  const [endpoints, setEndPoints] = useState<{clusterName: string, methodName: string, endpointList: string[]}>({clusterName: 'No cluster selected', methodName: 'No method selected', endpointList: []});
   const [clusters, setClusters] = useState<Cluster | null>([]);
   const forceUpdate = useForceUpdate();
 
@@ -156,7 +156,12 @@ export default function TreeGraph({
                             rx={node.data.children ? 0 : 10}
                             onClick={() => {
                               if(node.depth == 2) {
-                                setEndPoints(node.data.children.sort((a, b) => {
+                                console.log(node.parent.data.name);
+                                //To see what cluster this method belongs to , we have to access node.data.parent.name
+                                //To get the name of the method, we have to access node.data.name
+                                const clusterName = node.parent.data.name;
+                                const methodName = node.data.name
+                                const endpointList = node.data.children.sort((a, b) => {
                                   let fa = a.name.toLowerCase(),
                                       fb = b.name.toLowerCase();
 
@@ -167,7 +172,8 @@ export default function TreeGraph({
                                       return 1;
                                   }
                                   return 0;
-                                }));
+                                })
+                                setEndPoints({clusterName: clusterName, methodName: methodName, endpointList: endpointList});
                               }
                               node.data.isExpanded = !node.data.isExpanded;
                               forceUpdate();

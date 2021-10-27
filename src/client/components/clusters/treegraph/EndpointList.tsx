@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import { getListItemIconUtilityClass } from '@mui/material';
 
@@ -22,6 +23,7 @@ import { getListItemIconUtilityClass } from '@mui/material';
 
 export default function EndpointList(props) {
   const { endpoints } = props;
+  const { methodName, clusterName, endpointList } = endpoints;
   // endpoints = endpoints.sort;
 
   function renderRow(props: ListChildComponentProps) {
@@ -29,7 +31,7 @@ export default function EndpointList(props) {
     return (
       <ListItem style={style} key={index} component="div" disablePadding>
         <ListItemButton>
-          <ListItemText primary={`${index} : ${endpoints[index]?.name}`} />
+          <ListItemText primary={`${index} : ${endpointList[index]?.name}`} />
         </ListItemButton>
       </ListItem>
     );
@@ -50,15 +52,15 @@ export default function EndpointList(props) {
       <Box
         sx={{ width: '100%', height: '100%', maxWidth: 360, bgcolor: 'background.paper', textAlign: 'center'}}
       >
-        <h2>{endpoints.length ?  endpoints.length : null}</h2>
+        <Typography variant='h4' mr={3}>{endpointList.length ? `${clusterName} - ${methodName} - ${endpointList.length} ` : null}</Typography>
         <FixedSizeList
           height={(window.innerHeight * .80)}
           width={(window.innerWidth * .25)}
           itemSize={46}
-          itemCount={endpoints.length ? endpoints.length: 1}
+          itemCount={endpointList.length ? endpointList.length: 1}
           overscanCount={5}
         >
-          {endpoints.length === 0 ? renderSingleRow : renderRow}
+          {endpointList.length === 0 ? renderSingleRow : renderRow}
         </FixedSizeList>
       </Box>
     );
