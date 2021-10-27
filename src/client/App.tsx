@@ -9,6 +9,8 @@ import NavigationBar from './components/common/NavigationBar';
 import Clusters from './components/clusters/Clusters';
 import Metrics from './components/metrics/Metrics';
 import Documentation from './components/documentation/Documentation';
+import { blue } from '@mui/material/colors';
+
 
 export default function App() {
   const [useLightTheme, setUseLightTheme] = useState(true); // TODO hook up theme toggle
@@ -20,11 +22,12 @@ export default function App() {
   const showApiDocPage: () => void = useCallback(() => setDocSubPage(SubPage.ApiDoc), [setDocSubPage]);
 
   return (
-    <ThemeProvider theme={useLightTheme ? lightTheme : darkTheme}>
-      <div
+    <div
       style={{
-        backgroundImage: useLightTheme ? `url('https://coolbackgrounds.io/images/backgrounds/white/pure-white-background-85a2a7fd.jpg')`: `url('https://cdn.wallpapersafari.com/99/51/SXfiUY.jpg')`
+        backgroundImage: useLightTheme ? 'url(\'https://coolbackgrounds.io/images/backgrounds/white/pure-white-background-85a2a7fd.jpg\')': 'url(\'https://cdn.wallpapersafari.com/99/51/SXfiUY.jpg\')'
       }}>
+    <ThemeProvider theme={useLightTheme ? lightTheme : darkTheme}>
+
       <Stack id="app" direction='row'>
         <NavigationBar
           page={page} setPage={setPage}
@@ -46,7 +49,7 @@ export default function App() {
         }
         {page === Page.Documentation && <Documentation subPage={docSubPage} useLightTheme={useLightTheme} showApiDocPage={showApiDocPage} />}
       </Stack>
-      </div>
     </ThemeProvider>
+    </div>
   );
 }

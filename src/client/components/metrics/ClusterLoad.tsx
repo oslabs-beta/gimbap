@@ -10,6 +10,8 @@ import { drawerWidth } from './../common/NavigationBar';
 import useWindowDimensions from './../../hooks/useWindowDimensions';
 import ChipSelector from './../common/ChipSelector';
 import LoadGraph from './LoadGraph';
+import { red } from '@mui/material/colors';
+
 
 export default function ClusterLoad({
   isNavBarOpen,
@@ -61,13 +63,14 @@ export default function ClusterLoad({
           label='Clusters'
         />
 
+
         {Object.entries(selectedLoadData).map(([index, loadData]) => {
           if (!loadData) return <Splash />;
 
           const i: number = parseInt(index);
           const label = clusterLabels[i];
-
-          return (<LoadGraph
+          return (
+          <LoadGraph
             key={index}
             useLightTheme={useLightTheme}
             height={400}
@@ -77,6 +80,7 @@ export default function ClusterLoad({
           />);
         })}
       </Stack>
+
     }
   </>);
 }
