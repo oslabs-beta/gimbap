@@ -3,7 +3,7 @@ import request from 'supertest';
 import gimbap from './../../src/npm';
 import { EndpointModel, Endpoint } from './../../src/shared/models/endpointModel';
 
-describe('gimbap logs route request to MongoDB', () => {
+xdescribe('gimbap logs route request to MongoDB', () => {
   let app: Application;
 
   beforeAll(async () => {

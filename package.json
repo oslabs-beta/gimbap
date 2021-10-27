@@ -13,12 +13,15 @@
     "watch-build-server": "tsc -p ./src/server/tsconfig.json --watch",
     "watch-build-npm": "tsc -p ./src/middleware/tsconfig.json --watch",
     "start-server": "cross-env NODE_ENV=production node build/server/index.js",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --runInBand"
   },
   "jest": {
     "transform": {
       "^.+\\.[t|j]sx?$": "babel-jest"
-    }
+    },
+    "modulePathIgnorePatterns": [
+      "/testUtils/"
+    ]
   },
   "repository": {
     "type": "git",

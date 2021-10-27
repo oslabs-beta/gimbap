@@ -1,6 +1,6 @@
 import { connect, disconnect } from './../../../src/shared/models/mongoSetup';
 import { EndpointModel, Endpoint, logEndpoint, getAllEndpoints, getDistinctEndpoints } from './../../../src/shared/models/endpointModel';
-import { Route } from './../../../src/server/utils/endpoints';
+import { Route } from './../../../src/shared/types';
 
 describe('Test storing endpoints', () => {
   beforeAll(async () => {
@@ -8,12 +8,12 @@ describe('Test storing endpoints', () => {
   });
 
   afterAll(async () => {
-    await EndpointModel.deleteMany();
+    await EndpointModel.deleteMany({});
     return await disconnect();
   });
 
   beforeEach(async () => {
-    await EndpointModel.deleteMany();
+    await EndpointModel.deleteMany({});
   });
 
   test('Log a single endpoint to database', async () => {
@@ -23,7 +23,7 @@ describe('Test storing endpoints', () => {
 
     await logEndpoint(method, endpoint, callTime);
 
-    const result: Endpoint[] = await EndpointModel.find();
+    const result: Endpoint[] = await EndpointModel.find({});
     expect(result).toHaveLength(1);
     expect(result[0]).toMatchObject({ method, endpoint, callTime });
   });
@@ -36,7 +36,7 @@ describe('Test storing endpoints', () => {
     for (let i = 0; i < methods.length; i++)
       await logEndpoint(methods[i], endpoints[i], callTimes[i]);
 
-    const result = await EndpointModel.find();
+    const result = await EndpointModel.find({});
 
     expect(result).toHaveLength(methods.length);
     for (let i = 0; i < methods.length; i++)
@@ -50,12 +50,12 @@ describe('Test retrieving endpoints', () => {
   });
 
   afterAll(async () => {
-    await EndpointModel.deleteMany();
+    await EndpointModel.deleteMany({});
     return await disconnect();
   });
 
   beforeEach(async () => {
-    await EndpointModel.deleteMany();
+    await EndpointModel.deleteMany({});
   });
 
   test('Get a list of all endpoints', async () => {

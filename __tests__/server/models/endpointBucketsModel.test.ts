@@ -1,4 +1,4 @@
-import { delay } from './../../testUtils';
+import { delay } from '../../testUtils';
 
 import { connect, disconnect } from './../../../src/shared/models/mongoSetup';
 import {
@@ -30,13 +30,13 @@ describe('EndpointBuckets tests', () => {
 
   beforeEach(async () => {
     await stopWatchingEndpointModel();
-    await EndpointModel.deleteMany({});
-    await EndpointBucketsModel.deleteMany();
     startWatchingEndpointModel();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     jest.useRealTimers();
+    await EndpointModel.deleteMany({});
+    await EndpointBucketsModel.deleteMany();
   });
 
   describe('Test storing endpoint buckets', () => {
