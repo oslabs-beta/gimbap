@@ -1,8 +1,6 @@
 import mongoose, { QueryOptions } from 'mongoose';
 import { autoIncrement } from 'mongoose-plugin-autoinc';
 
-import { Route } from './../../shared/types';
-
 // TODO abstract so it can work with either MongoDB or PostgreSQL depending on how setup is called.
 
 export interface Endpoint { method: string, endpoint: string, callTime: number, _id?: number }

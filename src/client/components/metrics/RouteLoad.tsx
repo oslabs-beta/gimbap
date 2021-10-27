@@ -32,7 +32,7 @@ export default function RouteLoad({
 
   // load route load data on user selecting an endpoint
   useEffect(() => {
-    if (!routes) return;
+    if (routes === null) return;
 
     for (const index of selectedRoutes) {
       if (!routesLoadData[index]) {

@@ -32,7 +32,7 @@ export default function ClusterLoad({
 
   // load route load data on user selecting an endpoint
   useEffect(() => {
-    if (!clusters) return;
+    if (clusters === null) return;
 
     for (const index of selectedClusters) {
       if (!clustersLoadData[index]) {

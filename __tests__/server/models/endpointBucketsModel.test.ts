@@ -217,9 +217,6 @@ describe('EndpointBuckets tests', () => {
 
       await forceAllPendingUpdated();
 
-      const result2: EndpointBuckets[] = await getAllEndpointBuckets();
-      console.log({ result2 });
-
       const result: Route[] = await getDistinctRoutes();
 
       expect(result).toHaveLength(4);
