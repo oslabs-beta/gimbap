@@ -17,12 +17,12 @@ describe('gimbap logs route request to MongoDB', () => {
   });
 
   afterAll(async () => {
-    await EndpointModel.deleteMany();
+    await EndpointModel.deleteMany({});
     return gimbap.stop();
   });
 
   beforeEach(async () => {
-    await EndpointModel.deleteMany();
+    await EndpointModel.deleteMany({});
   });
 
   test('single endpoint correctly logged to database', async () => {
@@ -34,7 +34,7 @@ describe('gimbap logs route request to MongoDB', () => {
       .then(async (response) => {
         expect(response.text).toBe('Hello World!');
 
-        const endpoints: Endpoint[] = await EndpointModel.find();
+        const endpoints: Endpoint[] = await EndpointModel.find({});
         expect(endpoints).toHaveLength(1);
         expect(endpoints[0]).toMatchObject({ method: 'GET', endpoint: '/' });
         expect(endpoints[0].callTime - callTime).toBeLessThan(100); // allow 100 ms difference 
@@ -49,7 +49,7 @@ describe('gimbap logs route request to MongoDB', () => {
         .get(endpoint)
         .expect(200);
     })).then(async () => {
-      const endpoints: Endpoint[] = await EndpointModel.find();
+      const endpoints: Endpoint[] = await EndpointModel.find({});
       expect(endpoints).toHaveLength(3);
       expect(endpoints).toMatchObject(routes.map(route => ({ method: 'GET', endpoint: route })));
     });

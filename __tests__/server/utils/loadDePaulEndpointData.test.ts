@@ -10,11 +10,11 @@ xdescribe('Populate database with DePaul CTI data and verify data is in DB', () 
 
   beforeAll(async () => {
     await connect('mongodb+srv://admin:test@cluster0.dopf4.mongodb.net/DePaul?retryWrites=true&w=majority');
-    await EndpointModel.deleteMany();
+    await EndpointModel.deleteMany({});
   });
 
   afterAll(async () => {
-    await EndpointModel.deleteMany();
+    await EndpointModel.deleteMany({});
     await disconnect();
   });
 
