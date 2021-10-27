@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { Endpoint, getAllEndpoints, getDistinctEndpoints } from './../../shared/models/endpointModel';
+import { getDistinctRoutes, getEndpointBuckets, getAllEndpointBuckets, EndpointBuckets } from './../models/endpointBucketsModel';
 import { getLoadData, determineClusters, theSuperHappyTreeGenerator } from './../utils/endpoints';
-import { Cluster, Route } from './../../shared/types';
+import { Route, Cluster } from './../../shared/types';
 
-let clusters: Cluster[] | null = null; // used to store last calculated cluster result
+let clusters: Cluster[] | undefined = undefined;
 
 /**
  * Middleware: If successful, `res.locals.endpoints` will contain Route[].
@@ -16,7 +16,7 @@ let clusters: Cluster[] | null = null; // used to store last calculated cluster 
  */
 export async function getEndpointList(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const routes: Route[] = await getDistinctEndpoints();
+    const routes: Route[] = await getDistinctRoutes();
 
     res.locals.endpoints = routes;
   } catch (error) {
@@ -49,9 +49,9 @@ export async function getEndpointLoadGraphData(req: Request, res: Response, next
   });
 
   try {
-    const endpoints: Endpoint[] = await getAllEndpoints(method, route);
+    const endpointBuckets: EndpointBuckets | null = await getEndpointBuckets(method, route);
 
-    res.locals.loadGraphData = getLoadData(endpoints);
+    res.locals.loadGraphData = endpointBuckets !== null ? getLoadData(endpointBuckets) : [];
   } catch (error) {
     return next(Object.assign(error, {
       status: 500,
@@ -74,18 +74,17 @@ export async function getEndpointLoadGraphData(req: Request, res: Response, next
 export async function getClusterList(req: Request, res: Response, next: NextFunction): Promise<void> {
   if (clusters) {
     res.locals.clusters = clusters;
-    return next();
-  }
+  } else {
+    try {
+      const endpointBuckets: EndpointBuckets[] = await getAllEndpointBuckets();
 
-  try {
-    const endpoints: Endpoint[] = await getAllEndpoints();
-
-    clusters = res.locals.clusters = determineClusters(endpoints);
-  } catch (error) {
-    return next(Object.assign(error, {
-      status: 500,
-      error: 'Internal server error reading database.'
-    }));
+      res.locals.clusters = clusters = determineClusters(endpointBuckets);
+    } catch (error) {
+      return next(Object.assign(error, {
+        status: 500,
+        error: 'Internal server error reading database.'
+      }));
+    }
   }
 
   return next();
@@ -125,12 +124,27 @@ export async function getClusterLoadGraphData(req: Request, res: Response, next:
   try {
     const routes: Route[] = clusters[clusterId];
 
-    const endpoints: Endpoint[] = [];
+    const allEndpointBucketsInCluster: EndpointBuckets[] = [];
     for (const route of routes) {
-      endpoints.push(...(await getAllEndpoints(route.method, route.endpoint)));
+      const endpointBuckets: EndpointBuckets | null = await getEndpointBuckets(route.method, route.endpoint);
+
+      if (endpointBuckets !== null) allEndpointBucketsInCluster.push(endpointBuckets);
     }
 
-    res.locals.loadGraphData = getLoadData(endpoints);
+    // combine all endpoint buckets into a single buckets vector for getLoadData to use
+    const buckets: number[] = allEndpointBucketsInCluster.reduce((allBuckets: number[], endpointBuckets: EndpointBuckets) => {
+      endpointBuckets.buckets.forEach((value, i) => allBuckets[i] += value);
+      return allBuckets;
+    }, Array.from({ length: allEndpointBucketsInCluster[0].buckets.length }, () => 0));
+
+    res.locals.loadGraphData = getLoadData({
+      method: allEndpointBucketsInCluster[0].method,
+      endpoint: allEndpointBucketsInCluster[0].endpoint,
+      lastEndpointId: allEndpointBucketsInCluster[0].lastEndpointId,
+      newestDate: allEndpointBucketsInCluster[0].newestDate,
+      oldestDate: allEndpointBucketsInCluster[0].oldestDate,
+      buckets,
+    });
   } catch (error) {
     return next(Object.assign(error, {
       status: 500,
