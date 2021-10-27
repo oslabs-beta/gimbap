@@ -43,6 +43,7 @@ router.get('/tree',
       status: 500,
       error: 'Middleware getClusterTreeGraphData did not return expected data.'
     });
+  
     res.json(res.locals.treeGraphData);
   }
 );

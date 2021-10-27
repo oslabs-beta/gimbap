@@ -30,7 +30,7 @@ export function determineClusters(allEndpointBuckets: EndpointBuckets[]): Cluste
   const analyzer = new clustering.OPTICS();
 
   const averageCallsPerBucket = totalNumCalls / vectors[0].length; // use as neighborhood radius
-  const result: number[][] = analyzer.run(vectors, averageCallsPerBucket, 1);
+  const result: number[][] = analyzer.run(vectors, averageCallsPerBucket/20, 1);
 
   return result.map(clusterIndices => clusterIndices.map((i): Route => ({ method: allEndpointBuckets[i].method, endpoint: allEndpointBuckets[i].endpoint })));
 }
@@ -92,7 +92,7 @@ export function theSuperHappyTreeGenerator(clusters: Cluster[]): TreeNode {
     name: 'Clusters',
     children: []
   };
-
+  console.log('length of clusters',clusters.length);
   for (let i = 0; i < clusters.length; i++) {
     const clusterRoot: TreeNode = {
       name: 'Cluster ' + i,
