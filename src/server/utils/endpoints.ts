@@ -90,6 +90,11 @@ export function getUniqueRoutes(endpoints: Endpoint[]): Route[] {
  * @param granularity - time interval in minutes between data points
  */
 export function getLoadData(endpoints: Endpoint[], granularity = 30): LoadData {
+
+
+  // TODO refactor to utilize vectorizeEndpoints function
+
+
   // calculate oldest and newest day in data to determine numbers of days to average total bucket calls by
   let firstDay: Date | null = null, lastDay: Date | null = null;
 
@@ -120,6 +125,36 @@ export function getLoadData(endpoints: Endpoint[], granularity = 30): LoadData {
   }
 
   return loadData;
+}
+
+/**
+ * Create an array of buckets with the total number of endpoints that call into each bucket based on an interval size of granularity in minutes.
+ * 
+ * @param endpoints - Array of Endpoint
+ * @param granularity - time interval in minutes between data points
+ * @returns array of buckets with the total number of endpoints that call into each bucket
+ * 
+ * @public
+ */
+export function vectorizeEndpoints(endpoints: Endpoint[], granularity = 30): number[] {
+  // break data into bucket
+  const responses: TimeDomainEndpoint[] = endpoints.map(endpoint => {
+    const date = new Date(endpoint.callTime);
+
+    return {
+      ...endpoint,
+      hour: date.getHours() + (date.getMinutes() / 60)
+    };
+  });
+
+  const vector: number[] = [];
+  for (let hourStart = 0; hourStart < 24; hourStart += (granularity / 60)) {
+    const numCalls: number = responses.filter(endpoint => endpoint.hour >= hourStart && endpoint.hour < hourStart + (granularity / 60)).length;
+
+    vector.push(numCalls);
+  }
+
+  return vector;
 }
 
 /**
