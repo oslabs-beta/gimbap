@@ -1,6 +1,5 @@
 import { connect, disconnect } from './../../../src/shared/models/mongoSetup';
-import { EndpointModel, Endpoint, logEndpoint, getAllEndpoints, getDistinctEndpoints } from './../../../src/shared/models/endpointModel';
-import { Route } from './../../../src/shared/types';
+import { EndpointModel, Endpoint, logEndpoint, getAllEndpoints } from './../../../src/shared/models/endpointModel';
 
 describe('Test storing endpoints', () => {
   beforeAll(async () => {
@@ -104,36 +103,5 @@ describe('Test retrieving endpoints', () => {
         expect(result[i]).toMatchObject(api[i]);
       }
     }
-  });
-
-  test('Get distinct endpoints', async () => {
-    const getApi1: Endpoint[] = [
-      { method: 'GET', endpoint: 'api/1', callTime: 1 },
-      { method: 'GET', endpoint: 'api/1', callTime: 2 },
-      { method: 'GET', endpoint: 'api/1', callTime: 3 },
-    ];
-    const deleteApi1: Endpoint[] = [
-      { method: 'DELETE', endpoint: 'api/1', callTime: 4 },
-    ];
-    const getApi2: Endpoint[] = [
-      { method: 'GET', endpoint: 'api/2', callTime: 5 },
-      { method: 'GET', endpoint: 'api/2', callTime: 6 },
-    ];
-    const postApi2: Endpoint[] = [
-      { method: 'POST', endpoint: 'api/2', callTime: 7 },
-      { method: 'POST', endpoint: 'api/2', callTime: 8 },
-    ];
-
-    await EndpointModel.insertMany([...getApi1, ...deleteApi1, ...getApi2, ...postApi2]);
-
-    const result: Route[] = await getDistinctEndpoints();
-
-    expect(result).toHaveLength(4);
-    expect(result).toMatchObject([
-      { method: 'GET', endpoint: 'api/2' },
-      { method: 'POST', endpoint: 'api/2' },
-      { method: 'DELETE', endpoint: 'api/1' },
-      { method: 'GET', endpoint: 'api/1' }
-    ]);
   });
 });

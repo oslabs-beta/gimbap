@@ -8,10 +8,13 @@ import {
   stopWatchingEndpointModel,
   getEndpointBuckets,
   getAllEndpointBuckets,
+  getDistinctRoutes,
+  forceAllPendingUpdated,
   MIN_NUM_CHANGES_TO_UPDATE,
   NUM_DAILY_DIVISIONS,
 } from './../../../src/server/models/endpointBucketsModel';
 import { EndpointModel, logEndpoint, logAllEndpoints, Endpoint } from './../../../src/shared/models/endpointModel';
+import { Route } from './../../../src/shared/types';
 
 // Note to user: to make this test work, follow instructions here to convert your database to a replica set
 // https://docs.mongodb.com/manual/tutorial/convert-standalone-to-replica-set/
@@ -189,6 +192,43 @@ describe('EndpointBuckets tests', () => {
     test('Test retrieving all endpoint buckets from an empty database.', async () => {
       const result: EndpointBuckets[] = await getAllEndpointBuckets();
       expect(result).toHaveLength(0);
+    });
+
+    test('Get distinct endpoints', async () => {
+      const getApi1: Endpoint[] = [
+        { method: 'GET', endpoint: 'api/1', callTime: 1 },
+        { method: 'GET', endpoint: 'api/1', callTime: 2 },
+        { method: 'GET', endpoint: 'api/1', callTime: 3 },
+      ];
+      const deleteApi1: Endpoint[] = [
+        { method: 'DELETE', endpoint: 'api/1', callTime: 4 },
+      ];
+      const getApi2: Endpoint[] = [
+        { method: 'GET', endpoint: 'api/2', callTime: 5 },
+        { method: 'GET', endpoint: 'api/2', callTime: 6 },
+      ];
+      const postApi2: Endpoint[] = [
+        { method: 'POST', endpoint: 'api/2', callTime: 7 },
+        { method: 'POST', endpoint: 'api/2', callTime: 8 },
+      ];
+
+      await logAllEndpoints([...getApi1, ...deleteApi1, ...getApi2, ...postApi2]);
+      await delay(200);
+
+      await forceAllPendingUpdated();
+
+      const result2: EndpointBuckets[] = await getAllEndpointBuckets();
+      console.log({ result2 });
+
+      const result: Route[] = await getDistinctRoutes();
+
+      expect(result).toHaveLength(4);
+      expect(result).toMatchObject([
+        { method: 'GET', endpoint: 'api/1' },
+        { method: 'DELETE', endpoint: 'api/1' },
+        { method: 'GET', endpoint: 'api/2' },
+        { method: 'POST', endpoint: 'api/2' },
+      ]);
     });
   });
 });

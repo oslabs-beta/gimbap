@@ -84,19 +84,3 @@ export async function getAllEndpoints(method?: string, endpoint?: string, afterI
 
   return await EndpointModel.find(query);
 }
-
-/**
- * Get a distinct list of endpoints.
- *
- * @returns Promise of array of Route
- *
- * @public
- */
-export async function getDistinctEndpoints(): Promise<Route[]> {
-  return await EndpointModel.aggregate<Route>([
-    // group by key, score to get distinct
-    { '$group': { _id: { method: '$method', endpoint: '$endpoint' } } },
-    // Clean up the output
-    { '$project': { _id: 0, method: '$_id.method', endpoint: '$_id.endpoint' } }
-  ]);
-}
