@@ -24,11 +24,11 @@ export const EndpointModel = mongoose.model<Endpoint>('Endpoint', EndpointSchema
 
 /**
  * Log an endpoint request data point to external database.
- * 
+ *
  * @param {String} method - HTTP method type
  * @param {String} endpoint - HTTP request relative endpoint
  * @param {number} callTime - UNIX timestamp of when request first communicated with the server
- * 
+ *
  * @public
  */
 export async function logEndpoint(method: string, endpoint: string, callTime: number): Promise<void> {
@@ -49,9 +49,9 @@ export async function logEndpoint(method: string, endpoint: string, callTime: nu
 
 /**
  * Log an array of endpoint request data point to external database.
- * 
+ *
  * @param {Endpoint[]} endpoints - Array of endpoints to be added to database.
- * 
+ *
  * @public
  */
 export async function logAllEndpoints(endpoints: Endpoint[]): Promise<void> {
@@ -73,7 +73,7 @@ export async function logAllEndpoints(endpoints: Endpoint[]): Promise<void> {
  * @param {string} endpoint - (optional) HTTP request relative endpoint
  * @param {number} afterId -(optional) _id of EndpointModel used to filter result to include only _id greater than this value
  * @returns Promise of array of endpoints
- * 
+ *
  * @public
  */
 export async function getAllEndpoints(method?: string, endpoint?: string, afterId?: number): Promise<Endpoint[]> {
@@ -89,7 +89,7 @@ export async function getAllEndpoints(method?: string, endpoint?: string, afterI
  * Get a distinct list of endpoints.
  *
  * @returns Promise of array of Route
- * 
+ *
  * @public
  */
 export async function getDistinctEndpoints(): Promise<Route[]> {

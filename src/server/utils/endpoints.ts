@@ -55,7 +55,7 @@ export function determineClusters(serverResponses: Endpoint[], step = 1): Cluste
   const analyzer = new clustering.OPTICS();
 
   const averageCallsPerBucket = totalNumCalls / vectors[0].length; // use as neighborhood radius
-  const result: number[][] = analyzer.run(vectors, averageCallsPerBucket, 1);
+  const result: number[][] = analyzer.run(vectors, averageCallsPerBucket / 20, 1); // TODO change back or determine better method
 
   return result.map(clusterIndices => clusterIndices.map(i => uniqueRoutes[i]));
 }
@@ -173,11 +173,9 @@ export function theSuperHappyTreeGenerator(clusters: Cluster[]): TreeNode {
       name: 'Cluster ' + i,
       children: []
     };
-    if (!clusterRoot.children) continue; // typescript issue with line 181
 
     const cluster: Cluster = clusters[i];
     const cache: { [key: string]: string[] } = Object.create(null);
-
     for (let j = 0; j < cluster.length; j++) {
       // check if cluster[j].method does not exist in cache object
       if (!cache[cluster[j].method]) cache[cluster[j].method] = [];
@@ -196,8 +194,9 @@ export function theSuperHappyTreeGenerator(clusters: Cluster[]): TreeNode {
         })
       };
 
-      clusterRoot.children.push(methodCluster);
+      clusterRoot.children?.push(methodCluster);
     }
+    root.children?.push(clusterRoot);
   }
 
   return root;

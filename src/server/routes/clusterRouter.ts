@@ -17,6 +17,7 @@ router.get('/',
 );
 
 // To get cluster load graph data
+// clusterId is the index of the cluster in the array.
 router.get('/load/:clusterId',
   getClusterLoadGraphData,
   (req: Request, res: Response, next: NextFunction): void => {
@@ -37,7 +38,6 @@ router.get('/tree',
       status: 500,
       error: 'Middleware getClusterTreeGraphData did not return expected data.'
     });
-
     res.json(res.locals.treeGraphData);
   }
 );

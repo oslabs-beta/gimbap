@@ -1,6 +1,11 @@
 import React from 'react';
+import Box from '@mui/material/Box'; 
+import InputLabel from '@mui/material/InputLabel'; 
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl'; 
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
-const controlStyles = { fontSize: 10 };
+const controlStyles = { fontSize: 20 };
 
 type Props = {
   layout: string;
@@ -24,43 +29,51 @@ export default function LinkControls({
   setStepPercent,
 }: Props) {
   return (
-    <div style={controlStyles}>
-      <label>layout:</label>&nbsp;
-      <select
-        onClick={(e) => e.stopPropagation()}
-        onChange={(e) => setLayout(e.target.value)}
-        value={layout}
-      >
-        <option value="cartesian">cartesian</option>
-        <option value="polar">polar</option>
-      </select>
+    <Box sx={{ minWidth: 120, padding: "10px" }}>
+      <FormControl>
+        <InputLabel>layout:</InputLabel>
+        <Select 
+          value={layout}
+          onClick={(e) => e.stopPropagation()}
+          label="Layout"
+          onChange={(e) => setLayout(e.target.value)}
+        >
+          <MenuItem value={'cartesian'}>cartesian</MenuItem>
+          <MenuItem value={'polar'}>polar</MenuItem>
+        </Select>
+      </FormControl>
       &nbsp;&nbsp;
-      <label>orientation:</label>&nbsp;
-      <select
-        onClick={(e) => e.stopPropagation()}
-        onChange={(e) => setOrientation(e.target.value)}
-        value={orientation}
-        disabled={layout === 'polar'}
-      >
-        <option value="vertical">vertical</option>
-        <option value="horizontal">horizontal</option>
-      </select>
+      <FormControl>
+        <InputLabel>orientation:</InputLabel>
+        <Select
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => setOrientation(e.target.value)}
+          value={orientation}
+          disabled={layout === 'polar'}
+          label="Orientation"
+        >
+          <MenuItem value="vertical">vertical</MenuItem>
+          <MenuItem value="horizontal">horizontal</MenuItem>
+        </Select>
+      </FormControl>
       &nbsp;&nbsp;
-      <label>link:</label>&nbsp;
-      <select
-        onClick={(e) => e.stopPropagation()}
-        onChange={(e) => setLinkType(e.target.value)}
-        value={linkType}
-      >
-        <option value="diagonal">diagonal</option>
-        <option value="step">step</option>
-        <option value="curve">curve</option>
-        <option value="line">line</option>
-      </select>
+      <FormControl>
+        <InputLabel>link:</InputLabel>
+        <Select
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => setLinkType(e.target.value)}
+          value={linkType}
+          label="Link"
+        >
+          <MenuItem value="diagonal">diagonal</MenuItem>
+          <MenuItem value="step">step</MenuItem>
+          <MenuItem value="curve">curve</MenuItem>
+          <MenuItem value="line">line</MenuItem>
+        </Select>
+      </FormControl>
       {linkType === 'step' && layout !== 'polar' && (
         <>
-          &nbsp;&nbsp;
-          <label>step:</label>&nbsp;
+          <InputLabel>step:</InputLabel>&nbsp;
           <input
             onClick={(e) => e.stopPropagation()}
             type="range"
@@ -73,6 +86,6 @@ export default function LinkControls({
           />
         </>
       )}
-    </div>
+    </Box>
   );
 }
