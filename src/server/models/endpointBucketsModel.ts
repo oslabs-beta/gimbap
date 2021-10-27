@@ -16,8 +16,8 @@ export type EndpointBuckets = {
 const FORCED_UPDATE_TIMEOUT = 5 * 60 * 1000;
 export const NUM_DAILY_DIVISIONS = 24 * 2;
 export const MIN_NUM_CHANGES_TO_UPDATE = 100;
-let updateCounter = 0;
 let changeStream: ChangeStream<mongoose.Model<Endpoint>> | null = null;
+let updateCounter: { [key: string]: number } = Object.create(null); // key being method + endpoint
 
 // cache of active timeouts with key being method + endpoint
 let timeoutHandles: { [key: string]: NodeJS.Timeout } = Object.create(null);
@@ -55,16 +55,18 @@ export async function stopWatchingEndpointModel(): Promise<void> {
 export function startWatchingEndpointModel(): void {
   if (changeStream !== null) return;
 
-  updateCounter = 0;
+  updateCounter = Object.create(null);
   changeStream = EndpointModel.watch<typeof EndpointModel>();
 
   changeStream.on('change', change => {
     if (change.operationType !== 'insert' || !change.fullDocument) return;
 
-    updateCounter++;
     const key: string = change.fullDocument.method + change.fullDocument.endpoint;
-    if (updateCounter === MIN_NUM_CHANGES_TO_UPDATE) {
-      updateCounter = 0;
+
+    updateCounter[key] ??= 0;
+    updateCounter[key]++;
+    if (updateCounter[key] === MIN_NUM_CHANGES_TO_UPDATE) {
+      updateCounter[key] = 0;
 
       // remove timeout if it was already set
       if (timeoutHandles[key]) {
@@ -83,11 +85,13 @@ export function startWatchingEndpointModel(): void {
 }
 
 /**
- * Get EndpointBuckets for a particular route from the database. Forces an update if there is no endpoint buckets in database.
+ * Get EndpointBuckets for a particular route from the database. Forces a calculation update if there is no endpoint buckets in database.
  * 
  * @param {String} method - HTTP method type
  * @param {String} endpoint - HTTP request relative endpoint
  * @returns EndpointBuckets for that route, or null if no data exists for that route
+ * 
+ * @public
  */
 export async function getEndpointBuckets(method: string, endpoint: string): Promise<EndpointBuckets | null> {
   let endpointBuckets: EndpointBuckets | null = await EndpointBucketsModel.findOne({ method, endpoint });
@@ -99,6 +103,15 @@ export async function getEndpointBuckets(method: string, endpoint: string): Prom
   }
 
   return endpointBuckets;
+}
+
+/**
+ * Get all EndpointBuckets in the database. This does not force a calculation update.
+ * 
+ * @public
+ */
+export async function getAllEndpointBuckets(): Promise<EndpointBuckets[]> {
+  return await EndpointBucketsModel.find({});
 }
 
 /**
@@ -118,7 +131,7 @@ async function updateEndpointBuckets(method: string, endpoint: string): Promise<
   await EndpointBucketsModel.findOneAndUpdate(
     { method, endpoint },
     { method, endpoint, buckets, lastEndpointId }
-    , { upsert: true });
+    , { upsert: true, new: true });
 }
 
 /**

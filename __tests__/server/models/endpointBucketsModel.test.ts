@@ -1,7 +1,16 @@
 import { delay } from './../../testUtils';
 
 import { connect, disconnect } from './../../../src/shared/models/mongoSetup';
-import { EndpointBucketsModel, EndpointBuckets, startWatchingEndpointModel, stopWatchingEndpointModel, MIN_NUM_CHANGES_TO_UPDATE, NUM_DAILY_DIVISIONS, getEndpointBuckets } from './../../../src/server/models/endpointBucketsModel';
+import {
+  EndpointBucketsModel,
+  EndpointBuckets,
+  startWatchingEndpointModel,
+  stopWatchingEndpointModel,
+  getEndpointBuckets,
+  getAllEndpointBuckets,
+  MIN_NUM_CHANGES_TO_UPDATE,
+  NUM_DAILY_DIVISIONS,
+} from './../../../src/server/models/endpointBucketsModel';
 import { EndpointModel, logEndpoint, logAllEndpoints, Endpoint } from './../../../src/shared/models/endpointModel';
 
 // Note to user: to make this test work, follow instructions here to convert your database to a replica set
@@ -129,6 +138,8 @@ describe('EndpointBuckets tests', () => {
 
       const result: EndpointBuckets = await getEndpointBuckets('GET', '/test');
       // expect no update to have occurred
+      expect(result.method).toBe('GET');
+      expect(result.endpoint).toBe('/test');
       expect(result.buckets).toHaveLength(NUM_DAILY_DIVISIONS);
       expect(result.buckets[0]).toBe(MIN_NUM_CHANGES_TO_UPDATE);
     });
@@ -149,7 +160,32 @@ describe('EndpointBuckets tests', () => {
       expect(result.buckets).toHaveLength(NUM_DAILY_DIVISIONS);
       expect(result.buckets[0]).toBe(MIN_NUM_CHANGES_TO_UPDATE - 1);
     });
-  });
 
-  // TODO mock time and check for data to be updated due to timeout
+    test('Test retrieving all endpoint buckets from the database.', async () => {
+      const method1 = 'GET', method2 = 'POST';
+      const endpoint1 = '/api/1', endpoint2 = '/api/2';
+      // Date at beginning of day will add all calls to bucket at index 0.
+      const callTime: number = new Date(new Date().toDateString()).getTime();
+
+      let endpoints: Endpoint[] = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE }, () => ({ method: method1, endpoint: endpoint1, callTime }));
+      await logAllEndpoints(endpoints);
+      await delay(200);
+
+      endpoints = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE }, () => ({ method: method2, endpoint: endpoint2, callTime }));
+      await logAllEndpoints(endpoints);
+      await delay(200);
+
+      const result: EndpointBuckets[] = await getAllEndpointBuckets();
+      expect(result).toHaveLength(2);
+      expect(result[0].buckets).toHaveLength(NUM_DAILY_DIVISIONS);
+      expect(result[0].buckets[0]).toBe(MIN_NUM_CHANGES_TO_UPDATE);
+      expect(result[1].buckets).toHaveLength(NUM_DAILY_DIVISIONS);
+      expect(result[1].buckets[0]).toBe(MIN_NUM_CHANGES_TO_UPDATE);
+    });
+
+    test('Test retrieving all endpoint buckets from an empty database.', async () => {
+      const result: EndpointBuckets[] = await getAllEndpointBuckets();
+      expect(result).toHaveLength(0);
+    });
+  });
 });
