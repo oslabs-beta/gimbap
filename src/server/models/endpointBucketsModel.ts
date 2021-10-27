@@ -11,6 +11,8 @@ export type EndpointBuckets = {
   endpoint: string,
   buckets: number[],
   lastEndpointId: number,
+  oldestDate: number,
+  newestDate: number,
 };
 
 const FORCED_UPDATE_TIMEOUT = 5 * 60 * 1000;
@@ -28,6 +30,8 @@ const EndpointBucketsSchema = new mongoose.Schema<EndpointBuckets>({
   endpoint: { type: String, required: true },
   buckets: { type: [Number], required: true },
   lastEndpointId: { type: Number, required: true },
+  oldestDate: { type: Number, required: true },
+  newestDate: { type: Number, required: true },
 });
 export const EndpointBucketsModel = mongoose.model<EndpointBuckets>('EndpointBuckets', EndpointBucketsSchema);
 
@@ -126,11 +130,11 @@ async function updateEndpointBuckets(method: string, endpoint: string): Promise<
   const bucketCalc = await getBuckets(method, endpoint);
   if (bucketCalc === null) return;
 
-  const [buckets, lastEndpointId] = bucketCalc;
+  const { buckets, lastEndpointId, oldestDate, newestDate } = bucketCalc;
 
   await EndpointBucketsModel.findOneAndUpdate(
     { method, endpoint },
-    { method, endpoint, buckets, lastEndpointId }
+    { method, endpoint, buckets, lastEndpointId, oldestDate, newestDate }
     , { upsert: true, new: true });
 }
 
@@ -139,26 +143,34 @@ async function updateEndpointBuckets(method: string, endpoint: string): Promise<
  * 
  * @param {String} method - HTTP method type
  * @param {String} endpoint - HTTP request relative endpoint
- * @returns Tuple of buckets and the last endpoint id in calculation, or null if no endpoints exist for that route.
+ * @returns Object with buckets, the last endpoint id, oldestDate, and newestDate in the calculation, or null if no endpoints exist for that route.
  * 
  * @private
  */
-async function getBuckets(method: string, endpoint: string): Promise<[number[], number] | null> {
+async function getBuckets(method: string, endpoint: string):
+  Promise<{ buckets: number[], lastEndpointId: number, oldestDate: number, newestDate: number, } | null> {
+
   const endpointBuckets: EndpointBuckets | null = await EndpointBucketsModel.findOne({ method, endpoint });
 
   // grab all matching endpoints
   const endpoints: Endpoint[] = await getAllEndpoints(method, endpoint, endpointBuckets !== null ? endpointBuckets.lastEndpointId : undefined);
   if (endpoints.length === 0) return null;
 
-  const lastBucketId: number = endpoints.reduce((max, endpoint) => endpoint._id && endpoint._id > max ? endpoint._id : max, 0);
-  let buckets: number[] = vectorizeEndpoints(endpoints, (24 * 60) / NUM_DAILY_DIVISIONS);
+  let lastEndpointId = 0, oldestDate: number = endpoints[0].callTime, newestDate: number = endpoints[0].callTime;
+  endpoints.forEach(endpoint => {
+    if (endpoint._id && endpoint._id > lastEndpointId) lastEndpointId = endpoint._id;
+    if (endpoint.callTime < oldestDate) oldestDate = endpoint.callTime;
+    if (endpoint.callTime > newestDate) newestDate = endpoint.callTime;
+  });
 
+  let buckets: number[] = vectorizeEndpoints(endpoints, (24 * 60) / NUM_DAILY_DIVISIONS);
   if (endpointBuckets !== null) {
+    oldestDate = endpointBuckets.oldestDate;
     // update bucket with new data
     buckets = buckets.map((numCalls: number, i: number) => endpointBuckets.buckets[i] + numCalls);
   }
 
-  return [buckets, lastBucketId];
+  return { buckets, lastEndpointId, oldestDate, newestDate };
 }
 
 startWatchingEndpointModel();

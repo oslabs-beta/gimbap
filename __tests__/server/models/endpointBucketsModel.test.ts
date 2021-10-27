@@ -132,14 +132,17 @@ describe('EndpointBuckets tests', () => {
       // Date at beginning of day will add all calls to bucket at index 0.
       const callTime: number = new Date(new Date().toDateString()).getTime();
 
-      const endpoints: Endpoint[] = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE }, () => ({ method: 'GET', endpoint: '/test', callTime }));
+      const endpoints: Endpoint[] = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE - 1 }, () => ({ method: 'GET', endpoint: '/test', callTime }));
       await logAllEndpoints(endpoints);
+      await logEndpoint('GET', '/test', callTime + 1);
       await delay(200);
 
       const result: EndpointBuckets = await getEndpointBuckets('GET', '/test');
       // expect no update to have occurred
       expect(result.method).toBe('GET');
       expect(result.endpoint).toBe('/test');
+      expect(result.oldestDate).toBe(callTime);
+      expect(result.newestDate).toBe(callTime + 1);
       expect(result.buckets).toHaveLength(NUM_DAILY_DIVISIONS);
       expect(result.buckets[0]).toBe(MIN_NUM_CHANGES_TO_UPDATE);
     });
