@@ -10,7 +10,15 @@ export function cache(duration: number) {
     } else {
       const originalSendFunc = res.send;
       res.send = (body: string) => {
-        mcache.put(key, body, duration);
+        if (res.statusCode === 200) {
+
+
+          console.log(`cached ${key}`); // ! remove later 
+
+
+          mcache.put(key, body, duration);
+        }
+
         return originalSendFunc.call(res, body);
       };
     }

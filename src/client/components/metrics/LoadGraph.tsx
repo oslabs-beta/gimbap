@@ -28,11 +28,9 @@ export default function LoadGraph({
     yAccessor: (d: [number, number]): number => d[1],
   };
 
-  // TODO change size of graph depending on screen size
-
   return (
     <Stack className='load-graph' mb={3}>
-      <Typography variant='body1' color='textPrimary' sx={{ mb: 0 }}>{label}</Typography>
+      <Typography variant='body1' color='textPrimary' sx={{ mb: 0, mt: 3, fontWeight: 'bold' }}>{label}</Typography>
       <XYChart
         theme={useLightTheme ? lightTheme : darkTheme}
         height={height}

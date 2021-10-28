@@ -21,20 +21,8 @@ import NavItem from './NavItem';
 
 import './NavigationBar.scss';
 
-// import { ReactComponent as Logo } from './logo.svg';
-
-// import Logo from './gimbap.svg';
-
-// declare function require(path: string);
-
-// const SampleComponent = () => (
-//   <div>
-//     <img src={require('./logo.png')} alt="logo" />
-//   </div>
-// );
-
-
 export const drawerWidth = 240;
+export const closedDrawerWidth = 73;
 
 const openedMixin = (theme: Theme) => ({
   width: drawerWidth,
@@ -126,10 +114,10 @@ export default function NavigationBar({
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant='permanent' open={open}>
         <DrawerHeader>
           {open && <>
-            <Typography variant='h4' sx={{ fontWeight: 'medium', textShadow: useLightTheme ? '0 1px 0 #e2e3dc': '0 1px 0 #5c5758'}} color='#28A78D' mr={3}>gimbap</Typography>
+            <Typography variant='h4' sx={{ fontWeight: 'medium', textShadow: useLightTheme ? '0 1px 0 #e2e3dc' : '0 1px 0 #5c5758' }} color='#28A78D' mr={3}>gimbap</Typography>
             <IconButton onClick={handleDrawerClose}>
               <ChevronLeftIcon />
             </IconButton>
@@ -144,7 +132,8 @@ export default function NavigationBar({
                 marginRight: '10px',
               }}
             >
-              <MenuIcon/>
+              <MenuIcon />
+              {/* <Logo /> */}
             </IconButton>
           }
         </DrawerHeader>
