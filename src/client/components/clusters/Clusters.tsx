@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import TreeGraph from './treegraph/TreeGraph';
 //import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { isNavBarOpen } from './../../App';
 
 
-export default function Clusters() {
+export default function Clusters(props) {
+  const {useLightTheme} = props;
   const [dimensions, setDimensions] = useState({
     height: document.documentElement.clientHeight,
     width: document.documentElement.clientWidth,
@@ -27,7 +27,7 @@ export default function Clusters() {
 
   return(
     //<ParentSize>{({ width, height }) => <TreeGraph width={width} height={height} />}</ParentSize>
-    <TreeGraph width={dimensions.width * 0.60} height={(dimensions.height * 0.90)} isNavBarOpen={isNavBarOpen}/>
+    <TreeGraph width={dimensions.width * 0.60} height={(dimensions.height * 0.90)} useLightTheme={useLightTheme}/>
     // routes scroll
   );
 

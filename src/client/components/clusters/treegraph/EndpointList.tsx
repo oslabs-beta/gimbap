@@ -5,19 +5,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
-import { getListItemIconUtilityClass } from '@mui/material';
-
-// function renderRow(props: ListChildComponentProps) {
-//   const { index, style } = props;
-
-//   return (
-//     <ListItem style={style} key={index} component="div" disablePadding>
-//       <ListItemButton>
-//         <ListItemText primary={`Item ${index + 1}`} />
-//       </ListItemButton>
-//     </ListItem>
-//   );
-// }
+import Typography from '@mui/material/Typography';
 
 // Add the list bar
 
@@ -31,7 +19,7 @@ export default function EndpointList(props) {
     return (
       <ListItem style={style} key={index} component="div" disablePadding>
         <ListItemButton>
-          <ListItemText primary= {endpointList.length === 0 ? 'No endpoints to show...' : endpointList[index]?.name} />
+          <ListItemText disableTypography primary={<Typography color="textPrimary"> {endpointList.length === 0 ? 'No endpoints to show...' : endpointList[index]?.name}</Typography>}/>
         </ListItemButton>
       </ListItem>
     );
@@ -53,4 +41,5 @@ export default function EndpointList(props) {
         </FixedSizeList>
       </Box>
     );
-  }
+}
+

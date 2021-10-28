@@ -40,6 +40,8 @@ export default function TreeGraph({
   const [endpoints, setEndPoints] = useState<{clusterName: string, methodName: string, endpointList: string[]}>({clusterName: 'No cluster selected', methodName: 'No method selected', endpointList: []});
   const [clusters, setClusters] = useState<Cluster | null>([]);
   const forceUpdate = useForceUpdate();
+  const [useLightTheme, setUseLightTheme] = useState(true); // TODO hook up theme toggle
+
 
   const innerWidth = totalWidth - margin.left - margin.right;
   const innerHeight = totalHeight - margin.top - margin.bottom;
