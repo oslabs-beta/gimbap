@@ -14,7 +14,7 @@ import Documentation from './components/documentation/Documentation';
 
 
 export default function App() {
-  const [useLightTheme, setUseLightTheme] = useState(true); // TODO hook up theme toggle
+  const [useLightTheme, setUseLightTheme] = useState(true);
 
   const [isNavBarOpen, setIsNavBarOpen] = React.useState<boolean>(true);
   const [page, setPage] = useState<Page>(Page.Clusters);
@@ -27,20 +27,25 @@ export default function App() {
   const showApiDocPage: () => void = useCallback(() => setDocSubPage(SubPage.ApiDoc), [setDocSubPage]);
 
 
-  // load all routes and clusters on component mounting
+  // pre-load routes and clusters
   useEffect(() => {
-    fetchRoutes(setRoutes);
+    fetchRoutes((routes) => {
+      routes = routes as Route[];
+      routes.sort((r1: Route, r2: Route) => r1.method + r1.endpoint > r2.method + r2.endpoint ? 1 : -1);
+      setRoutes(routes);
+    });
+
     fetchClusters(setClusters);
   }, []);
-
 
   return (
     <div
       style={{
-        backgroundImage: useLightTheme ? 'url(\'https://coolbackgrounds.io/images/backgrounds/white/pure-white-background-85a2a7fd.jpg\')' : 'url(\'https://cdn.wallpapersafari.com/99/51/SXfiUY.jpg\')'
+        backgroundImage: useLightTheme
+          ? 'url(\'https://coolbackgrounds.io/images/backgrounds/white/pure-white-background-85a2a7fd.jpg\')'
+          : 'url(\'https://cdn.wallpapersafari.com/99/51/SXfiUY.jpg\')'
       }}>
       <ThemeProvider theme={useLightTheme ? lightTheme : darkTheme}>
-
         <Stack id='app' direction='row'>
           <NavigationBar
             page={page} setPage={setPage}
@@ -62,7 +67,9 @@ export default function App() {
               isNavBarOpen={isNavBarOpen}
             />
           }
-          {page === Page.Documentation && <Documentation subPage={docSubPage} useLightTheme={useLightTheme} showApiDocPage={showApiDocPage} />}
+          {page === Page.Documentation &&
+            <Documentation subPage={docSubPage} useLightTheme={useLightTheme} showApiDocPage={showApiDocPage} />
+          }
         </Stack>
       </ThemeProvider>
     </div>
