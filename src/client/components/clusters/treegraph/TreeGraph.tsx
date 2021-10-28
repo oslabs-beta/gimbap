@@ -57,7 +57,6 @@ export default function TreeGraph({
   let sizeHeight: number;
 
   // Fetch request zone
-
   useEffect(() => {
     fetchClusterTree(setTreeGraphData);
 
