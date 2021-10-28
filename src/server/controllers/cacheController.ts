@@ -9,9 +9,9 @@ export function cache(duration: number) {
       return res.send(cachedResponse);
     } else {
       const originalSendFunc = res.send;
-      res.send = (body: string): void => {
+      res.send = (body: string) => {
         mcache.put(key, body, duration);
-        originalSendFunc.call(res, body);
+        return originalSendFunc.call(res, body);
       };
     }
     return next();
