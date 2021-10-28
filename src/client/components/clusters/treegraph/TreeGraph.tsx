@@ -11,7 +11,7 @@ import { fetchClusterTree } from '../../../utils/ajax';
 import { Cluster } from './../../../../shared/types';
 import EndpointList from './EndpointList';
 import Box from '@mui/material/Box';
-
+import Stack from '@mui/material/Stack';
 
 
 interface TreeNode {
@@ -90,15 +90,15 @@ export default function TreeGraph({
         setLinkType={setLinkType}
         setStepPercent={setStepPercent}
       />
-      <Box sx={{display: 'flex'}}>
-        <svg width={totalWidth} height={totalHeight} style={{flexGrow: 1}}>
+      <Stack direction="row" spacing={2}>
+        <svg width={totalWidth} height={totalHeight}>
           <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
           <rect width={totalWidth} height={totalHeight} rx={14} fill="#272b4d" />
           <Group top={margin.top} left={margin.left}>
             <Tree
               root={hierarchy(data, (d) => (d.isExpanded ? null : d.children))}
               size={[sizeWidth, sizeHeight]}
-              separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
+              separation={(a, b) => (a.parent === b.parent ? 2 : 100) / a.depth}
             >
               {(tree) => (
                 <Group top={origin.y} left={origin.x}>
@@ -175,7 +175,7 @@ export default function TreeGraph({
                                 })
                                 setEndPoints({clusterName: clusterName, methodName: methodName, endpointList: endpointList});
                               }
-                              node.data.isExpanded = !node.data.isExpanded;
+                              //node.data.isExpanded = !node.data.isExpanded;
                               forceUpdate();
                             }}
                           />
@@ -200,8 +200,8 @@ export default function TreeGraph({
             </Tree>
           </Group>
         </svg>
-        <EndpointList endpoints={endpoints}/>
-      </Box>
+        <EndpointList endpoints={endpoints} width={totalWidth} height={totalHeight}/>
+      </Stack>
     </div>
   );
 }
