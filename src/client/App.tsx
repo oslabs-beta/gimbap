@@ -32,7 +32,10 @@ export default function App() {
           setDocSubPage={setDocSubPage}
           showApiDocPage={showApiDocPage}
         />
-        {page === Page.Clusters && <Clusters />}
+        {page === Page.Clusters && <Clusters
+        isNavBarOpen={isNavBarOpen}
+        />
+        }
         {page === Page.Metrics &&
           <Metrics
             useLightTheme={useLightTheme}

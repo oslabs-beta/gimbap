@@ -4,13 +4,12 @@ import { hierarchy, Tree } from '@visx/hierarchy';
 import { LinearGradient } from '@visx/gradient';
 import { pointRadial } from 'd3-shape';
 import useForceUpdate from './useForceUpdate';
-//import LinkControls from './LinkControls';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 import { fetchClusterTree } from '../../../utils/ajax';
 import { Cluster } from './../../../../shared/types';
 import EndpointList from './EndpointList';
-import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 
 
@@ -44,17 +43,14 @@ export default function TreeGraph({
 
   const innerWidth = totalWidth - margin.left - margin.right;
   const innerHeight = totalHeight - margin.top - margin.bottom;
-  // multiply the window height based on if the clusters and endpoints are shown.
-  // const innerHeight2 = window.screen.availHeight * (trees.children.length);
 
   let origin: { x: number; y: number };
   let sizeWidth: number;
   let sizeHeight: number;
 
   // Fetch request zone
-
-   useEffect(()=>{
-     fetchClusterTree(setTreeGraphData);
+  useEffect(()=>{
+    fetchClusterTree(setTreeGraphData);
   },[]);
 
   const data = trees;
@@ -90,15 +86,15 @@ export default function TreeGraph({
         setLinkType={setLinkType}
         setStepPercent={setStepPercent}
       />
-      <Box sx={{display: 'flex'}}>
+      <Stack direction="row" spacing={2}>
         <svg width={totalWidth} height={totalHeight} style={{flexGrow: 1}}>
           <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
-          <rect width={totalWidth} height={totalHeight} rx={14} fill="#272b4d" />
+          <rect width={totalWidth} height={(totalHeight)} rx={14} fill="#272b4d" />
           <Group top={margin.top} left={margin.left}>
             <Tree
               root={hierarchy(data, (d) => (d.isExpanded ? null : d.children))}
               size={[sizeWidth, sizeHeight]}
-              separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
+              separation={(a, b) => (a.parent === b.parent ? 2 : 100) / a.depth}
             >
               {(tree) => (
                 <Group top={origin.y} left={origin.x}>
@@ -173,6 +169,7 @@ export default function TreeGraph({
                                   }
                                   return 0;
                                 })
+
                                 setEndPoints({clusterName: clusterName, methodName: methodName, endpointList: endpointList});
                               }
                               node.data.isExpanded = !node.data.isExpanded;
@@ -200,8 +197,8 @@ export default function TreeGraph({
             </Tree>
           </Group>
         </svg>
-        <EndpointList endpoints={endpoints}/>
-      </Box>
+        <EndpointList sx={{ width: 1/2}} endpoints={endpoints}/>
+      </Stack>
     </div>
   );
 }

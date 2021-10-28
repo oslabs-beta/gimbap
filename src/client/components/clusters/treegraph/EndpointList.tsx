@@ -50,11 +50,11 @@ export default function EndpointList(props) {
 
     return (
       <Box
-        sx={{ width: '100%', height: '100%', maxWidth: 360, bgcolor: 'background.paper', textAlign: 'center'}}
+        sx={{ width: 'document.documentElement.clientWidth * 0.2', height: '100%', maxWidth: 'document.documentElement.clientWidth * 0.2', bgcolor: 'background.paper', textAlign: 'center' , border: 1, borderColor: 'black', borderRadius: 5}}
       >
         <Typography variant='h4' mr={3}>{endpointList.length ? `${clusterName} - ${methodName} - ${endpointList.length} ` : null}</Typography>
         <FixedSizeList
-          height={(window.innerHeight * .80)}
+          height={(window.innerHeight * .85)}
           width={(window.innerWidth * .25)}
           itemSize={46}
           itemCount={endpointList.length ? endpointList.length: 1}
