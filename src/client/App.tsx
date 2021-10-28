@@ -22,9 +22,9 @@ export default function App() {
   const showApiDocPage: () => void = useCallback(() => setDocSubPage(SubPage.ApiDoc), [setDocSubPage]);
 
   return (
-    <div
+    <div className='bg'
       style={{
-        backgroundImage: useLightTheme ? 'url(\'https://coolbackgrounds.io/images/backgrounds/white/pure-white-background-85a2a7fd.jpg\')': 'url(\'https://cdn.wallpapersafari.com/99/51/SXfiUY.jpg\')'
+        backgroundImage: useLightTheme ? 'url(\'https://coolbackgrounds.io/images/backgrounds/white/pure-white-background-85a2a7fd.jpg\')': 'url(\'https://cdn.wallpapersafari.com/99/51/SXfiUY.jpg\')', height: '100%', backgroundSize: 'cover'
       }}>
     <ThemeProvider theme={useLightTheme ? lightTheme : darkTheme}>
 
