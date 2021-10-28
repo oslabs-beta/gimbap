@@ -62,7 +62,7 @@ export default function ClusterLoad({
         />
 
         {Object.entries(selectedLoadData).map(([index, loadData]) => {
-          if (!loadData) return <Splash />;
+          if (!loadData) return <Splash key={index} />;
 
           const i: number = parseInt(index);
           const label = clusterLabels[i];

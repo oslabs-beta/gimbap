@@ -63,7 +63,7 @@ export default function RouteLoad({
         />
 
         {Object.entries(selectedLoadData).map(([index, loadData]) => {
-          if (!loadData) return <Splash />;
+          if (!loadData) return <Splash key={index} />;
 
           const i: number = parseInt(index);
           const label = routeLabels[i];
