@@ -43,6 +43,8 @@ export default function TreeGraph({
   const [endpoints, setEndPoints] = useState<object[]>([]);
   const [clusters, setClusters] = useState<Cluster | null>([]);
   const forceUpdate = useForceUpdate();
+  const [useLightTheme, setUseLightTheme] = useState(true); // TODO hook up theme toggle
+
 
   const innerWidth = totalWidth - margin.left - margin.right;
   const innerHeight = totalHeight - margin.top - margin.bottom;
@@ -189,7 +191,7 @@ export default function TreeGraph({
           </Tree>
         </Group>
       </svg>
-      <EndpointList endpoints={endpoints}/>
+      <EndpointList endpoints={endpoints} useLightTheme={useLightTheme}/>
       </Box>
     </div>
   );

@@ -83,7 +83,7 @@ module.exports = {
             loader: 'image-webpack-loader',
             options: {
               // Options to lower image quality for faster network exchanges
-              //webp: { 
+              //webp: {
               //  quality: 30,
               //}
               name: 'images/[hash].[ext]',
@@ -100,7 +100,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js']
+    extensions: ['.ts', '.tsx', '.js', '.svg', '.png']
   },
   devServer: {
     publicPath: '/',
