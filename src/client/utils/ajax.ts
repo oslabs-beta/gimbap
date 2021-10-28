@@ -1,4 +1,4 @@
-import { ClientError, Cluster, Route, LoadData } from './../../shared/types';
+import { ClientError, Cluster, Route, LoadData, TreeNode } from './../../shared/types';
 
 /**
  * Makes a GET fetch request.
@@ -100,7 +100,7 @@ export async function fetchClusterLoadData(
  * 
  * @public
  */
-export async function fetchClusterTree(setTreeGraphData: React.Dispatch<React.SetStateAction<Cluster[] | null>>): Promise<void> {
-  const trees: Cluster[] | void = await fetchWrapper<Cluster[]>('api/graph/cluster/tree');
+export async function fetchClusterTree(setTreeGraphData: React.Dispatch<React.SetStateAction<TreeNode | null>>): Promise<void> {
+  const trees: TreeNode | void = await fetchWrapper<TreeNode>('api/graph/cluster/tree');
   if (trees) setTreeGraphData(trees);
 }

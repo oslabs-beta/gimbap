@@ -10,7 +10,6 @@ import { drawerWidth } from './../common/NavigationBar';
 import useWindowDimensions from './../../hooks/useWindowDimensions';
 import ChipSelector from './../common/ChipSelector';
 import LoadGraph from './LoadGraph';
-import { red } from '@mui/material/colors';
 
 
 export default function ClusterLoad({
@@ -28,6 +27,7 @@ export default function ClusterLoad({
   const [selectedClusters, setSelectedClusters] = useState<number[]>([]); // indices in clusters
   const [clustersLoadData, setClustersLoadData] = useState<{ [key: number]: LoadData }>(Object.create(null));
 
+
   // load route load data on user selecting an endpoint
   useEffect(() => {
     if (clusters === null) return;
@@ -39,10 +39,12 @@ export default function ClusterLoad({
     }
   }, [clusters, clustersLoadData, selectedClusters]);
 
+
   // will be undefined if data has not finished transferring from back-end
   const selectedLoadData: { [key: number]: LoadData | undefined } = selectedClusters.map((index: number) => clustersLoadData[index]);
 
   const clusterLabels = clusters ? clusters.map((_, i: number) => `Cluster ${i}`) : [];
+
 
   return (<>
     {!clusters && <Splash />}
@@ -59,24 +61,22 @@ export default function ClusterLoad({
           label='Clusters'
         />
 
-
         {Object.entries(selectedLoadData).map(([index, loadData]) => {
           if (!loadData) return <Splash key={index} />;
 
           const i: number = parseInt(index);
           const label = clusterLabels[i];
           return (
-          <LoadGraph
-            key={index}
-            useLightTheme={useLightTheme}
-            height={400}
-            width={windowWidth - (isNavBarOpen ? drawerWidth : 0) - 100}
-            loadData={loadData}
-            label={label}
-          />);
+            <LoadGraph
+              key={index}
+              useLightTheme={useLightTheme}
+              height={400}
+              width={windowWidth - (isNavBarOpen ? drawerWidth : 0) - 100}
+              loadData={loadData}
+              label={label}
+            />);
         })}
       </Stack>
-
     }
   </>);
 }
