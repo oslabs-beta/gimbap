@@ -1,17 +1,24 @@
-import mongoose from 'mongoose';
-
-import { Route } from './../../shared/types';
+import mongoose, { QueryOptions } from 'mongoose';
+import { autoIncrement } from 'mongoose-plugin-autoinc';
 
 // TODO abstract so it can work with either MongoDB or PostgreSQL depending on how setup is called.
 
-export interface Endpoint { method: string, endpoint: string, callTime: number }
+export interface Endpoint { method: string, endpoint: string, callTime: number, _id?: number }
 
-export const EndpointModel = mongoose.model<Endpoint>('Endpoint', new mongoose.Schema<Endpoint>({
+const EndpointSchema = new mongoose.Schema<Endpoint>({
+  _id: { type: Number, required: true },
   method: { type: String, required: true },
   endpoint: { type: String, required: true },
   callTime: { type: Number, required: true }, // unix timestamp
-}));
+});
+// use auto incrementing _id of type Number
+EndpointSchema.plugin(autoIncrement, {
+  model: 'Endpoint',
+  startAt: 0,
+  incrementBy: 1,
+});
 // TODO add validation for call_time to be convertible to Date
+export const EndpointModel = mongoose.model<Endpoint>('Endpoint', EndpointSchema);
 
 /**
  * Log an endpoint request data point to external database.
@@ -59,30 +66,19 @@ export async function logAllEndpoints(endpoints: Endpoint[]): Promise<void> {
 
 /**
  * Get a list of all endpoints. If no method or endpoint is specified, it will return all endpoints in the database.
- *
- * @param {String} method - (optional) HTTP method
- * @param {String} endpoint - (optional) HTTP request relative endpoint
+ * 
+ * @param {string} method - (optional) HTTP method
+ * @param {string} endpoint - (optional) HTTP request relative endpoint
+ * @param {number} afterId -(optional) _id of EndpointModel used to filter result to include only _id greater than this value
  * @returns Promise of array of endpoints
  *
  * @public
  */
-export async function getAllEndpoints(method?: string, endpoint?: string): Promise<Endpoint[]> {
-  if (method && endpoint) return await EndpointModel.find({ method, endpoint });
-  return await EndpointModel.find({});
-}
+export async function getAllEndpoints(method?: string, endpoint?: string, afterId?: number): Promise<Endpoint[]> {
+  const query: QueryOptions = {};
+  if (method) query.method = method;
+  if (endpoint) query.endpoint = endpoint;
+  if (afterId) query._id = { $gt: afterId };
 
-/**
- * Get a distinct list of endpoints.
- *
- * @returns Promise of array of Route
- *
- * @public
- */
-export async function getDistinctEndpoints(): Promise<Route[]> {
-  return await EndpointModel.aggregate<Route>([
-    // group by key, score to get distinct
-    { '$group': { _id: { method: '$method', endpoint: '$endpoint' } } },
-    // Clean up the output
-    { '$project': { _id: 0, method: '$_id.method', endpoint: '$_id.endpoint' } }
-  ]);
+  return await EndpointModel.find(query);
 }

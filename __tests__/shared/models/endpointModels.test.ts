@@ -1,6 +1,5 @@
 import { connect, disconnect } from './../../../src/shared/models/mongoSetup';
-import { EndpointModel, Endpoint, logEndpoint, getAllEndpoints, getDistinctEndpoints } from './../../../src/shared/models/endpointModel';
-import { Route } from './../../../src/server/utils/endpoints';
+import { EndpointModel, Endpoint, logEndpoint, getAllEndpoints } from './../../../src/shared/models/endpointModel';
 
 describe('Test storing endpoints', () => {
   beforeAll(async () => {
@@ -8,12 +7,12 @@ describe('Test storing endpoints', () => {
   });
 
   afterAll(async () => {
-    await EndpointModel.deleteMany();
+    await EndpointModel.deleteMany({});
     return await disconnect();
   });
 
   beforeEach(async () => {
-    await EndpointModel.deleteMany();
+    await EndpointModel.deleteMany({});
   });
 
   test('Log a single endpoint to database', async () => {
@@ -23,7 +22,7 @@ describe('Test storing endpoints', () => {
 
     await logEndpoint(method, endpoint, callTime);
 
-    const result: Endpoint[] = await EndpointModel.find();
+    const result: Endpoint[] = await EndpointModel.find({});
     expect(result).toHaveLength(1);
     expect(result[0]).toMatchObject({ method, endpoint, callTime });
   });
@@ -36,7 +35,7 @@ describe('Test storing endpoints', () => {
     for (let i = 0; i < methods.length; i++)
       await logEndpoint(methods[i], endpoints[i], callTimes[i]);
 
-    const result = await EndpointModel.find();
+    const result = await EndpointModel.find({});
 
     expect(result).toHaveLength(methods.length);
     for (let i = 0; i < methods.length; i++)
@@ -50,12 +49,12 @@ describe('Test retrieving endpoints', () => {
   });
 
   afterAll(async () => {
-    await EndpointModel.deleteMany();
+    await EndpointModel.deleteMany({});
     return await disconnect();
   });
 
   beforeEach(async () => {
-    await EndpointModel.deleteMany();
+    await EndpointModel.deleteMany({});
   });
 
   test('Get a list of all endpoints', async () => {
@@ -104,36 +103,5 @@ describe('Test retrieving endpoints', () => {
         expect(result[i]).toMatchObject(api[i]);
       }
     }
-  });
-
-  test('Get distinct endpoints', async () => {
-    const getApi1: Endpoint[] = [
-      { method: 'GET', endpoint: 'api/1', callTime: 1 },
-      { method: 'GET', endpoint: 'api/1', callTime: 2 },
-      { method: 'GET', endpoint: 'api/1', callTime: 3 },
-    ];
-    const deleteApi1: Endpoint[] = [
-      { method: 'DELETE', endpoint: 'api/1', callTime: 4 },
-    ];
-    const getApi2: Endpoint[] = [
-      { method: 'GET', endpoint: 'api/2', callTime: 5 },
-      { method: 'GET', endpoint: 'api/2', callTime: 6 },
-    ];
-    const postApi2: Endpoint[] = [
-      { method: 'POST', endpoint: 'api/2', callTime: 7 },
-      { method: 'POST', endpoint: 'api/2', callTime: 8 },
-    ];
-
-    await EndpointModel.insertMany([...getApi1, ...deleteApi1, ...getApi2, ...postApi2]);
-
-    const result: Route[] = await getDistinctEndpoints();
-
-    expect(result).toHaveLength(4);
-    expect(result).toMatchObject([
-      { method: 'GET', endpoint: 'api/2' },
-      { method: 'POST', endpoint: 'api/2' },
-      { method: 'DELETE', endpoint: 'api/1' },
-      { method: 'GET', endpoint: 'api/1' }
-    ]);
   });
 });

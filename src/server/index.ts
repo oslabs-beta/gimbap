@@ -1,5 +1,6 @@
 import path from 'path';
 import express, { Request, Response, NextFunction, Express } from 'express';
+import compression from 'compression';
 import { connect } from './../shared/models/mongoSetup';
 // import gimbap from 'gimbap';
 
@@ -19,7 +20,7 @@ const app: Express = express();
 
 /* MIDDLEWARE */
 app.use(express.json());
-
+app.use(compression());
 
 /* STATIC SERVER */
 if (process.env.NODE_ENV === 'production') {

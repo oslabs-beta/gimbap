@@ -32,7 +32,7 @@ export default function ClusterLoad({
 
   // load route load data on user selecting an endpoint
   useEffect(() => {
-    if (!clusters) return;
+    if (clusters === null) return;
 
     for (const index of selectedClusters) {
       if (!clustersLoadData[index]) {
@@ -62,7 +62,7 @@ export default function ClusterLoad({
         />
 
         {Object.entries(selectedLoadData).map(([index, loadData]) => {
-          if (!loadData) return <Splash />;
+          if (!loadData) return <Splash key={index} />;
 
           const i: number = parseInt(index);
           const label = clusterLabels[i];
