@@ -1,19 +1,10 @@
 
 body {
   overflow-x: hidden;
-  height: 100%;
-  background-size: cover;
 }
 
-.bg {
-    /* The image used */
-    background-image: url("img_girl.jpg");
+#root {
+  // height: 100vh;
+  // background-size: contain;
 
-    /* Full height */
-    height: 100%;
-  
-    /* Center and scale the image nicely */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
 }

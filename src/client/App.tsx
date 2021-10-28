@@ -9,7 +9,6 @@ import NavigationBar from './components/common/NavigationBar';
 import Clusters from './components/clusters/Clusters';
 import Metrics from './components/metrics/Metrics';
 import Documentation from './components/documentation/Documentation';
-import { blue } from '@mui/material/colors';
 
 
 export default function App() {
@@ -22,9 +21,9 @@ export default function App() {
   const showApiDocPage: () => void = useCallback(() => setDocSubPage(SubPage.ApiDoc), [setDocSubPage]);
 
   return (
-    <div className='bg'
+    <div
       style={{
-        backgroundImage: useLightTheme ? 'url(\'https://coolbackgrounds.io/images/backgrounds/white/pure-white-background-85a2a7fd.jpg\')': 'url(\'https://cdn.wallpapersafari.com/99/51/SXfiUY.jpg\')', height: '100%', backgroundSize: 'cover'
+        backgroundImage: useLightTheme ? 'url(\'https://coolbackgrounds.io/images/backgrounds/white/pure-white-background-85a2a7fd.jpg\')': 'url(\'https://cdn.wallpapersafari.com/99/51/SXfiUY.jpg\')', height: '100vh', backgroundSize: 'cover'
       }}>
     <ThemeProvider theme={useLightTheme ? lightTheme : darkTheme}>
 

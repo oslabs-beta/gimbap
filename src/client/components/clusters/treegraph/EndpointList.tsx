@@ -28,7 +28,7 @@ export default function EndpointList(props) {
       <Box
         sx={{ width: 'document.documentElement.clientWidth * 0.2', height: '100%', maxWidth: 'document.documentElement.clientWidth * 0.2', bgcolor: 'background.paper', textAlign: 'center' , border: 1, borderColor: 'black', borderRadius: 5}}
       >
-        <Typography variant='h4' mr={3}>{endpointList.length ? `${clusterName} - ${methodName} - ${endpointList.length} ` : null}</Typography>
+        <Typography color="textPrimary" variant='h4' mr={3}>{endpointList.length ? `${clusterName} - ${methodName} - ${endpointList.length} ` : null}</Typography>
         <FixedSizeList
           height={(window.innerHeight * .85)}
           width={(window.innerWidth * .25)}
