@@ -100,8 +100,7 @@ export async function fetchClusterLoadData(
  * 
  * @public
  */
- export async function fetchClusterTree(setTreeGraphData: React.Dispatch<React.SetStateAction<Cluster[] | null>>): Promise<void> {
-  const clusters: Cluster[] | void = await fetchWrapper<Cluster[]>('api/graph/cluster/');
+export async function fetchClusterTree(setTreeGraphData: React.Dispatch<React.SetStateAction<Cluster[] | null>>): Promise<void> {
   const trees: Cluster[] | void = await fetchWrapper<Cluster[]>('api/graph/cluster/tree');
   if (trees) setTreeGraphData(trees);
 }
