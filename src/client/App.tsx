@@ -23,7 +23,7 @@ export default function App() {
   return (
     <div
       style={{
-        backgroundImage: useLightTheme ? 'url(\'https://coolbackgrounds.io/images/backgrounds/white/pure-white-background-85a2a7fd.jpg\')': 'url(\'https://cdn.wallpapersafari.com/99/51/SXfiUY.jpg\')', height: '100vh', backgroundSize: 'cover'
+        backgroundImage: useLightTheme ? 'url(\'https://coolbackgrounds.io/images/backgrounds/white/pure-white-background-85a2a7fd.jpg\')': 'url(\'https://cdn.wallpapersafari.com/99/51/SXfiUY.jpg\')',
       }}>
     <ThemeProvider theme={useLightTheme ? lightTheme : darkTheme}>
 

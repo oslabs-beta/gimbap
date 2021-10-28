@@ -144,8 +144,7 @@ export default function NavigationBar({
                 marginRight: '10px',
               }}
             >
-              <MenuIcon src="logo.png" />
-              {/* <Logo /> */}
+              <MenuIcon/>
             </IconButton>
           }
         </DrawerHeader>
