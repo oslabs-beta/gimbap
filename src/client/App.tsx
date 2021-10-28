@@ -7,14 +7,18 @@ import { Cluster, Route } from './../../src/shared/types';
 import { Page, SubPage } from './types';
 import { fetchRoutes, fetchClusters } from './utils/ajax';
 import { darkTheme, lightTheme } from './theme';
+import useWindowDimensions from './hooks/useWindowDimensions';
 import NavigationBar from './components/common/NavigationBar';
 import Clusters from './components/clusters/Clusters';
 import Metrics from './components/metrics/Metrics';
 import Documentation from './components/documentation/Documentation';
 
+import './App.scss';
+
 
 export default function App() {
   const [useLightTheme, setUseLightTheme] = useState(true);
+  const { height } = useWindowDimensions();
 
   const [isNavBarOpen, setIsNavBarOpen] = React.useState<boolean>(true);
   const [page, setPage] = useState<Page>(Page.Clusters);
@@ -40,10 +44,12 @@ export default function App() {
 
   return (
     <div
+      id={'app'}
       style={{
         backgroundImage: useLightTheme
           ? 'url(\'https://coolbackgrounds.io/images/backgrounds/white/pure-white-background-85a2a7fd.jpg\')'
-          : 'url(\'https://cdn.wallpapersafari.com/99/51/SXfiUY.jpg\')'
+          : 'url(\'https://cdn.wallpapersafari.com/99/51/SXfiUY.jpg\')',
+        minHeight: height,
       }}>
       <ThemeProvider theme={useLightTheme ? lightTheme : darkTheme}>
         <Stack id='app' direction='row'>

@@ -19,6 +19,6 @@ export default function Clusters({
   // TODO adjust as needed I removed percent cuts
   return (<>
     {clusters === null && <Splash />}
-    {clusters !== null && <TreeGraph width={(isNavBarOpen ? width - drawerWidth : width - closedDrawerWidth)} height={height} />}
+    {clusters !== null && <TreeGraph width={(isNavBarOpen ? width - drawerWidth : width - closedDrawerWidth)} height={height - 2} />}
   </>);
 }
