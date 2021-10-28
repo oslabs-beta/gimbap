@@ -41,10 +41,12 @@ export default function ClusterLoad({
 
 
   // will be undefined if data has not finished transferring from back-end
-  const selectedLoadData: { [key: number]: LoadData | undefined } = selectedClusters.map((index: number) => clustersLoadData[index]);
+  const selectedLoadData: { [key: number]: LoadData | undefined } = selectedClusters.reduce((selectedData: { [key: number]: LoadData | undefined }, index: number) => {
+    selectedData[index] = clustersLoadData[index];
+    return selectedData;
+  }, Object.create(null));
 
   const clusterLabels = clusters ? clusters.map((_, i: number) => `Cluster ${i}`) : [];
-
 
   return (<>
     {!clusters && <Splash />}
