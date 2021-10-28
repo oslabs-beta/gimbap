@@ -171,10 +171,7 @@ export async function getClusterTreeGraphData(req: Request, res: Response, next:
   });
 
   try {
-    console.log('Withing treegraphdata middleware ', clusters);
-    console.log('one cluster', clusters[1]);
     res.locals.treeGraphData = theSuperHappyTreeGenerator(clusters);
-    //console.log(res.locals.treeGraphData);
   } catch (error) {
     return next(Object.assign(error, {
       status: 500,
