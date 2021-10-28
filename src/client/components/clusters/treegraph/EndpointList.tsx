@@ -31,18 +31,7 @@ export default function EndpointList(props) {
     return (
       <ListItem style={style} key={index} component="div" disablePadding>
         <ListItemButton>
-          <ListItemText primary={`${index} : ${endpointList[index]?.name}`} />
-        </ListItemButton>
-      </ListItem>
-    );
-  }
-
-  const renderSingleRow = (props: ListChildComponentProps) => {
-    const { index, style } = props;
-    return (
-      <ListItem style={style} key={index} component="div" disablePadding>
-        <ListItemButton>
-          <ListItemText primary={'No endpoints to show...'} />
+          <ListItemText primary= {endpointList.length === 0 ? 'No endpoints to show...' : endpointList[index]?.name} />
         </ListItemButton>
       </ListItem>
     );
@@ -60,7 +49,7 @@ export default function EndpointList(props) {
           itemCount={endpointList.length ? endpointList.length: 1}
           overscanCount={5}
         >
-          {endpointList.length === 0 ? renderSingleRow : renderRow}
+          {renderRow}
         </FixedSizeList>
       </Box>
     );

@@ -172,7 +172,7 @@ export default function TreeGraph({
 
                                 setEndPoints({clusterName: clusterName, methodName: methodName, endpointList: endpointList});
                               }
-                              node.data.isExpanded = !node.data.isExpanded;
+                              //node.data.isExpanded = !node.data.isExpanded;
                               forceUpdate();
                             }}
                           />
