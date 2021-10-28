@@ -37,17 +37,6 @@ export default function EndpointList(props) {
     );
   }
 
-  const renderSingleRow = (props: ListChildComponentProps) => {
-    const { index, style } = props;
-    return (
-      <ListItem style={style} key={index} component="div" disablePadding>
-        <ListItemButton>
-          <ListItemText primary={'No endpoints to show...'} />
-        </ListItemButton>
-      </ListItem>
-    );
-  }
-
     return (
       <Box
         sx={{ width: '100%', height: '100%', maxWidth: 360, bgcolor: 'background.paper', textAlign: 'center'}}
