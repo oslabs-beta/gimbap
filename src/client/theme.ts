@@ -1,6 +1,14 @@
 import { createTheme, Theme } from '@mui/material/styles';
 
 export const lightTheme: Theme = createTheme({
+  // typography: {
+  //   fontFamily: [
+  //     'Roboto',
+  //     'Arial',
+  //     'Helvetica',
+  //     'sans-serif'
+  //   ].join(',')
+  // }
   palette: {
     mode: 'light',
     primary: {

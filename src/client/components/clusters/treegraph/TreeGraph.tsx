@@ -4,13 +4,12 @@ import { hierarchy, Tree } from '@visx/hierarchy';
 import { LinearGradient } from '@visx/gradient';
 import { pointRadial } from 'd3-shape';
 import useForceUpdate from './useForceUpdate';
-//import LinkControls from './LinkControls';
 import LinkControls from './LinkControls';
 import getLinkComponent from './getLinkComponent';
 import { fetchClusterTree } from '../../../utils/ajax';
 import { Cluster } from './../../../../shared/types';
 import EndpointList from './EndpointList';
-import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 
 
@@ -19,8 +18,6 @@ interface TreeNode {
   isExpanded?: boolean;
   children?: TreeNode[];
 }
-
-
 
 const defaultMargin = { top: 30, left: 30, right: 30, bottom: 70 };
 
@@ -40,7 +37,7 @@ export default function TreeGraph({
   const [linkType, setLinkType] = useState<string>('diagonal');
   const [stepPercent, setStepPercent] = useState<number>(0.5);
   const [trees, setTreeGraphData] = useState<Cluster[] | null>([]);
-  const [endpoints, setEndPoints] = useState<object[]>([]);
+  const [endpoints, setEndPoints] = useState<{clusterName: string, methodName: string, endpointList: string[]}>({clusterName: 'No cluster selected', methodName: 'No method selected', endpointList: []});
   const [clusters, setClusters] = useState<Cluster | null>([]);
   const forceUpdate = useForceUpdate();
   const [useLightTheme, setUseLightTheme] = useState(true); // TODO hook up theme toggle
@@ -48,18 +45,15 @@ export default function TreeGraph({
 
   const innerWidth = totalWidth - margin.left - margin.right;
   const innerHeight = totalHeight - margin.top - margin.bottom;
-  // multiply the window height based on if the clusters and endpoints are shown.
-  // const innerHeight2 = window.screen.availHeight * (trees.children.length);
 
   let origin: { x: number; y: number };
   let sizeWidth: number;
   let sizeHeight: number;
 
   // Fetch request zone
-  useEffect(() => {
+  useEffect(()=>{
     fetchClusterTree(setTreeGraphData);
-
-  }, []);
+  },[]);
 
   const data = trees;
   if (layout === 'polar') {
@@ -94,15 +88,15 @@ export default function TreeGraph({
         setLinkType={setLinkType}
         setStepPercent={setStepPercent}
       />
-      <Box sx={{ display: 'flex' }}>
-        <svg width={totalWidth} height={totalHeight}>
+      <Stack direction="row" spacing={2}>
+        <svg width={totalWidth} height={totalHeight} style={{flexGrow: 1}}>
           <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
-          <rect width={totalWidth} height={totalHeight} rx={14} fill="#272b4d" />
+          <rect width={totalWidth} height={(totalHeight)} rx={14} fill="#272b4d" />
           <Group top={margin.top} left={margin.left}>
             <Tree
               root={hierarchy(data, (d) => (d.isExpanded ? null : d.children))}
               size={[sizeWidth, sizeHeight]}
-              separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
+              separation={(a, b) => (a.parent === b.parent ? 2 : 100) / a.depth}
             >
               {(tree) => (
                 <Group top={origin.y} left={origin.x}>
@@ -146,7 +140,7 @@ export default function TreeGraph({
                             }}
                           />
                         )}
-                        {node.depth > 0 && node.depth !== 3 && (
+                        {node.depth > 0 && node.depth !== 3 &&(
                           <rect
                             height={height}
                             width={width}
@@ -159,25 +153,43 @@ export default function TreeGraph({
                             strokeOpacity={node.data.children ? 1 : 0.6}
                             rx={node.data.children ? 0 : 10}
                             onClick={() => {
-                              if (node.depth == 2) {
-                                setEndPoints(node.data.children);
+                              if(node.depth == 2) {
+                            
+                                //To see what cluster this method belongs to , we have to access node.data.parent.name
+                                //To get the name of the method, we have to access node.data.name
+                                const clusterName = node.parent.data.name;
+                                const methodName = node.data.name
+                                const endpointList = node.data.children.sort((a, b) => {
+                                  let fa = a.name.toLowerCase(),
+                                      fb = b.name.toLowerCase();
+
+                                  if (fa < fb) {
+                                      return -1;
+                                  }
+                                  if (fa > fb) {
+                                      return 1;
+                                  }
+                                  return 0;
+                                })
+
+                                setEndPoints({clusterName: clusterName, methodName: methodName, endpointList: endpointList});
                               }
-                              node.data.isExpanded = !node.data.isExpanded;
+                              //node.data.isExpanded = !node.data.isExpanded;
                               forceUpdate();
                             }}
                           />
                         )}
-                        {node.depth !== 3 && (
-                          <text
-                            dy=".33em"
-                            fontSize={9}
-                            fontFamily="Arial"
-                            textAnchor="middle"
-                            style={{ pointerEvents: 'none' }}
-                            fill={node.depth === 0 ? '#fc0345' : node.children ? 'white' : '#fc0345'}
-                          >
-                            {node.data.name}
-                          </text>
+                        {node.depth !== 3 &&(
+                        <text
+                          dy=".33em"
+                          fontSize={9}
+                          fontFamily="Arial"
+                          textAnchor="middle"
+                          style={{ pointerEvents: 'none' }}
+                          fill={node.depth === 0 ? '#fc0345' : node.children ? 'white' : '#fc0345'}
+                        >
+                          {node.data.name}
+                        </text>
                         )}
                       </Group>
                     );
@@ -187,8 +199,8 @@ export default function TreeGraph({
             </Tree>
           </Group>
         </svg>
-        <EndpointList endpoints={endpoints} />
-      </Box>
+        <EndpointList sx={{ width: 1/2}} endpoints={endpoints}/>
+      </Stack>
     </div>
   );
 }
