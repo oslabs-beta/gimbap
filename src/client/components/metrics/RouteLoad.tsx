@@ -32,7 +32,7 @@ export default function RouteLoad({
 
   // load route load data on user selecting an endpoint
   useEffect(() => {
-    if (!routes) return;
+    if (routes === null) return;
 
     for (const index of selectedRoutes) {
       if (!routesLoadData[index]) {
@@ -63,7 +63,7 @@ export default function RouteLoad({
         />
 
         {Object.entries(selectedLoadData).map(([index, loadData]) => {
-          if (!loadData) return <Splash />;
+          if (!loadData) return <Splash key={index} />;
 
           const i: number = parseInt(index);
           const label = routeLabels[i];

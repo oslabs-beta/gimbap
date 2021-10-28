@@ -1,7 +1,8 @@
 import clustering from 'density-clustering';
 
 import { Endpoint } from '../../shared/models/endpointModel';
-import { Route, Cluster, LoadData, TreeNode } from './../../shared/types';
+import { EndpointBuckets } from '../../server/models/endpointBucketsModel';
+import { Route, Cluster, LoadData, TreeNode, DataPoint } from './../../shared/types';
 
 interface TimeDomainEndpoint extends Endpoint {
   hour: number;
@@ -11,94 +12,59 @@ interface TimeDomainEndpoint extends Endpoint {
  * Utilize OPTICS algorithm to cluster endpoints based on covariant time utilization.
  * https://en.wikipedia.org/wiki/OPTICS_algorithm
  *
- * @param {Endpoint[]} serverResponses - Array of server responses.
- * @param {number} step - step size for bucket vectorization in hours. Defaults to 1.
+ * @param allEndpointBuckets - Array of endpoint buckets to use for clustering calculation.
  * @returns Array of Cluster recommendations.
  *
  * @public
  */
-export function determineClusters(serverResponses: Endpoint[], step = 1): Cluster[] {
-  // group data by endpoints and add hour property that is decimal of hour
-  const byEndpoint: { [key: string]: TimeDomainEndpoint[] } = serverResponses.reduce((grouped, response) => {
-    const date: Date = new Date(response.callTime);
-
-    grouped[response.method + response.endpoint] ??= [];
-    grouped[response.method + response.endpoint].push({
-      ...response,
-      hour: date.getHours() + (date.getMinutes() / 60)
-    });
-
-    return grouped;
-  }, Object.create(null));
-
-  const uniqueRoutes: Route[] = getUniqueRoutes(serverResponses);
-
+export function determineClusters(allEndpointBuckets: EndpointBuckets[]): Cluster[] {
   // vectorize endpoint array into 24 data points with number of calls in that hour.
-  // same order as uniqueRoutes
+  // same order as endpointBuckets
   const vectors: number[][] = [];
   let totalNumCalls = 0;
-  for (const route of uniqueRoutes) {
-    const responses: TimeDomainEndpoint[] = byEndpoint[route.method + route.endpoint];
-
-    const vector: number[] = [];
-    for (let hourStart = 0; hourStart < 24; hourStart += step) {
-      const numCalls: number = responses.filter(endpoint => endpoint.hour > hourStart && endpoint.hour < hourStart + step).length;
-
-      totalNumCalls += numCalls;
-
-      vector.push(numCalls);
-    }
-
-    vectors.push(vector);
+  for (const endpointBuckets of allEndpointBuckets) {
+    totalNumCalls += endpointBuckets.buckets.reduce((sum, val) => sum + val, 0);
+    vectors.push(endpointBuckets.buckets);
   }
 
   const analyzer = new clustering.OPTICS();
 
   const averageCallsPerBucket = totalNumCalls / vectors[0].length; // use as neighborhood radius
-  const result: number[][] = analyzer.run(vectors, averageCallsPerBucket/20, 1);
+  const result: number[][] = analyzer.run(vectors, averageCallsPerBucket, 1);
 
-  return result.map(clusterIndices => clusterIndices.map(i => uniqueRoutes[i]));
+  return result.map(clusterIndices => clusterIndices.map((i): Route => ({ method: allEndpointBuckets[i].method, endpoint: allEndpointBuckets[i].endpoint })));
 }
 
 /**
- * Find all unique routes in the endpoint array.
- *
- * @param {Endpoint} endpoints - Array of Endpoint.
- * @returns Array of unique Route in Endpoint array.
- *
- * @private
+ * Generate DataPoints for a load data graph for a pre-processed route buckets vector.
+ * 
+ * @param endpointBuckets - EndpointBuckets object for a particular route.
+ * @param granularity - time interval in minutes between data points
+ * 
+ * @public
  */
-export function getUniqueRoutes(endpoints: Endpoint[]): Route[] {
-  const routes: Route[] = [];
-  const foundRoutes: Set<string> = new Set();
+export function getLoadData(endpointBuckets: EndpointBuckets, granularity = 30): LoadData {
+  const granularityInHours: number = granularity / 60;
 
-  endpoints.forEach(endpoint => {
-    const key = endpoint.method + endpoint.endpoint;
-    if (!foundRoutes.has(key)) {
-      foundRoutes.add(key);
-      routes.push({ method: endpoint.method, endpoint: endpoint.endpoint });
-    }
-  });
+  let numDays: number = (endpointBuckets.newestDate - endpointBuckets.oldestDate) / (24 * 60 * 60 * 1000);
+  numDays = numDays === 0 ? 1 : Math.ceil(numDays);
 
-  return routes;
+  return endpointBuckets.buckets.map((numCalls: number, i: number): DataPoint => [granularityInHours * i, numCalls / numDays]);
 }
 
 /**
- * Generate DataPoints for a load data graph for a set of server responses.
+ * Create an array of buckets with the total number of endpoints that call into each bucket based on an interval size of granularity in minutes.
  * 
  * @param endpoints - Array of Endpoint
  * @param granularity - time interval in minutes between data points
+ * @returns array of buckets with the total number of endpoints that call into each bucket
+ * 
+ * @public
  */
-export function getLoadData(endpoints: Endpoint[], granularity = 30): LoadData {
-  // calculate oldest and newest day in data to determine numbers of days to average total bucket calls by
-  let firstDay: Date | null = null, lastDay: Date | null = null;
-
+export function vectorizeEndpoints(endpoints: Endpoint[], granularity = 30): number[] {
   // break data into bucket
   const responses: TimeDomainEndpoint[] = endpoints.map(endpoint => {
     const date = new Date(endpoint.callTime);
-
-    if (!firstDay || date < firstDay) firstDay = date;
-    if (!lastDay || date > lastDay) lastDay = date;
 
     return {
       ...endpoint,
@@ -106,20 +72,14 @@ export function getLoadData(endpoints: Endpoint[], granularity = 30): LoadData {
     };
   });
 
-  if (!firstDay || !lastDay) throw new Error('Cannot calculate load data for an empty array of endpoints.');
-
-  let numDays: number = (lastDay - firstDay) / (24 * 60 * 60 * 1000);
-  numDays = numDays === 0 ? 1 : Math.ceil(numDays);
-
-  const loadData: LoadData = [];
+  const vector: number[] = [];
   for (let hourStart = 0; hourStart < 24; hourStart += (granularity / 60)) {
-    const numCalls: number = responses
-      .filter(endpoint => endpoint.hour > hourStart && endpoint.hour < hourStart + (granularity / 60)).length / numDays;
+    const numCalls: number = responses.filter(endpoint => endpoint.hour >= hourStart && endpoint.hour < hourStart + (granularity / 60)).length;
 
-    loadData.push([hourStart, numCalls]);
+    vector.push(numCalls);
   }
 
-  return loadData;
+  return vector;
 }
 
 /**
@@ -132,19 +92,15 @@ export function theSuperHappyTreeGenerator(clusters: Cluster[]): TreeNode {
     name: 'Clusters',
     children: []
   };
-  console.log('length of clusters',clusters.length);
+
   for (let i = 0; i < clusters.length; i++) {
     const clusterRoot: TreeNode = {
       name: 'Cluster ' + i,
       children: []
     };
-    console.log('before', clusterRoot);
-    if (!clusterRoot.children) continue; // typescript issue with line 181
 
     const cluster: Cluster = clusters[i];
     const cache: { [key: string]: string[] } = Object.create(null);
-    console.log('individual cluster', cluster);
-    console.log('individual cluster length', cluster.length);
     for (let j = 0; j < cluster.length; j++) {
       // check if cluster[j].method does not exist in cache object
       if (!cache[cluster[j].method]) cache[cluster[j].method] = [];
@@ -163,7 +119,7 @@ export function theSuperHappyTreeGenerator(clusters: Cluster[]): TreeNode {
         })
       };
 
-      clusterRoot.children.push(methodCluster);
+      clusterRoot.children?.push(methodCluster);
     }
     root.children?.push(clusterRoot);
   }

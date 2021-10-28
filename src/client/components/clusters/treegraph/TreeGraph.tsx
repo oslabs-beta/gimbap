@@ -56,11 +56,10 @@ export default function TreeGraph({
   let sizeHeight: number;
 
   // Fetch request zone
+  useEffect(() => {
+    fetchClusterTree(setTreeGraphData);
 
-   useEffect(()=>{
-     fetchClusterTree(setTreeGraphData);
-
-  },[]);
+  }, []);
 
   const data = trees;
   if (layout === 'polar') {
@@ -95,103 +94,100 @@ export default function TreeGraph({
         setLinkType={setLinkType}
         setStepPercent={setStepPercent}
       />
-      <Box sx={{display: 'flex'}}>
-      <svg width={totalWidth} height={totalHeight}>
-        <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
-        <rect width={totalWidth} height={totalHeight} rx={14} fill="#272b4d" />
-        <Group top={margin.top} left={margin.left}>
-          <Tree
-            root={hierarchy(data, (d) => (d.isExpanded ? null : d.children))}
-            size={[sizeWidth, sizeHeight]}
-            separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
-          >
-            {(tree) => (
-              <Group top={origin.y} left={origin.x}>
-                {tree.links().map((link, i) => (
-                  <LinkComponent
-                    key={i}
-                    data={link}
-                    percent={stepPercent}
-                    stroke="rgb(3, 136, 252)"
-                    strokeWidth="1"
-                    fill="none"
-                  />
-                ))}
-                {console.log(tree)}
-                {tree.descendants().map((node, key) => {
-                  const width = 40;
-                  const height = 20;
+      <Box sx={{ display: 'flex' }}>
+        <svg width={totalWidth} height={totalHeight}>
+          <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
+          <rect width={totalWidth} height={totalHeight} rx={14} fill="#272b4d" />
+          <Group top={margin.top} left={margin.left}>
+            <Tree
+              root={hierarchy(data, (d) => (d.isExpanded ? null : d.children))}
+              size={[sizeWidth, sizeHeight]}
+              separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
+            >
+              {(tree) => (
+                <Group top={origin.y} left={origin.x}>
+                  {tree.links().map((link, i) => (
+                    <LinkComponent
+                      key={i}
+                      data={link}
+                      percent={stepPercent}
+                      stroke="rgb(3, 136, 252)"
+                      strokeWidth="1"
+                      fill="none"
+                    />
+                  ))}
+                  {tree.descendants().map((node, key) => {
+                    const width = 40;
+                    const height = 20;
 
-                  let top: number;
-                  let left: number;
-                  if (layout === 'polar') {
-                    const [radialX, radialY] = pointRadial(node.x, node.y);
-                    top = radialY;
-                    left = radialX;
-                  } else if (orientation === 'vertical') {
-                    top = node.y;
-                    left = node.x;
-                  } else {
-                    top = node.x;
-                    left = node.y;
-                  }
+                    let top: number;
+                    let left: number;
+                    if (layout === 'polar') {
+                      const [radialX, radialY] = pointRadial(node.x, node.y);
+                      top = radialY;
+                      left = radialX;
+                    } else if (orientation === 'vertical') {
+                      top = node.y;
+                      left = node.x;
+                    } else {
+                      top = node.x;
+                      left = node.y;
+                    }
 
-                  return (
-                    <Group top={top} left={left} key={key}>
-                      {node.depth === 0 && (
-                        <circle
-                          r={12}
-                          fill="url('#links-gradient')"
-                          onClick={() => {
-                            node.data.isExpanded = !node.data.isExpanded;
-                            console.log(node);
-                            forceUpdate();
-                          }}
-                        />
-                      )}
-                      {node.depth > 0 && node.depth !== 3 &&(
-                        <rect
-                          height={height}
-                          width={width}
-                          y={-height / 2}
-                          x={-width / 2}
-                          fill="#272b4d"
-                          stroke={node.data.children ? '#03c0dc' : '#26deb0'}
-                          strokeWidth={1}
-                          strokeDasharray={node.data.children ? '0' : '2,2'}
-                          strokeOpacity={node.data.children ? 1 : 0.6}
-                          rx={node.data.children ? 0 : 10}
-                          onClick={() => {
-                            if(node.depth == 2) {
-                              setEndPoints(node.data.children);
-                            }
-                            node.data.isExpanded = !node.data.isExpanded;
-                            console.log(node);
-                            forceUpdate();
-                          }}
-                        />
-                      )}
-                      {node.depth !== 3 &&(
-                      <text
-                        dy=".33em"
-                        fontSize={9}
-                        fontFamily="Arial"
-                        textAnchor="middle"
-                        style={{ pointerEvents: 'none' }}
-                        fill={node.depth === 0 ? '#fc0345' : node.children ? 'white' : '#fc0345'}
-                      >
-                        {node.data.name}
-                      </text>
-                      )}
-                    </Group>
-                  );
-                })}
-              </Group>
-            )}
-          </Tree>
-        </Group>
-      </svg>
-      <EndpointList endpoints={endpoints} useLightTheme={useLightTheme}/>
+                    return (
+                      <Group top={top} left={left} key={key}>
+                        {node.depth === 0 && (
+                          <circle
+                            r={12}
+                            fill="url('#links-gradient')"
+                            onClick={() => {
+                              node.data.isExpanded = !node.data.isExpanded;
+                              forceUpdate();
+                            }}
+                          />
+                        )}
+                        {node.depth > 0 && node.depth !== 3 && (
+                          <rect
+                            height={height}
+                            width={width}
+                            y={-height / 2}
+                            x={-width / 2}
+                            fill="#272b4d"
+                            stroke={node.data.children ? '#03c0dc' : '#26deb0'}
+                            strokeWidth={1}
+                            strokeDasharray={node.data.children ? '0' : '2,2'}
+                            strokeOpacity={node.data.children ? 1 : 0.6}
+                            rx={node.data.children ? 0 : 10}
+                            onClick={() => {
+                              if (node.depth == 2) {
+                                setEndPoints(node.data.children);
+                              }
+                              node.data.isExpanded = !node.data.isExpanded;
+                              forceUpdate();
+                            }}
+                          />
+                        )}
+                        {node.depth !== 3 && (
+                          <text
+                            dy=".33em"
+                            fontSize={9}
+                            fontFamily="Arial"
+                            textAnchor="middle"
+                            style={{ pointerEvents: 'none' }}
+                            fill={node.depth === 0 ? '#fc0345' : node.children ? 'white' : '#fc0345'}
+                          >
+                            {node.data.name}
+                          </text>
+                        )}
+                      </Group>
+                    );
+                  })}
+                </Group>
+              )}
+            </Tree>
+          </Group>
+        </svg>
+        <EndpointList endpoints={endpoints} />
       </Box>
     </div>
   );

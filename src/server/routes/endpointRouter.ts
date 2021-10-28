@@ -1,10 +1,13 @@
 import { Router, Request, Response, NextFunction } from 'express';
+
 import { getEndpointList, getEndpointLoadGraphData } from './../controllers/dataController';
+import { cache } from './../controllers/cacheController';
 
 const router = Router();
 
 // To get list of all endpoints
 router.get('/',
+  cache(8 * 60 * 60 * 1000),
   getEndpointList,
   (req: Request, res: Response, next: NextFunction): void => {
     if (!res.locals.endpoints) return next({

@@ -44,7 +44,7 @@ module.exports = {
               '@babel/preset-react',
               '@babel/preset-typescript'
             ],
-            'plugins': [
+            plugins: [
               [
                 '@babel/plugin-transform-runtime',
                 {
