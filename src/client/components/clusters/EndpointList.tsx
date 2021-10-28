@@ -42,7 +42,7 @@ export default function EndpointList({
         borderRadius: 5
       }}
     >
-      <Typography variant='h4' mr={3} height={45} overflow={'hidden'}>
+      <Typography color='textPrimary' variant='h4' mr={3} height={45} overflow={'hidden'}>
         {endpointList.length ? `${clusterName} - ${methodName} - ${endpointList.length} ` : null}
       </Typography>
 
