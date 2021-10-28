@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import Splash from './../common/Splash';
 
 import { Cluster, LoadData } from './../../../shared/types';
-import { fetchClusters, fetchClusterLoadData } from './../../utils/ajax';
+import { fetchClusterLoadData } from './../../utils/ajax';
 import { drawerWidth } from './../common/NavigationBar';
 import useWindowDimensions from './../../hooks/useWindowDimensions';
 import ChipSelector from './../common/ChipSelector';
@@ -14,23 +14,19 @@ import { red } from '@mui/material/colors';
 
 
 export default function ClusterLoad({
+  clusters,
   isNavBarOpen,
   useLightTheme
 }: {
+  clusters: Cluster[] | null;
   isNavBarOpen: boolean;
   useLightTheme: boolean;
 }): JSX.Element {
 
   const { width: windowWidth } = useWindowDimensions();
 
-  const [clusters, setClusters] = useState<Cluster[] | null>(null);
   const [selectedClusters, setSelectedClusters] = useState<number[]>([]); // indices in clusters
   const [clustersLoadData, setClustersLoadData] = useState<{ [key: number]: LoadData }>(Object.create(null));
-
-  // load all clusters on component mounting
-  useEffect(() => {
-    fetchClusters(setClusters);
-  }, []);
 
   // load route load data on user selecting an endpoint
   useEffect(() => {

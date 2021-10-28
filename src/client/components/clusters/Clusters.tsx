@@ -1,10 +1,17 @@
-import React, {useState, useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
+
+import { Cluster } from './../../../shared/types';
 import TreeGraph from './treegraph/TreeGraph';
-//import ParentSize from '@visx/responsive/lib/components/ParentSize';
+import Splash from './../common/Splash';
 
+export default function Clusters({
+  useLightTheme,
+  clusters,
+}: {
+  useLightTheme: boolean;
+  clusters: Cluster[] | null;
+}) {
 
-export default function Clusters(props) {
-  const {useLightTheme} = props;
   const [dimensions, setDimensions] = useState({
     height: document.documentElement.clientHeight,
     width: document.documentElement.clientWidth,
@@ -25,10 +32,8 @@ export default function Clusters(props) {
     };
   });
 
-  return(
-    //<ParentSize>{({ width, height }) => <TreeGraph width={width} height={height} />}</ParentSize>
-    <TreeGraph width={dimensions.width * 0.60} height={(dimensions.height * 0.90)} useLightTheme={useLightTheme}/>
-    // routes scroll
-  );
-
+  return (<>
+    {clusters === null && <Splash />}
+    {clusters !== null && <TreeGraph width={dimensions.width * 0.60} height={(dimensions.height * 0.90)} useLightTheme={useLightTheme} />}
+  </>);
 }
