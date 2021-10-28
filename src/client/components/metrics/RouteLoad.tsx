@@ -6,29 +6,25 @@ import Splash from './../common/Splash';
 import LoadGraph from './LoadGraph';
 
 import { Route, LoadData } from './../../../shared/types';
-import { fetchRoutes, fetchRouteLoadData } from './../../utils/ajax';
+import { fetchRouteLoadData } from './../../utils/ajax';
 import { drawerWidth } from './../common/NavigationBar';
 import useWindowDimensions from './../../hooks/useWindowDimensions';
 import ChipSelector from './../common/ChipSelector';
 
 export default function RouteLoad({
+  routes,
   isNavBarOpen,
   useLightTheme,
 }: {
+  routes: Route[] | null;
   isNavBarOpen: boolean;
   useLightTheme: boolean
 }): JSX.Element {
 
   const { width: windowWidth } = useWindowDimensions();
 
-  const [routes, setRoutes] = useState<Route[] | null>(null);
   const [selectedRoutes, setSelectedRoutes] = useState<number[]>([]); // indices in routes
   const [routesLoadData, setRoutesLoadData] = useState<{ [key: number]: LoadData }>(Object.create(null));
-
-  // load all routes on component mounting
-  useEffect(() => {
-    fetchRoutes(setRoutes);
-  }, []);
 
   // load route load data on user selecting an endpoint
   useEffect(() => {

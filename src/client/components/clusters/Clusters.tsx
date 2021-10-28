@@ -1,34 +1,24 @@
-import React, {useState, useEffect} from 'react';
-import TreeGraph from './treegraph/TreeGraph';
-//import ParentSize from '@visx/responsive/lib/components/ParentSize';
+import React from 'react';
 
+import { Cluster } from './../../../shared/types';
+import { drawerWidth, closedDrawerWidth } from './../common/NavigationBar';
+import getWindowDimensions from './../../hooks/useWindowDimensions';
+import TreeGraph from './TreeGraph';
+import Splash from './../common/Splash';
 
-export default function Clusters(props) {
-  const {useLightTheme} = props;
-  const [dimensions, setDimensions] = useState({
-    height: document.documentElement.clientHeight,
-    width: document.documentElement.clientWidth,
-  });
+export default function Clusters({
+  isNavBarOpen,
+  clusters,
+}: {
+  isNavBarOpen: boolean;
+  clusters: Cluster[] | null;
+}) {
 
-  //Resize the window and update the state
-  useEffect(() => {
-    function handleResize() {
-      setDimensions({
-        height: document.documentElement.clientHeight,
+  const { width, height } = getWindowDimensions();
 
-        width: document.documentElement.clientWidth
-      });
-    }
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  });
-
-  return(
-    //<ParentSize>{({ width, height }) => <TreeGraph width={width} height={height} />}</ParentSize>
-    <TreeGraph width={dimensions.width * 0.60} height={(dimensions.height * 0.90)} useLightTheme={useLightTheme}/>
-    // routes scroll
-  );
-
+  // TODO adjust as needed I removed percent cuts
+  return (<>
+    {clusters === null && <Splash />}
+    {clusters !== null && <TreeGraph width={(isNavBarOpen ? width - drawerWidth : width - closedDrawerWidth)} height={height - 2} />}
+  </>);
 }
