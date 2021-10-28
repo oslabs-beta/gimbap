@@ -2,6 +2,7 @@ import path from 'path';
 import fs, { promises as fsPromises } from 'fs';
 
 import { logAllEndpoints, Endpoint } from '../../shared/models/endpointModel';
+import { MONGODB_URI } from '../secrets.json';
 
 /**
  * Data from https://cds.cdm.depaul.edu/resources/datasets/ using Non-Preprocessed DePaul CTI Web Usage Data.
@@ -42,3 +43,4 @@ export default async function loadDePaulEndpointData(batchSize = 5000): Promise<
         console.log(`Percent completed: ${(((begin + batchSize) / allEndpoints.length) * 100).toFixed(2)}`);
     }
 }
+connect(MONGODB_URI).then(loadDePaulEndpointData).then(disconnect);
