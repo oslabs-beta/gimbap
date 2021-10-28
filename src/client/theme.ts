@@ -4,39 +4,65 @@ export const lightTheme: Theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#3559a4',
+      main: '#3559A4',
     },
     secondary: {
-      main: '#28a78d',
+      main: '#3559A4',
     },
     error: {
-      main: '#e24b44',
+      main: '#3559A4',
     },
     warning: {
-      main: '#f7b646',
+      main: '#3559A4',
     },
-    divider: '#6C6C6C',
+    divider: '#3559A4',
   },
 });
+
+// const getDesignTokens = (mode: PaletteMode) => ({
+//   palette: {
+//     mode,
+//     ...(mode === 'light'
+//       ? {
+//           // palette values for light mode
+//           primary: amber,
+//           divider: amber[200],
+//           text: {
+//             primary: grey[900],
+//             secondary: grey[800],
+//           },
+//         }
+//       : {
+//           // palette values for dark mode
+//           primary: deepOrange,
+//           divider: deepOrange[700],
+//           background: {
+//             default: deepOrange[900],
+//             paper: deepOrange[900],
+//           },
+//           text: {
+//             primary: '#fff',
+//             secondary: grey[500],
+//           },
+//         }),
+//   },
+// });
 
 export const darkTheme: Theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#3559a4',
+      main:'#fff',
     },
-    secondary: {
-      main: '#28a78d',
-    },
-    error: {
-      main: '#e24b44',
-    },
-    warning: {
-      main: '#f7b646',
-    },
-    divider: '#6C6C6C',
-    info: {
-      main: '#F7B646',
-    },
-  },
+          divider: '#242423',
+          background: {
+            default: '#E24B44',
+            paper: '#242423',
+          },
+          text: {
+            primary: '#fff',
+            secondary: '#fff',
+          },
+
+  }
 });

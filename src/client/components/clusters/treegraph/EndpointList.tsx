@@ -4,31 +4,18 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
-import { getListItemIconUtilityClass } from '@mui/material';
-
-// function renderRow(props: ListChildComponentProps) {
-//   const { index, style } = props;
-
-//   return (
-//     <ListItem style={style} key={index} component="div" disablePadding>
-//       <ListItemButton>
-//         <ListItemText primary={`Item ${index + 1}`} />
-//       </ListItemButton>
-//     </ListItem>
-//   );
-// }
+import Typography from '@mui/material/Typography';
 
 
 export default function EndpointList(props) {
   const { endpoints } = props;
-
 
   function renderRow(props: ListChildComponentProps) {
     const { index, style } = props;
     return (
       <ListItem style={style} key={index} component="div" disablePadding>
         <ListItemButton>
-          <ListItemText primary={`${endpoints[index]?.name}`} />
+          <ListItemText primary={`${endpoints[index]?.name}`} color="#E76f51"/>
         </ListItemButton>
       </ListItem>
     );
@@ -36,14 +23,17 @@ export default function EndpointList(props) {
 
   const renderSingleRow = (props: ListChildComponentProps) => {
     const { index, style } = props;
+
     return (
       <ListItem style={style} key={index} component="div" disablePadding>
         <ListItemButton>
-          <ListItemText primary={'No endpoints to show...'} />
+        <ListItemText
+        disableTypography primary={<Typography color="textPrimary">No endpoints to display...</Typography>}
+      />
         </ListItemButton>
       </ListItem>
     );
-  }
+  };
 
     return (
       <Box
@@ -61,3 +51,4 @@ export default function EndpointList(props) {
       </Box>
     );
    }
+

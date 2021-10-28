@@ -22,9 +22,6 @@ interface TreeNode {
 
 
 
-
-
-
 const defaultMargin = { top: 30, left: 30, right: 30, bottom: 70 };
 
 export type LinkTypesProps = {
@@ -46,6 +43,8 @@ export default function TreeGraph({
   const [endpoints, setEndPoints] = useState<object[]>([]);
   const [clusters, setClusters] = useState<Cluster | null>([]);
   const forceUpdate = useForceUpdate();
+  const [useLightTheme, setUseLightTheme] = useState(true); // TODO hook up theme toggle
+
 
   const innerWidth = totalWidth - margin.left - margin.right;
   const innerHeight = totalHeight - margin.top - margin.bottom;

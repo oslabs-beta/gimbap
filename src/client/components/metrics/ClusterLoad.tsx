@@ -10,6 +10,8 @@ import { drawerWidth } from './../common/NavigationBar';
 import useWindowDimensions from './../../hooks/useWindowDimensions';
 import ChipSelector from './../common/ChipSelector';
 import LoadGraph from './LoadGraph';
+import { red } from '@mui/material/colors';
+
 
 export default function ClusterLoad({
   isNavBarOpen,
@@ -50,9 +52,9 @@ export default function ClusterLoad({
     {!clusters && <Splash />}
     {clusters &&
       <Stack id='cluster-load' sx={{ padding: 2 }}>
-        <Typography variant='h4'>Cluster Load Graphs</Typography>
-        <Typography variant='body1'>Average number of server calls to a particular cluster per 24-hour time period.</Typography>
-        <Typography variant='body1' mt={4}>Select clusters to view graphs.</Typography>
+        <Typography variant='h4' color='textPrimary'>Cluster Load Graphs</Typography>
+        <Typography variant='body1' color='textPrimary'>Average number of server calls to a particular cluster per 24-hour time period.</Typography>
+        <Typography variant='body1' color='textPrimary' mt={4}>Select clusters to view graphs.</Typography>
 
         <ChipSelector
           itemLabels={clusterLabels}
@@ -61,13 +63,14 @@ export default function ClusterLoad({
           label='Clusters'
         />
 
+
         {Object.entries(selectedLoadData).map(([index, loadData]) => {
           if (!loadData) return <Splash key={index} />;
 
           const i: number = parseInt(index);
           const label = clusterLabels[i];
-
-          return (<LoadGraph
+          return (
+          <LoadGraph
             key={index}
             useLightTheme={useLightTheme}
             height={400}
@@ -77,6 +80,7 @@ export default function ClusterLoad({
           />);
         })}
       </Stack>
+
     }
   </>);
 }
