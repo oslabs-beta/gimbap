@@ -152,7 +152,7 @@ export default function TreeGraph({
                             rx={node.data.children ? 0 : 10}
                             onClick={() => {
                               if(node.depth == 2) {
-                                console.log(node.parent.data.name);
+                            
                                 //To see what cluster this method belongs to , we have to access node.data.parent.name
                                 //To get the name of the method, we have to access node.data.name
                                 const clusterName = node.parent.data.name;

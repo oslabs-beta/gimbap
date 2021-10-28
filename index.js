@@ -1,1 +1,0 @@
-console.log(new Date(new Date().toLocaleDateString()));
