@@ -72,6 +72,9 @@ export async function getEndpointLoadGraphData(req: Request, res: Response, next
  * @public
  */
 export async function getClusterList(req: Request, res: Response, next: NextFunction): Promise<void> {
+
+  // TODO update with new clusterModel
+
   if (clusters) {
     res.locals.clusters = clusters;
   } else {
