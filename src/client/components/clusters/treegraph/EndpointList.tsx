@@ -5,9 +5,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
-import Typography from '@mui/material/Typography';
-
-// Add the list bar
 
 export default function EndpointList(props) {
   const { endpoints } = props;
