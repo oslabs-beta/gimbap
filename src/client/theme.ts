@@ -23,7 +23,7 @@ export const lightTheme: Theme = createTheme({
     warning: {
       main: '#3559A4',
     },
-    divider: '#3559A4',
+    divider: '#28A78D',
   },
 });
 
