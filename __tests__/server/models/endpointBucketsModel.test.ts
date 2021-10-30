@@ -4,8 +4,8 @@ import { connect, disconnect } from './../../../src/shared/models/mongoSetup';
 import {
   EndpointBucketsModel,
   EndpointBuckets,
-  startWatchingEndpointModel,
-  stopWatchingEndpointModel,
+  startWatchingServerResponseModel,
+  stopWatchingServerResponseModel,
   getEndpointBuckets,
   getAllEndpointBuckets,
   getDistinctRoutes,
@@ -13,7 +13,7 @@ import {
   MIN_NUM_CHANGES_TO_UPDATE,
   NUM_DAILY_DIVISIONS,
 } from './../../../src/server/models/endpointBucketsModel';
-import { EndpointModel, logEndpoint, logAllEndpoints, Endpoint } from './../../../src/shared/models/endpointModel';
+import { ServerResponseModel, logResponse, logAllResponses, ServerResponse } from './../../../src/shared/models/serverresponseModel';
 import { Route } from './../../../src/shared/types';
 
 // Note to user: to make this test work, follow instructions here to convert your database to a replica set
@@ -25,20 +25,20 @@ describe('EndpointBuckets tests', () => {
   });
 
   afterAll(async () => {
-    await EndpointModel.deleteMany({});
+    await ServerResponseModel.deleteMany({});
     await EndpointBucketsModel.deleteMany({});
-    await stopWatchingEndpointModel();
+    await stopWatchingServerResponseModel();
     return await disconnect();
   });
 
   beforeEach(async () => {
-    await stopWatchingEndpointModel();
-    startWatchingEndpointModel();
+    await stopWatchingServerResponseModel();
+    startWatchingServerResponseModel();
   });
 
   afterEach(async () => {
     jest.useRealTimers();
-    await EndpointModel.deleteMany({});
+    await ServerResponseModel.deleteMany({});
     await EndpointBucketsModel.deleteMany();
   });
 
@@ -49,7 +49,7 @@ describe('EndpointBuckets tests', () => {
 
       // add one less than needed number of change events to trigger update
       for (let i = 0; i < MIN_NUM_CHANGES_TO_UPDATE - 1; i++) {
-        await logEndpoint('GET', '/test', Date.now());
+        await logResponse('GET', '/test', Date.now());
       }
 
       result = await EndpointBucketsModel.find({});
@@ -64,8 +64,8 @@ describe('EndpointBuckets tests', () => {
       // Date at beginning of day will add all calls to bucket at index 0.
       const callTime: number = new Date(new Date().toDateString()).getTime();
 
-      const endpoints: Endpoint[] = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE }, () => ({ method: 'GET', endpoint: '/test', callTime }));
-      await logAllEndpoints(endpoints);
+      const responses: ServerResponse[] = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE }, () => ({ method: 'GET', endpoint: '/test', callTime }));
+      await logAllResponses(responses);
 
       await delay(200);
 
@@ -81,9 +81,9 @@ describe('EndpointBuckets tests', () => {
       // Date at beginning of day will add all calls to bucket at index 0.
       const callTime: number = new Date(new Date().toDateString()).getTime();
 
-      const endpoints: Endpoint[] = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE }, () => ({ method: 'GET', endpoint: '/test', callTime }));
+      const responses: ServerResponse[] = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE }, () => ({ method: 'GET', endpoint: '/test', callTime }));
       for (let i = 0; i < numUpdates; i++) {
-        await logAllEndpoints(endpoints);
+        await logAllResponses(responses);
       }
 
       await delay(200);
@@ -100,15 +100,15 @@ describe('EndpointBuckets tests', () => {
     // test('Test storing endpoint buckets because 5 minute timeout has occurred, even before enough data entry events have caused an update', async () => {
     //   // Date at beginning of day will add all calls to bucket at index 0.
     //   const callTime: number = new Date(new Date().toDateString()).getTime();
-    //   await stopWatchingEndpointModel();
+    //   await stopWatchingServerResponseModel();
 
     //   jest.useFakeTimers('legacy');
     //   Promise.resolve().then(() => jest.advanceTimersByTime(5 * 60 * 1000)); // because jest timer mocks are broken https://stackoverflow.com/questions/51126786/jest-fake-timers-with-promises 
 
-    //   startWatchingEndpointModel();
+    //   startWatchingServerResponseModel();
 
-    //   const endpoints: Endpoint[] = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE - 1 }, () => ({ method: 'GET', endpoint: '/test', callTime }));
-    //   await logAllEndpoints(endpoints);
+    //   const responses: ServerResponse[] = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE - 1 }, () => ({ method: 'GET', endpoint: '/test', callTime }));
+    //   await logAllResponses(responses);
     //   await delay(200);
 
     //   jest.spyOn(global, 'setTimeout');
@@ -135,9 +135,9 @@ describe('EndpointBuckets tests', () => {
       // Date at beginning of day will add all calls to bucket at index 0.
       const callTime: number = new Date(new Date().toDateString()).getTime();
 
-      const endpoints: Endpoint[] = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE - 1 }, () => ({ method: 'GET', endpoint: '/test', callTime }));
-      await logAllEndpoints(endpoints);
-      await logEndpoint('GET', '/test', callTime + 1);
+      const responses: ServerResponse[] = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE - 1 }, () => ({ method: 'GET', endpoint: '/test', callTime }));
+      await logAllResponses(responses);
+      await logResponse('GET', '/test', callTime + 1);
       await delay(200);
 
       const result: EndpointBuckets = await getEndpointBuckets('GET', '/test');
@@ -154,8 +154,8 @@ describe('EndpointBuckets tests', () => {
       // Date at beginning of day will add all calls to bucket at index 0.
       const callTime: number = new Date(new Date().toDateString()).getTime();
 
-      const endpoints: Endpoint[] = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE - 1 }, () => ({ method: 'GET', endpoint: '/test', callTime }));
-      await logAllEndpoints(endpoints);
+      const responses: ServerResponse[] = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE - 1 }, () => ({ method: 'GET', endpoint: '/test', callTime }));
+      await logAllResponses(responses);
       await delay(200);
 
       const inDatabase: EndpointBuckets[] = await EndpointBucketsModel.find({});
@@ -173,12 +173,12 @@ describe('EndpointBuckets tests', () => {
       // Date at beginning of day will add all calls to bucket at index 0.
       const callTime: number = new Date(new Date().toDateString()).getTime();
 
-      let endpoints: Endpoint[] = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE }, () => ({ method: method1, endpoint: endpoint1, callTime }));
-      await logAllEndpoints(endpoints);
+      let responses: ServerResponse[] = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE }, () => ({ method: method1, endpoint: endpoint1, callTime }));
+      await logAllResponses(responses);
       await delay(200);
 
-      endpoints = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE }, () => ({ method: method2, endpoint: endpoint2, callTime }));
-      await logAllEndpoints(endpoints);
+      responses = Array.from({ length: MIN_NUM_CHANGES_TO_UPDATE }, () => ({ method: method2, endpoint: endpoint2, callTime }));
+      await logAllResponses(responses);
       await delay(200);
 
       const result: EndpointBuckets[] = await getAllEndpointBuckets();
@@ -194,25 +194,25 @@ describe('EndpointBuckets tests', () => {
       expect(result).toHaveLength(0);
     });
 
-    test('Get distinct endpoints', async () => {
-      const getApi1: Endpoint[] = [
+    test('Get distinct responses', async () => {
+      const getApi1: ServerResponse[] = [
         { method: 'GET', endpoint: 'api/1', callTime: 1 },
         { method: 'GET', endpoint: 'api/1', callTime: 2 },
         { method: 'GET', endpoint: 'api/1', callTime: 3 },
       ];
-      const deleteApi1: Endpoint[] = [
+      const deleteApi1: ServerResponse[] = [
         { method: 'DELETE', endpoint: 'api/1', callTime: 4 },
       ];
-      const getApi2: Endpoint[] = [
+      const getApi2: ServerResponse[] = [
         { method: 'GET', endpoint: 'api/2', callTime: 5 },
         { method: 'GET', endpoint: 'api/2', callTime: 6 },
       ];
-      const postApi2: Endpoint[] = [
+      const postApi2: ServerResponse[] = [
         { method: 'POST', endpoint: 'api/2', callTime: 7 },
         { method: 'POST', endpoint: 'api/2', callTime: 8 },
       ];
 
-      await logAllEndpoints([...getApi1, ...deleteApi1, ...getApi2, ...postApi2]);
+      await logAllResponses([...getApi1, ...deleteApi1, ...getApi2, ...postApi2]);
       await delay(200);
 
       await forceAllPendingUpdated();

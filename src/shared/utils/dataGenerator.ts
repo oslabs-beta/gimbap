@@ -1,4 +1,4 @@
-import { Endpoint } from './../models/endpointModel';
+import { ServerResponse } from '../models/serverresponseModel';
 
 export type DistributionFunction = (x: number) => number;
 
@@ -24,12 +24,12 @@ export type EndpointPDF = {
  *
  * @public
  */
-export function simulateServerResponses(endpoints: EndpointPDF[], numCallsDist: DistributionFunction, numDays: number, granularity = 30): Endpoint[] {
+export function simulateServerResponses(endpoints: EndpointPDF[], numCallsDist: DistributionFunction, numDays: number, granularity = 30): ServerResponse[] {
   if ((24 * 60) % granularity !== 0) throw new RangeError('Granularity does not divide a day.');
 
   const dayStartTime: Date = new Date(new Date().toLocaleDateString());
 
-  const simulatedCalls: Endpoint[] = [];
+  const simulatedCalls: ServerResponse[] = [];
   for (let i = 0; i < numDays; i++) {
     simulatedCalls.push(...simulateSingleDayResponses(endpoints, numCallsDist, granularity, dayStartTime));
 
@@ -54,11 +54,11 @@ export function simulateServerResponses(endpoints: EndpointPDF[], numCallsDist: 
  *
  * @private
  */
-function simulateSingleDayResponses(endpoints: EndpointPDF[], numCallsDist: DistributionFunction, granularity: number, dayStart: Date): Endpoint[] {
+function simulateSingleDayResponses(endpoints: EndpointPDF[], numCallsDist: DistributionFunction, granularity: number, dayStart: Date): ServerResponse[] {
   const numIntervals = (24 * 60) / granularity;
   const intervalStartTime = new Date(dayStart);
 
-  const dayResponses: Endpoint[] = [];
+  const dayResponses: ServerResponse[] = [];
   for (let i = 0; i < numIntervals; i++) {
     const intervalStartHour: number = intervalStartTime.getHours() + (intervalStartTime.getMinutes() / 60);
     const intervalEndHour: number = intervalStartTime.getHours() + ((intervalStartTime.getMinutes() + granularity) / 60);
@@ -79,7 +79,7 @@ function simulateSingleDayResponses(endpoints: EndpointPDF[], numCallsDist: Dist
         return selectionArray;
       }, []);
 
-    const intervalResponses: Endpoint[] = Array.from({ length: numServerCalls }, (): Endpoint => {
+    const intervalResponses: ServerResponse[] = Array.from({ length: numServerCalls }, (): ServerResponse => {
       const endpoint: EndpointPDF = endpointSelectionArray[Math.floor(Math.random() * endpointSelectionArray.length)];
 
       // pick time from random uniform distribution in interval

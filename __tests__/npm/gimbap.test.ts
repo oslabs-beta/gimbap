@@ -1,7 +1,7 @@
 import express, { Application } from 'express';
 import request from 'supertest';
 import gimbap from './../../src/npm';
-import { EndpointModel, Endpoint } from './../../src/shared/models/endpointModel';
+import {  ServerResponseModel,  ServerResponse } from '../../src/shared/models/serverresponseModel';
 
 xdescribe('gimbap logs route request to MongoDB', () => {
   let app: Application;
@@ -17,15 +17,15 @@ xdescribe('gimbap logs route request to MongoDB', () => {
   });
 
   afterAll(async () => {
-    await EndpointModel.deleteMany({});
+    await ServerResponseModel.deleteMany({});
     return gimbap.stop();
   });
 
   beforeEach(async () => {
-    await EndpointModel.deleteMany({});
+    await ServerResponseModel.deleteMany({});
   });
 
-  test('single endpoint correctly logged to database', async () => {
+  test('single response correctly logged to database', async () => {
     const callTime: number = Date.now();
 
     return request(app)
@@ -34,24 +34,24 @@ xdescribe('gimbap logs route request to MongoDB', () => {
       .then(async (response) => {
         expect(response.text).toBe('Hello World!');
 
-        const endpoints: Endpoint[] = await EndpointModel.find({});
-        expect(endpoints).toHaveLength(1);
-        expect(endpoints[0]).toMatchObject({ method: 'GET', endpoint: '/' });
-        expect(endpoints[0].callTime - callTime).toBeLessThan(100); // allow 100 ms difference 
+        const responses: ServerResponse[] = await ServerResponseModel.find({});
+        expect(responses).toHaveLength(1);
+        expect(responses[0]).toMatchObject({ method: 'GET', endpoint: '/' });
+        expect(responses[0].callTime - callTime).toBeLessThan(100); // allow 100 ms difference 
       });
   });
 
-  test('multiple endpoints correctly logged to database', async () => {
+  test('multiple responses correctly logged to database', async () => {
     const routes = ['/', '/api/user', '/api/message'];
 
-    return Promise.all(routes.map(endpoint => {
+    return Promise.all(routes.map(response => {
       return request(app)
-        .get(endpoint)
+        .get(response)
         .expect(200);
     })).then(async () => {
-      const endpoints: Endpoint[] = await EndpointModel.find({});
-      expect(endpoints).toHaveLength(3);
-      expect(endpoints).toMatchObject(routes.map(route => ({ method: 'GET', endpoint: route })));
+      const responses: ServerResponse[] = await ServerResponseModel.find({});
+      expect(responses).toHaveLength(3);
+      expect(responses).toMatchObject(routes.map(route => ({ method: 'GET', endpoint: route })));
     });
   });
 });

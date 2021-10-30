@@ -1,12 +1,12 @@
 import { getLoadData, determineClusters } from '../../../src/server/utils/endpoints';
-import { EndpointModel, Endpoint } from '../../../src/shared/models/endpointModel';
-import { calculateEndpointBuckets, EndpointBuckets, stopWatchingEndpointModel } from './../../../src/server/models/endpointBucketsModel';
+import { ServerResponseModel, ServerResponse } from '../../../src/shared/models/serverresponseModel';
+import { calculateEndpointBuckets, EndpointBuckets, stopWatchingServerResponseModel } from './../../../src/server/models/endpointBucketsModel';
 import { connect, disconnect } from '../../../src/shared/models/mongoSetup';
 import { simulateServerResponses, EndpointPDF, DistributionFunction } from '../../../src/shared/utils/dataGenerator';
 import { Cluster, LoadData } from '../../../src/shared/types';
 
 
-describe('Generate LoadData from array of endpoints', () => {
+describe('Generate LoadData from array of responses', () => {
   test('Should return empty array if an empty array is passed in', () => {
     const result = getLoadData({
       method: 'GET',
@@ -47,12 +47,12 @@ describe('Generate LoadData from array of endpoints', () => {
 describe('Correctness of clustering algorithm using step function pdf', () => {
   beforeAll(async () => await connect('mongodb://localhost:27017/gimbap-test'));
   afterAll(async () => {
-    await stopWatchingEndpointModel();
+    await stopWatchingServerResponseModel();
     await disconnect();
   });
 
   beforeEach(async () => {
-    await EndpointModel.deleteMany();
+    await ServerResponseModel.deleteMany();
   });
 
   test('Should return a single cluster for a single endpoint', async () => {
@@ -60,7 +60,7 @@ describe('Correctness of clustering algorithm using step function pdf', () => {
       { method: 'GET', endpoint: '/api', pdf: () => 1 / 24 }
     ];
     const callDist: DistributionFunction = () => 10;
-    const singleEndpointServerResponses: Endpoint[] = simulateServerResponses(endpointsPDF, callDist, 5, 60);
+    const singleEndpointServerResponses: ServerResponse[] = simulateServerResponses(endpointsPDF, callDist, 5, 60);
     // const buckets = vectorizeEndpoints(endpoints);
 
     const endpointBuckets: EndpointBuckets = calculateEndpointBuckets(singleEndpointServerResponses);
@@ -79,11 +79,11 @@ describe('Correctness of clustering algorithm using step function pdf', () => {
       { method: 'POST', endpoint: '/api/4', pdf: () => 1 / 24 }
     ];
     const callDist: DistributionFunction = () => 100;
-    const singleEndpointServerResponses: Endpoint[] = simulateServerResponses(endpointsPDF, callDist, 5, 60);
+    const singleEndpointServerResponses: ServerResponse[] = simulateServerResponses(endpointsPDF, callDist, 5, 60);
 
     // TODO place this repeated code in a function
     // group by routes
-    const sortedEndpoints: Endpoint[][] = singleEndpointServerResponses.reduce((sorted, endpoint) => {
+    const sortedEndpoints: ServerResponse[][] = singleEndpointServerResponses.reduce((sorted, endpoint) => {
       const index = endpointsPDF.findIndex(pdf => pdf.method === endpoint.method && pdf.endpoint === endpoint.endpoint);
       sorted[index].push(endpoint);
       return sorted;
@@ -116,10 +116,10 @@ describe('Correctness of clustering algorithm using step function pdf', () => {
       { method: 'POST', endpoint: '/api/4', pdf: () => 1 / 24 }
     ];
     const callDist: DistributionFunction = () => 100;
-    const singleEndpointServerResponses: Endpoint[] = simulateServerResponses(endpointsPDF, callDist, 5, 60);
+    const singleEndpointServerResponses: ServerResponse[] = simulateServerResponses(endpointsPDF, callDist, 5, 60);
 
     // group by routes
-    const sortedEndpoints: Endpoint[][] = singleEndpointServerResponses.reduce((sorted, endpoint) => {
+    const sortedEndpoints: ServerResponse[][] = singleEndpointServerResponses.reduce((sorted, endpoint) => {
       const index = endpointsPDF.findIndex(pdf => pdf.method === endpoint.method && pdf.endpoint === endpoint.endpoint);
       sorted[index].push(endpoint);
       return sorted;
@@ -161,10 +161,10 @@ describe('Correctness of clustering algorithm using step function pdf', () => {
       { method: 'POST', endpoint: '/api/4', pdf: rightStep }
     ];
     const callDist: DistributionFunction = () => 100;
-    const singleEndpointServerResponses: Endpoint[] = simulateServerResponses(endpointsPDF, callDist, 5, 60);
+    const singleEndpointServerResponses: ServerResponse[] = simulateServerResponses(endpointsPDF, callDist, 5, 60);
 
     // group by routes
-    const sortedEndpoints: Endpoint[][] = singleEndpointServerResponses.reduce((sorted, endpoint) => {
+    const sortedEndpoints: ServerResponse[][] = singleEndpointServerResponses.reduce((sorted, endpoint) => {
       const index = endpointsPDF.findIndex(pdf => pdf.method === endpoint.method && pdf.endpoint === endpoint.endpoint);
       sorted[index].push(endpoint);
       return sorted;
@@ -197,10 +197,10 @@ describe('Correctness of clustering algorithm using step function pdf', () => {
       { method: 'POST', endpoint: '/api/4', pdf: () => 0.85 }
     ];
     const callDist: DistributionFunction = () => 100;
-    const singleEndpointServerResponses: Endpoint[] = simulateServerResponses(endpointsPDF, callDist, 5, 60);
+    const singleEndpointServerResponses: ServerResponse[] = simulateServerResponses(endpointsPDF, callDist, 5, 60);
 
     // group by routes
-    const sortedEndpoints: Endpoint[][] = singleEndpointServerResponses.reduce((sorted, endpoint) => {
+    const sortedEndpoints: ServerResponse[][] = singleEndpointServerResponses.reduce((sorted, endpoint) => {
       const index = endpointsPDF.findIndex(pdf => pdf.method === endpoint.method && pdf.endpoint === endpoint.endpoint);
       sorted[index].push(endpoint);
       return sorted;

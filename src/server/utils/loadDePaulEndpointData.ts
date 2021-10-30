@@ -1,7 +1,7 @@
 import path from 'path';
 import fs, { promises as fsPromises } from 'fs';
 
-import { logAllEndpoints, Endpoint } from '../../shared/models/endpointModel';
+import { logAllResponses, ServerResponse } from '../../shared/models/serverresponseModel';
 
 /**
  * Data from https://cds.cdm.depaul.edu/resources/datasets/ using Non-Preprocessed DePaul CTI Web Usage Data.
@@ -22,23 +22,23 @@ export default async function loadDePaulEndpointData(batchSize = 5000): Promise<
     const entries = data.split('\n').slice(4);
 
     //we now have an array of relevant data, but each entry is a string.  We should split now based on spaces.  We should use a for loop to iterate over each entry.
-    const allEndpoints: Endpoint[] = [];
+    const allResponses: ServerResponse[] = [];
     for (const entry of entries) {
         const values: string[] = entry.split(' ');
         const timeStamp: number = new Date(values[0] + ' ' + values[1]).getTime();
 
         if (isNaN(timeStamp) || !values[8] || !values[9]) continue;
 
-        allEndpoints.push({
+        allResponses.push({
             method: values[8],
             endpoint: values[9],
             callTime: timeStamp,
         });
     }
 
-    for (let begin = 0; begin < allEndpoints.length; begin += batchSize) {
-        const batch = allEndpoints.slice(begin, begin + batchSize);
-        await logAllEndpoints(batch);
-        console.log(`Percent completed: ${(((begin + batchSize) / allEndpoints.length) * 100).toFixed(2)}`);
+    for (let begin = 0; begin < allResponses.length; begin += batchSize) {
+        const batch = allResponses.slice(begin, begin + batchSize);
+        await logAllResponses(batch);
+        console.log(`Percent completed: ${(((begin + batchSize) / allResponses.length) * 100).toFixed(2)}`);
     }
 }

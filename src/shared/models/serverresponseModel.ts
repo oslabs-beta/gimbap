@@ -3,22 +3,22 @@ import { autoIncrement } from 'mongoose-plugin-autoinc';
 
 // TODO abstract so it can work with either MongoDB or PostgreSQL depending on how setup is called.
 
-export interface Endpoint { method: string, endpoint: string, callTime: number, _id?: number }
+export interface ServerResponse { method: string, endpoint: string, callTime: number, _id?: number }
 
-const EndpointSchema = new mongoose.Schema<Endpoint>({
+const ServerResponseSchema = new mongoose.Schema<ServerResponse>({
   _id: { type: Number, required: true },
   method: { type: String, required: true },
   endpoint: { type: String, required: true },
   callTime: { type: Number, required: true }, // unix timestamp
 });
 // use auto incrementing _id of type Number
-EndpointSchema.plugin(autoIncrement, {
-  model: 'Endpoint',
+ServerResponseSchema.plugin(autoIncrement, {
+  model: 'ServerResponse',
   startAt: 0,
   incrementBy: 1,
 });
 // TODO add validation for call_time to be convertible to Date
-export const EndpointModel = mongoose.model<Endpoint>('Endpoint', EndpointSchema);
+export const ServerResponseModel = mongoose.model<ServerResponse>('ServerResponse', ServerResponseSchema);
 
 /**
  * Log an endpoint request data point to external database.
@@ -29,11 +29,11 @@ export const EndpointModel = mongoose.model<Endpoint>('Endpoint', EndpointSchema
  *
  * @public
  */
-export async function logEndpoint(method: string, endpoint: string, callTime: number): Promise<void> {
+export async function logResponse(method: string, endpoint: string, callTime: number): Promise<void> {
   // TODO validate inputs
 
   try {
-    await EndpointModel.create({
+    await ServerResponseModel.create({
       method,
       endpoint,
       callTime,
@@ -48,15 +48,15 @@ export async function logEndpoint(method: string, endpoint: string, callTime: nu
 /**
  * Log an array of endpoint request data point to external database.
  *
- * @param {Endpoint[]} endpoints - Array of endpoints to be added to database.
+ * @param {ServerResponse[]} endpoints - Array of endpoints to be added to database.
  *
  * @public
  */
-export async function logAllEndpoints(endpoints: Endpoint[]): Promise<void> {
+export async function logAllResponses(responses: ServerResponse[]): Promise<void> {
   // TODO validate inputs
 
   try {
-    await EndpointModel.insertMany(endpoints);
+    await ServerResponseModel.insertMany(responses);
   } catch (error) {
     console.error('\n\nERROR LOGGING RESPONSES TO DATABASE - LOG MANY');
     console.error(error);
@@ -69,16 +69,16 @@ export async function logAllEndpoints(endpoints: Endpoint[]): Promise<void> {
  * 
  * @param {string} method - (optional) HTTP method
  * @param {string} endpoint - (optional) HTTP request relative endpoint
- * @param {number} afterId -(optional) _id of EndpointModel used to filter result to include only _id greater than this value
+ * @param {number} afterId -(optional) _id of ServerResponseModel used to filter result to include only _id greater than this value
  * @returns Promise of array of endpoints
  *
  * @public
  */
-export async function getAllEndpoints(method?: string, endpoint?: string, afterId?: number): Promise<Endpoint[]> {
+export async function getAllResponses(method?: string, endpoint?: string, afterId?: number): Promise<ServerResponse[]> {
   const query: QueryOptions = {};
   if (method) query.method = method;
   if (endpoint) query.endpoint = endpoint;
   if (afterId) query._id = { $gt: afterId };
 
-  return await EndpointModel.find(query);
+  return await ServerResponseModel.find(query);
 }

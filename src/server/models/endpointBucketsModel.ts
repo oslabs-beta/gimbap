@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { ChangeStream } from 'mongodb';
 
-import { EndpointModel, Endpoint, getAllEndpoints } from './../../shared/models/endpointModel';
+import { ServerResponseModel, ServerResponse, getAllResponses } from '../../shared/models/serverresponseModel';
 import { vectorizeEndpoints } from './../utils/endpoints';
 import { Route } from './../../shared/types';
 
@@ -19,7 +19,7 @@ export type EndpointBuckets = {
 const FORCED_UPDATE_TIMEOUT = 5 * 60 * 1000;
 export const NUM_DAILY_DIVISIONS = 24 * 2;
 export const MIN_NUM_CHANGES_TO_UPDATE = 100;
-let changeStream: ChangeStream<mongoose.Model<Endpoint>> | null = null;
+let changeStream: ChangeStream<mongoose.Model<ServerResponse>> | null = null;
 let updateCounter: { [key: string]: number } = Object.create(null); // key being method + endpoint
 
 // cache of active timeouts with key being method + endpoint
@@ -37,11 +37,11 @@ const EndpointBucketsSchema = new mongoose.Schema<EndpointBuckets>({
 export const EndpointBucketsModel = mongoose.model<EndpointBuckets>('EndpointBuckets', EndpointBucketsSchema);
 
 /**
- * Close the ChangeStream watching EndpointModel.
+ * Close the ChangeStream watching ServerResponseModel.
  * 
  * @public
  */
-export async function stopWatchingEndpointModel(): Promise<void> {
+export async function stopWatchingServerResponseModel(): Promise<void> {
   // clear all timeouts
   for (const timeoutHandle of Object.values(timeoutHandles)) {
     clearTimeout(timeoutHandle);
@@ -53,15 +53,15 @@ export async function stopWatchingEndpointModel(): Promise<void> {
 }
 
 /**
- * Initiate the ChangeStream watching EndpointModel.
+ * Initiate the ChangeStream watching ServerResponseModel.
  * 
  * @public
  */
-export function startWatchingEndpointModel(): void {
+export function startWatchingServerResponseModel(): void {
   if (changeStream !== null) return;
 
   updateCounter = Object.create(null);
-  changeStream = EndpointModel.watch<typeof EndpointModel>();
+  changeStream = ServerResponseModel.watch<typeof ServerResponseModel>();
 
   changeStream.on('change', change => {
     if (change.operationType !== 'insert' || !change.fullDocument) return;
@@ -153,7 +153,7 @@ export async function forceAllPendingUpdated(): Promise<void> {
  * @param endpoints - Array of server response endpoints
  * @returns EndpointBuckets object for those endpoints.
  */
-export function calculateEndpointBuckets(endpoints: Endpoint[]): EndpointBuckets {
+export function calculateEndpointBuckets(endpoints: ServerResponse[]): EndpointBuckets {
   let lastEndpointId = 0, oldestDate: number = endpoints[0].callTime, newestDate: number = endpoints[0].callTime;
   endpoints.forEach(endpoint => {
     if (endpoint._id && endpoint._id > lastEndpointId) lastEndpointId = endpoint._id;
@@ -190,7 +190,7 @@ async function getBuckets(method: string, endpoint: string): Promise<EndpointBuc
   const endpointBuckets: EndpointBuckets | null = await EndpointBucketsModel.findOne({ method, endpoint });
 
   // grab all matching endpoints
-  const endpoints: Endpoint[] = await getAllEndpoints(method, endpoint, endpointBuckets !== null ? endpointBuckets.lastEndpointId : undefined);
+  const endpoints: ServerResponse[] = await getAllResponses(method, endpoint, endpointBuckets !== null ? endpointBuckets.lastEndpointId : undefined);
   if (endpoints.length === 0) return null;
 
   const newDataEndpointBuckets = calculateEndpointBuckets(endpoints);
@@ -229,4 +229,4 @@ function getRouteFromKey(key: string): Route {
   return JSON.parse(key);
 }
 
-startWatchingEndpointModel();
+startWatchingServerResponseModel();

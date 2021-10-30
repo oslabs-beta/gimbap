@@ -2,21 +2,21 @@ import fs from 'fs/promises';
 import path from 'path';
 
 import loadDePaulEndpointData from './../../../src/server/utils/loadDePaulEndpointData';
-import { EndpointModel, Endpoint } from './../../../src/shared/models/endpointModel';
-import { startWatchingEndpointModel, EndpointBucketsModel, forceAllPendingUpdated } from './../../../src/server/models/endpointBucketsModel';
+import { ServerResponseModel, ServerResponse } from '../../../src/shared/models/serverresponseModel';
+import { startWatchingServerResponseModel, EndpointBucketsModel, forceAllPendingUpdated } from './../../../src/server/models/endpointBucketsModel';
 import { connect, disconnect } from '../../../src/shared/models/mongoSetup';
 import { delay } from './../../testUtils';
 
 import { MONGODB_URI } from './../../../src/server/secrets.json';
 
-xdescribe('Populate database with DePaul CTI data and verify data is in DB', () => {
+describe('Populate database with DePaul CTI data and verify data is in DB', () => {
   jest.setTimeout(60 * 60 * 1000);
 
   beforeAll(async () => {
     await connect(MONGODB_URI);
-    await EndpointModel.deleteMany({});
+    await ServerResponseModel.deleteMany({});
     await EndpointBucketsModel.deleteMany({});
-    await startWatchingEndpointModel();
+    await startWatchingServerResponseModel();
   });
 
   afterAll(async () => {
@@ -36,7 +36,7 @@ xdescribe('Populate database with DePaul CTI data and verify data is in DB', () 
     for (let i = 0; i < entries.length; i += batchSize) {
       const entry: string[] = data.split('\n').slice(4);
       const timeStamp: number = new Date(entry[0] + ' ' + entry[1]).getTime();
-      const expected: Endpoint = {
+      const expected: ServerResponse = {
         method: entry[8],
         endpoint: entry[9],
         callTime: timeStamp,
@@ -44,7 +44,7 @@ xdescribe('Populate database with DePaul CTI data and verify data is in DB', () 
 
       if (isNaN(timeStamp) || !entry[8] || !entry[9]) continue;
 
-      const check: boolean = await EndpointModel.exists(expected);
+      const check: boolean = await ServerResponseModel.exists(expected);
       expect(check).toBe(true); // expected endpoint to be in DB
     }
   });

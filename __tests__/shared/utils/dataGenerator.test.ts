@@ -1,7 +1,7 @@
 import chiSquaredTest from 'chi-squared-test';
 
 import { simulateServerResponses, DistributionFunction, EndpointPDF } from './../../../src/shared/utils/dataGenerator';
-import { Endpoint } from './../../../src/shared/models/endpointModel';
+import { ServerResponse } from '../../../src/shared/models/serverresponseModel';
 
 describe('Simulate server responses using uniform distributions', () => {
   test('For a single endpoint with uniform pdf and uniform call distribution of 1', () => {
@@ -14,11 +14,11 @@ describe('Simulate server responses using uniform distributions', () => {
     const startDayTime: number = new Date(new Date().toLocaleDateString()).getTime();
 
     // one interval per hour, with call dist of 1 call per hour
-    let result: Endpoint[] = simulateServerResponses([endpointPDF], callDist, 1, 60);
+    let result: ServerResponse[] = simulateServerResponses([endpointPDF], callDist, 1, 60);
 
     expect(result).toHaveLength(24);
 
-    result.forEach((response: Endpoint, i: number) => {
+    result.forEach((response: ServerResponse, i: number) => {
       expect(response).toMatchObject({ method: endpointPDF.method, endpoint: endpointPDF.endpoint });
       expect(response.callTime).toBeGreaterThanOrEqual(startDayTime + i * 60 * 60 * 1000);
       expect(response.callTime).toBeLessThanOrEqual(startDayTime + (i + 1) * 60 * 60 * 1000);
@@ -36,7 +36,7 @@ describe('Simulate server responses using uniform distributions', () => {
 
     expect(result).toHaveLength(24 * numDays);
 
-    result.forEach((response: Endpoint, i: number) => {
+    result.forEach((response: ServerResponse, i: number) => {
       expect(response).toMatchObject({ method: endpointPDF.method, endpoint: endpointPDF.endpoint });
       expect(response.callTime).toBeGreaterThanOrEqual(startDayTime + i * 60 * 60 * 1000);
       expect(response.callTime).toBeLessThanOrEqual(startDayTime + (i + 1) * 60 * 60 * 1000);
@@ -54,10 +54,10 @@ describe('Simulate server responses using uniform distributions', () => {
     const startDayTime: number = new Date(new Date().toLocaleDateString()).getTime();
 
     // one interval per hour, with call dist of 100 call per hour
-    const result: Endpoint[] = simulateServerResponses([endpointPDF], callDist, 1, 60);
+    const result: ServerResponse[] = simulateServerResponses([endpointPDF], callDist, 1, 60);
     expect(result).toHaveLength(24 * callsPerHour);
 
-    result.forEach((response: Endpoint, i: number) => {
+    result.forEach((response: ServerResponse, i: number) => {
       const j = Math.floor(i / callsPerHour); // since 100 endpoints per hour
 
       expect(response).toMatchObject({ method: endpointPDF.method, endpoint: endpointPDF.endpoint });
@@ -78,10 +78,10 @@ describe('Simulate server responses using uniform distributions', () => {
     const startDayTime: number = new Date(new Date().toLocaleDateString()).getTime();
 
     // one interval per hour, with call dist of 100 call per hour
-    const result: Endpoint[] = simulateServerResponses([endpointPDF], callDist, 1, granularity);
+    const result: ServerResponse[] = simulateServerResponses([endpointPDF], callDist, 1, granularity);
     expect(result).toHaveLength(24 * callsPerHour);
 
-    result.forEach((response: Endpoint, i: number) => {
+    result.forEach((response: ServerResponse, i: number) => {
       expect(response).toMatchObject({ method: endpointPDF.method, endpoint: endpointPDF.endpoint });
       expect(response.callTime).toBeGreaterThanOrEqual(startDayTime + i * granularity * 60 * 1000);
       expect(response.callTime).toBeLessThanOrEqual(startDayTime + (i + 1) * granularity * 60 * 1000);
@@ -101,7 +101,7 @@ describe('Simulate server responses using uniform distributions', () => {
     const startDayTime: number = new Date(new Date().toLocaleDateString()).getTime();
 
     // single interval day long
-    const result: Endpoint[] = simulateServerResponses(endpoints, callDist, 1, 24 * 60);
+    const result: ServerResponse[] = simulateServerResponses(endpoints, callDist, 1, 24 * 60);
 
     expect(result).toHaveLength(numCallsPerInterval);
 
@@ -150,13 +150,13 @@ describe('Simulate server responses using uniform distributions', () => {
     const numDays = 100;
 
     // one interval per hour, with call dist of 1 call per hour
-    const result: Endpoint[] = simulateServerResponses(endpoints, callDist, numDays, 60);
+    const result: ServerResponse[] = simulateServerResponses(endpoints, callDist, numDays, 60);
 
     expect(result).toHaveLength(24 * numDays);
 
     // Expect distribution of endpoints to be roughly uniform
     const endpointFrequencies: { [key: string]: number } = result.reduce(
-      (frequencies: { [key: string]: number }, endpoint: Endpoint): { [key: string]: number } => {
+      (frequencies: { [key: string]: number }, endpoint: ServerResponse): { [key: string]: number } => {
         frequencies[endpoint.endpoint] ??= 0;
         frequencies[endpoint.endpoint]++;
 

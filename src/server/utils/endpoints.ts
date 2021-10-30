@@ -1,10 +1,10 @@
 import clustering from 'density-clustering';
 
-import { Endpoint } from '../../shared/models/endpointModel';
+import { ServerResponse } from '../../shared/models/serverresponseModel';
 import { EndpointBuckets } from '../../server/models/endpointBucketsModel';
 import { Route, Cluster, LoadData, TreeNode, DataPoint } from './../../shared/types';
 
-interface TimeDomainEndpoint extends Endpoint {
+interface TimeDomainEndpoint extends ServerResponse {
   hour: number;
 }
 
@@ -55,13 +55,13 @@ export function getLoadData(endpointBuckets: EndpointBuckets, granularity = 30):
 /**
  * Create an array of buckets with the total number of endpoints that call into each bucket based on an interval size of granularity in minutes.
  * 
- * @param endpoints - Array of Endpoint
+ * @param endpoints - Array of ServerResponse
  * @param granularity - time interval in minutes between data points
  * @returns array of buckets with the total number of endpoints that call into each bucket
  * 
  * @public
  */
-export function vectorizeEndpoints(endpoints: Endpoint[], granularity = 30): number[] {
+export function vectorizeEndpoints(endpoints: ServerResponse[], granularity = 30): number[] {
   // break data into bucket
   const responses: TimeDomainEndpoint[] = endpoints.map(endpoint => {
     const date = new Date(endpoint.callTime);
