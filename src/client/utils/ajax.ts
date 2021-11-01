@@ -52,7 +52,8 @@ export async function fetchRouteLoadData(
   index: number,
   setRoutesLoadData: React.Dispatch<React.SetStateAction<{ [key: number]: LoadData }>>
 ): Promise<void> {
-  const loadData: LoadData | void = await fetchWrapper<LoadData>(`/api/graph/endpoint/load?method=${encodeURIComponent(route.method)}&route=${encodeURIComponent(route.endpoint)}`);
+  let loadData: LoadData | void;
+  route.method.match(/^[a-zA-Z]+$/) ? loadData =  await fetchWrapper<LoadData>(`/api/graph/endpoint/load?method=${encodeURIComponent(route.method)}&route=${encodeURIComponent(route.endpoint)}`) : loadData = undefined;
   if (loadData) setRoutesLoadData(routesLoadData => {
     const nextRoutesLoadData = Object.assign(Object.create(null), routesLoadData);
     nextRoutesLoadData[index] = loadData;
