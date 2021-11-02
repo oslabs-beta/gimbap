@@ -115,7 +115,7 @@ export default function NavigationBar({
   return (
     <Box sx={{ display: 'flex' }}>
       <Drawer variant='permanent' open={open}>
-        <DrawerHeader>
+        <DrawerHeader className="Drawer-Header">
           {open && <>
             <Typography variant='h4' sx={{ fontWeight: 'medium', textShadow: useLightTheme ? '0 1px 0 #e2e3dc' : '0 1px 0 #5c5758' }} color='#28A78D' mr={3}>gimbap</Typography>
             <IconButton onClick={handleDrawerClose}>
