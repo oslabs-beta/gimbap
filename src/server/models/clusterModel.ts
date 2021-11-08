@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 import { Cluster } from './../../shared/types';
-import { getLastEndpoint } from './../../shared/models/endpointModel';
+import { getLastEndpoint, Endpoint } from './../../shared/models/endpointModel';
 import { getAllEndpointBuckets, EndpointBuckets } from './../models/endpointBucketsModel';
 import { determineClusters } from './../utils/endpoints';
 
@@ -20,7 +20,7 @@ const ClusterSchema = new mongoose.Schema<DBClusterSchema>({
   clusters: { type: [[{ method: String, endpoint: String }]], required: true },
   lastEndpointId: { type: Number, required: true },
 });
-export const ClusterModel = mongoose.model<DBClusterSchema>('Cluster', ClusterSchema);
+export const ClusterModel: mongoose.Model<DBClusterSchema> = mongoose.model<DBClusterSchema>('Cluster', ClusterSchema);
 
 
 /**
@@ -42,7 +42,7 @@ export function startWatchingClusterModel(): void {
  * 
  * @public
  */
-export async function stopWatchingClusterModel(): Promise<void> {
+export function stopWatchingClusterModel(): void {
   // clear the interval
   if (intervalId !== null) {
     clearInterval(intervalId);
@@ -55,50 +55,61 @@ export async function stopWatchingClusterModel(): Promise<void> {
  * 
  * @public
  */
-export async function forceUpdated(): Promise<void> {
+export async function forceUpdate(): Promise<void> {
   await updateClusters();
 }
 
-async function updateClusters(): Promise<void> {
-  // grab clusters from db
-  const clusters = await ClusterModel.findOne({});
+/**
+ * Get current cluster model in database. Note, this will only attempt a cluster calculation if there is no 
+ * cluster model saved in the database, use `forceUpdate` before this call if a recalculation is needed.
+ * 
+ * @returns Cluster[] or null if no cluster model exist in database.
+ * 
+ * @public
+ */
+export async function getClusters(): Promise<Cluster[] | null> {
+  let clusterModel: DBClusterSchema | null = await ClusterModel.findOne({});
 
-  // what if we dont have one
-  if (clusters === null) {
-    // recalculate
-
+  if (clusterModel === null) {
+    // if no cluster model exist in database, force update and retry
+    await updateClusters();
+    clusterModel = await ClusterModel.findOne({});
   }
 
-  // if we have one
-  else {
-    // grab last endpoint from db, if it doesn't match, recalculate
-    const lastEndpoint = await getLastEndpoint();
-    if (lastEndpoint !== null && lastEndpoint._id !== clusters.lastEndpointId) {
+  return clusterModel === null ? null : clusterModel.clusters;
+}
 
-    }
+/**
+ * Update cluster model.
+ * 
+ * @private
+ */
+async function updateClusters(): Promise<void> {
+  const lastEndpoint: Endpoint & { _id: number } | null = await getLastEndpoint();
+
+  if (lastEndpoint !== null) {
+    const clusterModel: DBClusterSchema & { _id: mongoose.Types.ObjectId; } | null = await ClusterModel.findOne({});
+    await recalculateClusters(lastEndpoint._id, clusterModel === null ? undefined : clusterModel._id);
   }
 }
 
 /**
- * Recalculates the clusters by getting all endpoint and determining clusters. Replaces existing clusters 
- * with new cluster collection if a match is found with clusterId parameter.
+ * Recalculates the clusters by getting all endpoint and determining clusters. Updates cluster recommendations
+ * in database.
  * 
- * @param lastEndpointId
- * @param clusterId
+ * @param lastEndpointId - _id of the last endpoint in database
+ * @param clusterId - _id of the clusterModel in database to be replaced with new calculation.
  * @returns Promise of the last endpoint or null if no endpoints in collection
  *
- * @public
+ * @private
  */
 async function recalculateClusters(lastEndpointId: number, clusterId?: mongoose.Types.ObjectId): Promise<void> {
   const endpointBuckets: EndpointBuckets[] = await getAllEndpointBuckets();
   const clusters: Cluster[] = determineClusters(endpointBuckets);
 
-  await ClusterModel.findOneAndUpdate({ _id: clusterId }, { clusters, lastEndpointId }, { upsert: true });
+  await ClusterModel.findOneAndUpdate({ _id: clusterId }, { clusters, lastEndpointId }, { upsert: true, new: true });
 }
 
-
-// TODO getCluster
-
-// TODO unit test
-
 // TODO integrate with dataController
+
+startWatchingClusterModel();
