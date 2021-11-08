@@ -91,6 +91,6 @@ export async function getAllEndpoints(method?: string, endpoint?: string, afterI
  *
  * @public
  */
-export async function getLastEndpoint(): Promise<Endpoint | null> {
+export async function getLastEndpoint(): Promise<Endpoint & { _id: number } | null> {
   return await EndpointModel.findOne().sort({ _id: -1 });
 }

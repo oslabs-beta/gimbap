@@ -138,7 +138,7 @@ async function updateEndpointBuckets(method: string, endpoint: string): Promise<
  * 
  * @public
  */
-export async function forceAllPendingUpdated(): Promise<void> {
+export async function forceAllPendingUpdates(): Promise<void> {
   for (const key in timeoutHandles) {
     const { method, endpoint } = getRouteFromKey(key);
     clearTimeout(timeoutHandles[key]);

@@ -9,7 +9,7 @@ import {
   getEndpointBuckets,
   getAllEndpointBuckets,
   getDistinctRoutes,
-  forceAllPendingUpdated,
+  forceAllPendingUpdates,
   MIN_NUM_CHANGES_TO_UPDATE,
   NUM_DAILY_DIVISIONS,
 } from './../../../src/server/models/endpointBucketsModel';
@@ -39,7 +39,7 @@ describe('EndpointBuckets tests', () => {
   afterEach(async () => {
     jest.useRealTimers();
     await EndpointModel.deleteMany({});
-    await EndpointBucketsModel.deleteMany();
+    await EndpointBucketsModel.deleteMany({});
   });
 
   describe('Test storing endpoint buckets', () => {
@@ -215,7 +215,7 @@ describe('EndpointBuckets tests', () => {
       await logAllEndpoints([...getApi1, ...deleteApi1, ...getApi2, ...postApi2]);
       await delay(200);
 
-      await forceAllPendingUpdated();
+      await forceAllPendingUpdates();
 
       const result: Route[] = await getDistinctRoutes();
 
