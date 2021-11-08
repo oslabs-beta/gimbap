@@ -23,7 +23,7 @@ export default function Documentation({
   return (<>
     {subPage === SubPage.ApiDoc && <ApiDoc />}
     {subPage === SubPage.None &&
-      <Stack spacing={2} mt="2%" ml="5%" mr="5%" mb="2%">
+      <Stack spacing={2} mt="2%" ml="5%" mr="5%" mb="2%" sx={{width: '60%'}}>
         <TableOfContents showApiDocPage={showApiDocPage} />
         <Intro />
         <Installation useLightTheme={useLightTheme} />

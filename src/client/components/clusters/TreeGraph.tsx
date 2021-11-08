@@ -41,7 +41,7 @@ export default function TreeGraph({
     {trees === null && <Splash />}
     {trees !== null &&
       <Stack direction='row' spacing={2} padding={3}>
-        <svg width={treeWidth} height={treeHeight} style={{ flexGrow: 1, filter: useLightTheme ? 'drop-shadow(10px 10px 7px #b3b3b3)' : 'drop-shadow(10px 10px 7px #F12C0C)' }} >
+        <svg width={treeWidth} height={treeHeight} style={{ flexGrow: 1, filter: useLightTheme ? 'drop-shadow(10px 10px 7px #b3b3b3)' : 'drop-shadow(10px 10px 7px #1D1D1C)' }} >
           <LinearGradient id='links-gradient' from='#fd9b93' to='#fe6e9e' />
           <rect width={treeWidth} height={(treeHeight)} rx={14} fill='#272b4d'/>
           <Group top={margin.top} left={margin.left}>
