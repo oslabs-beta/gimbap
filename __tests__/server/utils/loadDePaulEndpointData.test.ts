@@ -3,7 +3,8 @@ import path from 'path';
 
 import loadDePaulEndpointData from './../../../src/server/utils/loadDePaulEndpointData';
 import { EndpointModel, Endpoint } from './../../../src/shared/models/endpointModel';
-import { startWatchingEndpointModel, EndpointBucketsModel, forceAllPendingUpdated } from './../../../src/server/models/endpointBucketsModel';
+import { startWatchingEndpointModel, EndpointBucketsModel, forceAllPendingUpdates } from './../../../src/server/models/endpointBucketsModel';
+import { startWatchingClusterModel, forceUpdate } from '../../../src/server/models/clusterModel';
 import { connect, disconnect } from '../../../src/shared/models/mongoSetup';
 import { delay } from './../../testUtils';
 
@@ -16,12 +17,14 @@ xdescribe('Populate database with DePaul CTI data and verify data is in DB', () 
     await connect(MONGODB_URI);
     await EndpointModel.deleteMany({});
     await EndpointBucketsModel.deleteMany({});
-    await startWatchingEndpointModel();
+    startWatchingEndpointModel();
+    startWatchingClusterModel();
   });
 
   afterAll(async () => {
     await delay(60 * 1000); // wait a minute for update calls to finish, increase if you got errors at the end
-    await forceAllPendingUpdated();
+    await forceAllPendingUpdates();
+    await forceUpdate();
     await disconnect();
   });
 
