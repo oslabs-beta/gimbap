@@ -6,6 +6,7 @@ import getWindowDimensions from './../../hooks/useWindowDimensions';
 import TreeGraph from './TreeGraph';
 import Splash from './../common/Splash';
 
+
 export default function Clusters({
   isNavBarOpen,
   clusters,

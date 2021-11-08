@@ -39,7 +39,8 @@ export default function EndpointList({
         textAlign: 'center',
         border: 1,
         borderColor: 'black',
-        borderRadius: 5
+        borderRadius: 5,
+        boxShadow: 10
       }}
     >
       <Typography color='textPrimary' variant='h4' mr={3} height={45} overflow={'hidden'}>
