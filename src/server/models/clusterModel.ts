@@ -107,9 +107,7 @@ async function recalculateClusters(lastEndpointId: number, clusterId?: mongoose.
   const endpointBuckets: EndpointBuckets[] = await getAllEndpointBuckets();
   const clusters: Cluster[] = determineClusters(endpointBuckets);
 
-  await ClusterModel.findOneAndUpdate({ _id: clusterId }, { clusters, lastEndpointId }, { upsert: true, new: true });
+  await ClusterModel.findOneAndUpdate({ _id: clusterId }, { clusters, lastEndpointId }, { upsert: true });
 }
-
-// TODO integrate with dataController
 
 startWatchingClusterModel();

@@ -11,11 +11,6 @@ export function cache(duration: number) {
       const originalSendFunc = res.send;
       res.send = (body: string) => {
         if (res.statusCode === 200) {
-
-
-          console.log(`cached ${key}`); // ! remove later 
-
-
           mcache.put(key, body, duration);
         }
 

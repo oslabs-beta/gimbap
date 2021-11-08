@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import { getDistinctRoutes, getEndpointBuckets, getAllEndpointBuckets, EndpointBuckets } from './../models/endpointBucketsModel';
-import { getLoadData, determineClusters, theSuperHappyTreeGenerator } from './../utils/endpoints';
+import { getDistinctRoutes, getEndpointBuckets, EndpointBuckets } from './../models/endpointBucketsModel';
+import { getClusters } from './../models/clusterModel';
+import { getLoadData, getClusterTreeNode } from './../utils/endpoints';
 import { Route, Cluster } from './../../shared/types';
 
-let clusters: Cluster[] | undefined = undefined;
+// ! remove  let clusters: Cluster[] | undefined = undefined;
 
 /**
  * Middleware: If successful, `res.locals.endpoints` will contain Route[].
@@ -72,22 +73,14 @@ export async function getEndpointLoadGraphData(req: Request, res: Response, next
  * @public
  */
 export async function getClusterList(req: Request, res: Response, next: NextFunction): Promise<void> {
-
-  // TODO update with new clusterModel
-
-  if (clusters) {
-    res.locals.clusters = clusters;
-  } else {
-    try {
-      const endpointBuckets: EndpointBuckets[] = await getAllEndpointBuckets();
-
-      res.locals.clusters = clusters = determineClusters(endpointBuckets);
-    } catch (error) {
-      return next(Object.assign(error, {
-        status: 500,
-        error: 'Internal server error reading database.'
-      }));
-    }
+  try {
+    const clusters: Cluster[] | null = await getClusters();
+    res.locals.clusters = clusters === null ? [] : clusters;
+  } catch (error) {
+    return next(Object.assign(error, {
+      status: 500,
+      error: 'Internal server error reading database.'
+    }));
   }
 
   return next();
@@ -104,11 +97,6 @@ export async function getClusterList(req: Request, res: Response, next: NextFunc
  * @public
  */
 export async function getClusterLoadGraphData(req: Request, res: Response, next: NextFunction): Promise<void> {
-  if (!clusters) return next({
-    status: 400,
-    error: 'Can not return cluster graph data before a call to get clusters is made.'
-  });
-
   const { clusterId: clusterIdStr } = req.params;
 
   if (!clusterIdStr) return next({
@@ -125,6 +113,8 @@ export async function getClusterLoadGraphData(req: Request, res: Response, next:
   });
 
   try {
+    let clusters: Cluster[] | null = await getClusters();
+    if (clusters === null) clusters = [];
     const routes: Route[] = clusters[clusterId];
 
     const allEndpointBucketsInCluster: EndpointBuckets[] = [];
@@ -168,13 +158,11 @@ export async function getClusterLoadGraphData(req: Request, res: Response, next:
  * @public
  */
 export async function getClusterTreeGraphData(req: Request, res: Response, next: NextFunction): Promise<void> {
-  if (!clusters) return next({
-    status: 400,
-    error: 'Can not return cluster tree data before a call to get clusters is made.'
-  });
-
   try {
-    res.locals.treeGraphData = theSuperHappyTreeGenerator(clusters);
+    let clusters: Cluster[] | null = await getClusters();
+    if (clusters === null) clusters = [];
+
+    res.locals.treeGraphData = getClusterTreeNode(clusters);
   } catch (error) {
     return next(Object.assign(error, {
       status: 500,
