@@ -2,10 +2,9 @@
   "name": "gimbap-dev",
   "version": "0.0.1",
   "private": true,
-  "main": "main.js",
   "description": "",
   "scripts": {
-    "start": "electron .",
+    "start": "electron src/electron/main.ts",
     "clean": "cross-env rm -rf build",
     "build": "cross-env NODE_ENV=production concurrently \"npm run build-client\" \"npm run build-server\" \"npm run build-npm\"",
     "build-client": "webpack",
