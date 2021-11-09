@@ -2,8 +2,10 @@
   "name": "gimbap-dev",
   "version": "0.0.1",
   "private": true,
+  "main": "main.js",
   "description": "",
   "scripts": {
+    "start": "electron .",
     "clean": "cross-env rm -rf build",
     "build": "cross-env NODE_ENV=production concurrently \"npm run build-client\" \"npm run build-server\" \"npm run build-npm\"",
     "build-client": "webpack",
@@ -72,6 +74,7 @@
     "css-loader": "^6.4.0",
     "css-minimizer-webpack-plugin": "^3.1.1",
     "d3-shape": "^3.0.1",
+    "electron": "^15.3.1",
     "eslint": "^7.32.0",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
