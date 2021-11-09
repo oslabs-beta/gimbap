@@ -10,6 +10,10 @@
 *.userosscache
 *.sln.docstates
 
+# Electron folder
+outTwo
+
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

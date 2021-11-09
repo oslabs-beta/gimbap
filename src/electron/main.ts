@@ -6,7 +6,7 @@ function createWindow () {
     height: 600
   });
 
-  win.loadFile('../../build/client/index.html');
+  win.loadFile('../client/index.html');
 }
 
 // createWindow();

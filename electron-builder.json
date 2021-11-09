@@ -1,0 +1,33 @@
+{
+	"appId": "com.oslabs.gimbap",
+	"productName": "gimbap",
+	"directories": {
+		"app": ".",
+		"output": "outTwo",
+		"buildResources": "build-res"
+	},
+	"files": [
+        "package.json",
+        "build/**/*",
+        "node_modules"
+    ],
+	"dmg": {
+		"background": null,
+		"backgroundColor": "#ffffff",
+		"window": {
+			"width": "400",
+			"height": "300"
+		}
+	},
+	"mac": {
+		"target": "dmg",
+		"category": "public.app-category.utilities"
+	},
+    "win": {
+        "target": "nsis"
+    },
+    "linux": {
+        "target": "AppImage",
+        "category": "Utility"
+    }
+}
