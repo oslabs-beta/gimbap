@@ -86,8 +86,9 @@ export function vectorizeEndpoints(endpoints: Endpoint[], granularity = 30): num
  * Generate a D3 compatible nested node object for graphing tree graphs (dendrogram).
  *
  * @param clusters - Array of Cluster recommendations.
+ * @returns - TreeNode representation of cluster to be used with D3 dendrogram graph
  */
-export function theSuperHappyTreeGenerator(clusters: Cluster[]): TreeNode {
+export function getClusterTreeNode(clusters: Cluster[]): TreeNode {
   const root: TreeNode = {
     name: 'Clusters',
     children: []
