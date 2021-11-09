@@ -10,6 +10,7 @@ import { TreeNode } from './../../../shared/types';
 import { fetchClusterTree } from '../../utils/ajax';
 import EndpointList from './EndpointList';
 import Splash from './../common/Splash';
+// import { useLightTheme } from ''
 
 
 const defaultMargin = { top: 30, left: 30, right: 30, bottom: 70 }; // TODO reconciliate this with component Tree attribute size
@@ -18,6 +19,8 @@ export default function TreeGraph({
   width,
   height,
   margin = defaultMargin,
+  useLightTheme,
+  setUseLightTheme,
 }: {
   width: number;
   height: number;
@@ -38,9 +41,9 @@ export default function TreeGraph({
     {trees === null && <Splash />}
     {trees !== null &&
       <Stack direction='row' spacing={2} padding={3}>
-        <svg width={treeWidth} height={treeHeight} style={{ flexGrow: 1 }}>
+        <svg width={treeWidth} height={treeHeight} style={{ flexGrow: 1, filter: useLightTheme ? 'drop-shadow(10px 10px 7px #b3b3b3)' : 'drop-shadow(10px 10px 7px #1D1D1C)' }} >
           <LinearGradient id='links-gradient' from='#fd9b93' to='#fe6e9e' />
-          <rect width={treeWidth} height={(treeHeight)} rx={14} fill='#272b4d' />
+          <rect width={treeWidth} height={(treeHeight)} rx={14} fill='#272b4d'/>
           <Group top={margin.top} left={margin.left}>
             <Tree
               root={hierarchy(trees, (d) => d.children)}

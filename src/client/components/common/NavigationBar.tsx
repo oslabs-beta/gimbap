@@ -15,6 +15,7 @@ import Switch from '@mui/material/Switch';
 import Stack from '@mui/material/Stack';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import NightlightIcon from '@mui/icons-material/Nightlight';
+import useWindowDimensions from './../../hooks/useWindowDimensions';
 
 import { Page, SubPage } from './../../types';
 import NavItem from './NavItem';
@@ -112,9 +113,11 @@ export default function NavigationBar({
     setPage(Page.Documentation);
   }, [setPage, setDocSubPage]);
 
+  const { height } = useWindowDimensions();
+
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Drawer variant='permanent' open={open}>
+    <Box sx={{ display: 'flex', boxShadow: 10, }} style={{minHeight: height,}}>
+      <Drawer variant='permanent' open={open} sx={{boxShadow: 10, }}>
         <DrawerHeader>
           {open && <>
             <Typography variant='h4' sx={{ fontWeight: 'medium', textShadow: useLightTheme ? '0 1px 0 #e2e3dc' : '0 1px 0 #5c5758' }} color='#28A78D' mr={3}>gimbap</Typography>
