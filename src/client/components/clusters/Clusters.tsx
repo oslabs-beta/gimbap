@@ -6,9 +6,11 @@ import getWindowDimensions from './../../hooks/useWindowDimensions';
 import TreeGraph from './TreeGraph';
 import Splash from './../common/Splash';
 
+
 export default function Clusters({
   isNavBarOpen,
   clusters,
+  useLightTheme,
 }: {
   isNavBarOpen: boolean;
   clusters: Cluster[] | null;
@@ -19,6 +21,6 @@ export default function Clusters({
   // TODO adjust as needed I removed percent cuts
   return (<>
     {clusters === null && <Splash />}
-    {clusters !== null && <TreeGraph width={(isNavBarOpen ? width - drawerWidth : width - closedDrawerWidth)} height={height - 2} />}
+    {clusters !== null && <TreeGraph width={(isNavBarOpen ? width - drawerWidth : width - closedDrawerWidth)} height={height - 2} useLightTheme={useLightTheme} />}
   </>);
 }

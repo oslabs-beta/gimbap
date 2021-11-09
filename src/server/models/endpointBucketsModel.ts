@@ -20,9 +20,9 @@ const FORCED_UPDATE_TIMEOUT = 5 * 60 * 1000;
 export const NUM_DAILY_DIVISIONS = 24 * 2;
 export const MIN_NUM_CHANGES_TO_UPDATE = 100;
 let changeStream: ChangeStream<mongoose.Model<Endpoint>> | null = null;
-let updateCounter: { [key: string]: number } = Object.create(null); // key being method + endpoint
+let updateCounter: { [key: string]: number } = Object.create(null);
 
-// cache of active timeouts with key being method + endpoint
+// cache of active timeouts 
 let timeoutHandles: { [key: string]: NodeJS.Timeout } = Object.create(null);
 
 
@@ -138,7 +138,7 @@ async function updateEndpointBuckets(method: string, endpoint: string): Promise<
  * 
  * @public
  */
-export async function forceAllPendingUpdated(): Promise<void> {
+export async function forceAllPendingUpdates(): Promise<void> {
   for (const key in timeoutHandles) {
     const { method, endpoint } = getRouteFromKey(key);
     clearTimeout(timeoutHandles[key]);
