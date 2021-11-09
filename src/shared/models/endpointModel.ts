@@ -82,3 +82,15 @@ export async function getAllEndpoints(method?: string, endpoint?: string, afterI
 
   return await EndpointModel.find(query);
 }
+
+
+/**
+ * Get the last endpoint. If no endpoints exit in database, it will return null.
+ * 
+ * @returns Promise of the last endpoint or null if no endpoints in collection
+ *
+ * @public
+ */
+export async function getLastEndpoint(): Promise<Endpoint & { _id: number } | null> {
+  return await EndpointModel.findOne().sort({ _id: -1 });
+}

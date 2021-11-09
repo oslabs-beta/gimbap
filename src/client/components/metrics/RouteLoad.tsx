@@ -39,7 +39,10 @@ export default function RouteLoad({
 
   // TODO when user has graph selected, but data is not available, show splash
 
-  const selectedLoadData: { [key: number]: LoadData | undefined } = selectedRoutes.map((index: number) => routesLoadData[index]);
+  const selectedLoadData: { [key: number]: LoadData | undefined } = selectedRoutes.reduce((selectedData: { [key: number]: LoadData | undefined }, index: number) => {
+    selectedData[index] = routesLoadData[index];
+    return selectedData;
+  }, Object.create(null));
 
   const routeLabels = routes ? routes.map(route => `${route.method} ${route.endpoint}`) : [];
 
@@ -65,14 +68,14 @@ export default function RouteLoad({
           const label = routeLabels[i];
 
           return (
-          <LoadGraph
-            key={index}
-            useLightTheme={useLightTheme}
-            height={400}
-            width={windowWidth - (isNavBarOpen ? drawerWidth : 0) - 100}
-            loadData={loadData}
-            label={label}
-          />);
+            <LoadGraph
+              key={index}
+              useLightTheme={useLightTheme}
+              height={400}
+              width={windowWidth - (isNavBarOpen ? drawerWidth : 0) - 100}
+              loadData={loadData}
+              label={label}
+            />);
         })}
       </Stack>
     }
