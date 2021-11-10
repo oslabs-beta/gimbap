@@ -1,7 +1,20 @@
 import { Endpoint } from './../models/endpointModel';
 
+/**
+ * A distribution function. A simple one-to-one mapping.
+ * 
+ * @param {number} x - the independent variable
+ * @returns {number} - the probability, a value between 0 and 1
+ */
 export type DistributionFunction = (x: number) => number;
 
+/**
+ * An object specifying a route and a probability distribution function.
+ * 
+ * @property method - HTTP method type
+ * @property endpoint - HTTP request relative endpoint
+ * @property pdf - A probability distribution function that should return the probability (a number between 0 and 1) at a particular independent value.
+ */
 export type EndpointPDF = {
   method: string;
   endpoint: string;
@@ -16,11 +29,11 @@ export type EndpointPDF = {
  * @param {EndpointPDF[]} endpoints - Array of EndpointPDF which include method, endpoint, and pdf.
  * @param {DistributionFunction} numCallsDist - Distribution function of number of calls server received over a 24 hour period.
  * @param {number} numDays - Number of days to run simulation for.
- * @param {number} granularity - Granularity, in minutes, of internal calculation period. Defaults to 30 minutes. Smaller values means approximation is closer to continuos pdf
- * since algorithm uses trapezoid rule numerical integration. Warning of using too small granularity: if number of calls for a granularity interval sums to less than one, no
- * calls will be made for period.
+ * @param {number} granularity - Granularity, in minutes, of internal calculation period. Defaults to 30 minutes. Smaller values mean approximation is closer to continuous 
+ * pdf since the algorithm uses trapezoid rule numerical integration. Warning of using too small granularity: if the number of calls for a granularity interval sums to less 
+ * than one, no calls will be made for the period.
  *
- * @returns Array of Endpoints that simulate how a real life server would have responded given the endpoint bias in pdf.
+ * @returns Array of Endpoints that simulate how a real-life server would have responded given the endpoint bias in pdf.
  *
  * @public
  */

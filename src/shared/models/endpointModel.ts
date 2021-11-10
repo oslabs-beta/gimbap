@@ -3,6 +3,14 @@ import { autoIncrement } from 'mongoose-plugin-autoinc';
 
 // TODO abstract so it can work with either MongoDB or PostgreSQL depending on how setup is called.
 
+/**
+ * Interface defining a server response object type.
+ * 
+ * @property method - HTTP method type
+ * @property endpoint - HTTP request relative endpoint
+ * @property callTime - UNIX timestamp of when the server received the request
+ * @property _id - MongoDB unique id, will be a number for endpoints collection
+ */
 export interface Endpoint { method: string, endpoint: string, callTime: number, _id?: number }
 
 const EndpointSchema = new mongoose.Schema<Endpoint>({
@@ -21,7 +29,7 @@ EndpointSchema.plugin(autoIncrement, {
 export const EndpointModel = mongoose.model<Endpoint>('Endpoint', EndpointSchema);
 
 /**
- * Log an endpoint request data point to external database.
+ * Log an endpoint request data point to the database.
  *
  * @param {String} method - HTTP method type
  * @param {String} endpoint - HTTP request relative endpoint
@@ -46,7 +54,7 @@ export async function logEndpoint(method: string, endpoint: string, callTime: nu
 }
 
 /**
- * Log an array of endpoint request data point to external database.
+ * Log an array of server response data points to the database.
  *
  * @param {Endpoint[]} endpoints - Array of endpoints to be added to database.
  *
@@ -69,7 +77,7 @@ export async function logAllEndpoints(endpoints: Endpoint[]): Promise<void> {
  * 
  * @param {string} method - (optional) HTTP method
  * @param {string} endpoint - (optional) HTTP request relative endpoint
- * @param {number} afterId -(optional) _id of EndpointModel used to filter result to include only _id greater than this value
+ * @param {number} afterId - (optional) _id of EndpointModel used to filter result to include only _id greater than this value
  * @returns Promise of array of endpoints
  *
  * @public
@@ -85,7 +93,7 @@ export async function getAllEndpoints(method?: string, endpoint?: string, afterI
 
 
 /**
- * Get the last endpoint. If no endpoints exit in database, it will return null.
+ * Get the last endpoint. If no endpoints exist in the database, it will return null.
  * 
  * @returns Promise of the last endpoint or null if no endpoints in collection
  *

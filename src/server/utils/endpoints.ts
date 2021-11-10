@@ -40,6 +40,7 @@ export function determineClusters(allEndpointBuckets: EndpointBuckets[]): Cluste
  * 
  * @param endpointBuckets - EndpointBuckets object for a particular route.
  * @param granularity - time interval in minutes between data points
+ * @returns {LoadData} Graph data to construct load graph scatter plot.
  * 
  * @public
  */
