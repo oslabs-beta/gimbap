@@ -206,10 +206,10 @@ export default function NavigationBar({
               onClick: showApiDocPage,
             },
             {
-              title: 'Credits',
+              title: 'Contributors',
               onClick: () => {
                 setDocSubPage(SubPage.None);
-                window.location.href = '#credits';
+                window.location.href = '#contributors';
               },
             },
           ]}

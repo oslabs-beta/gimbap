@@ -8,7 +8,7 @@ import Intro from './Intro';
 import Installation from './Installation';
 import VisualizingYourData from './VisualizingYourData';
 import ApiDoc from './ApiDoc';
-import Credits from './Credits';
+import Contributors from './Contributors';
 
 export default function Documentation({
   useLightTheme,
@@ -21,15 +21,15 @@ export default function Documentation({
 }): JSX.Element {
 
   return (<>
-    {subPage === SubPage.ApiDoc && <ApiDoc />}
-    {subPage === SubPage.None &&
-      <Stack spacing={2} mt="2%" ml="5%" mr="5%" mb="2%">
+    <Stack spacing={2} mt='2%' ml='5%' mr='5%' mb='2%'>
+      {subPage === SubPage.ApiDoc && <ApiDoc />}
+      {subPage === SubPage.None && <>
         <TableOfContents showApiDocPage={showApiDocPage} />
         <Intro />
         <Installation useLightTheme={useLightTheme} />
         <VisualizingYourData />
-        <Credits />
-      </Stack>
-    }
+        <Contributors />
+      </>}
+    </Stack>
   </>);
 }

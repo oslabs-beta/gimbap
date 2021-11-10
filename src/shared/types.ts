@@ -14,6 +14,9 @@ export type Route = {
   endpoint: string;
 };
 
+/**
+ * Array of [number, number] tuples specifying the x and y values respectively of a scatter plot.
+ */
 export type LoadData = DataPoint[];
 
 export type DataPoint = [number, number];
