@@ -1,13 +1,21 @@
 const { app, BrowserWindow } = require('electron');
 const path = require( 'path' );
+const express = require(path.resolve( __dirname, 'server/index.js'));
 
 function createWindow () {
+  express();
   const win = new BrowserWindow({
-    width: 800,
-    height: 600
+    width: 1280,
+    height: 720,
+    webPreferences: {
+      nodeIntegration: true, 
+      enableRemoteModule: true,
+    }
   });
 
   win.loadFile( path.resolve( __dirname, 'client/index.html' ) );
+  win.loadURL('http://localhost:3000');
+  win.focus();
 }
 
 // createWindow();
