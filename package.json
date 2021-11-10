@@ -3,9 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "description": "",
-  "main": "build/electron/main.ts",
+  "main": "build/main.js",
   "scripts": {
-    "electron-start": "electron src/electron/main.ts",
     "electron-pack": "electron-builder -mwl",
     "clean": "cross-env rm -rf build",
     "build": "cross-env NODE_ENV=production concurrently \"npm run build-client\" \"npm run build-server\" \"npm run build-npm\"",
@@ -42,7 +41,7 @@
     "mongodb",
     "mongoose"
   ],
-  "author": "Miguel Hernandez (miguelh72@outlook.com), Sebastien Fauque (sbfauque@gmail.com), Angelynn Truong (angelynn.trng@gmail.com), Parker Hutcheson (pdhutcheson@gmail.com)",
+  "author": "Sebastien Fauque (sbfauque@gmail.com), Angelynn Truong (angelynn.trng@gmail.com), Parker Hutcheson (pdhutcheson@gmail.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/oslabs-beta/gimbap/issues"
@@ -117,6 +116,7 @@
     "mongoose": "^6.0.11",
     "mongoose-plugin-autoinc": "^1.1.9",
     "normalize.css": "^8.0.1",
+    "path": "^0.12.7",
     "react": "^17.0.2",
     "react-code-blocks": "0.0.9-0",
     "react-dom": "^17.0.2",
