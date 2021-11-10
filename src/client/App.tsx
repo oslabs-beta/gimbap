@@ -46,9 +46,9 @@ export default function App() {
     <div
       id={'app'}
       style={{
-        backgroundImage: useLightTheme
-          ? 'url(\'https://coolbackgrounds.io/images/backgrounds/white/pure-white-background-85a2a7fd.jpg\')'
-          : 'url(\'https://cdn.wallpapersafari.com/99/51/SXfiUY.jpg\')',
+        backgroundColor: useLightTheme
+          ? '#fff'
+          : "#242423",
         minHeight: height,
       }}>
       <ThemeProvider theme={useLightTheme ? lightTheme : darkTheme}>
@@ -63,7 +63,7 @@ export default function App() {
             setDocSubPage={setDocSubPage}
             showApiDocPage={showApiDocPage}
           />
-          {page === Page.Clusters && <Clusters isNavBarOpen={isNavBarOpen} clusters={clusters} />}
+          {page === Page.Clusters && <Clusters useLightTheme={useLightTheme} isNavBarOpen={isNavBarOpen} clusters={clusters} />}
           {page === Page.Metrics &&
             <Metrics
               routes={routes}
