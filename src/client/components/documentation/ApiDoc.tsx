@@ -7,13 +7,13 @@ import ApiTableOfContents from './ApiTableOfContents';
 
 export default function ApiDoc() {
   return (<>
-    <Typography variant='h4' component='h2'>
+    <Typography variant='h4' component='h2' color='textPrimary'>
       API Documentation
     </Typography>
 
     <ApiTableOfContents />
 
-    <Typography id='types' variant='h5' >
+    <Typography id='types' variant='h5' color='textPrimary' >
       Types
     </Typography>
     <CodeComment
@@ -33,7 +33,7 @@ export default function ApiDoc() {
       ]}
     />
 
-    <Typography id='gimbap' variant='h5'>
+    <Typography id='gimbap' variant='h5' color='textPrimary'>
       Gimbap
     </Typography>
     <CodeComment
@@ -49,7 +49,7 @@ export default function ApiDoc() {
       returns='{Promise<void>} Promise<void> returns when connection to database has been established.'
     />
 
-    <Typography id='setup' variant='h5'>
+    <Typography id='setup' variant='h5' color='textPrimary'>
       Setup
     </Typography>
     <CodeComment
@@ -62,7 +62,7 @@ export default function ApiDoc() {
       explanation='Disconnect from MongoDB.'
     />
 
-    <Typography id='endpointmodel' variant='h5'>
+    <Typography id='endpointmodel' variant='h5' color='textPrimary'>
       EndpointModel
     </Typography>
     <CodeComment
@@ -86,7 +86,7 @@ export default function ApiDoc() {
       returns='Promise of array of endpoints'
     />
 
-    <Typography id='endpointbucketsmodel' variant='h5'>
+    <Typography id='endpointbucketsmodel' variant='h5' color='textPrimary'>
       EndpointBucketsModel
     </Typography>
     <CodeComment
@@ -138,7 +138,7 @@ export default function ApiDoc() {
       explanation='Close the ChangeStream watching EndpointModel.'
     />
 
-    <Typography id='clustermodel' variant='h5'>
+    <Typography id='clustermodel' variant='h5' color='textPrimary'>
       ClusterModel
     </Typography>
     <CodeComment
@@ -159,7 +159,7 @@ export default function ApiDoc() {
       explanation='Stop watching for new data.'
     />
 
-    <Typography id='endpoints-utility' variant='h5'>
+    <Typography id='endpoints-utility' variant='h5' color='textPrimary'>
       Endpoints Utility
     </Typography>
     <CodeComment
@@ -193,7 +193,7 @@ export default function ApiDoc() {
       returns='array of buckets with the total number of endpoints that call into each bucket'
     />
 
-    <Typography id='data-generator' variant='h5'>
+    <Typography id='data-generator' variant='h5' color='textPrimary'>
       Data Generator
     </Typography>
     <CodeComment
