@@ -7,6 +7,16 @@ import { Route } from './../../shared/types';
 
 // TODO abstract so it can work with either MongoDB or PostgreSQL depending on how setup is called.
 
+/**
+ * Interface defining a time-vectorized collection of server responses for a specific route.
+ * 
+ * @property method - HTTP method type
+ * @property endpoint - HTTP request relative endpoint
+ * @property buckets - an array of numbers signifying the number of server responses that occurred in that time interval.
+ * @property lastEndpointId - the _id of the last endpoints document used in the buckets calculation
+ * @property oldestDate - UNIX timestamp of the oldest server response taken into account in buckets
+ * @property newestDate - UNIX timestamp of the newest server response taken into account in buckets
+ */
 export type EndpointBuckets = {
   method: string,
   endpoint: string,
@@ -89,7 +99,7 @@ export function startWatchingEndpointModel(): void {
 }
 
 /**
- * Get EndpointBuckets for a particular route from the database. Forces a calculation update if there is no endpoint buckets in database.
+ * Get EndpointBuckets for a particular route from the database. Forces a calculation update if there are no endpoint buckets in the database.
  * 
  * @param {String} method - HTTP method type
  * @param {String} endpoint - HTTP request relative endpoint
@@ -169,7 +179,7 @@ export function calculateEndpointBuckets(endpoints: Endpoint[]): EndpointBuckets
 /**
  * Get a distinct list of distinct routes.
  *
- * @returns Promise of array of Route
+ * @returns Promise of an array of Route objects
  *
  * @public
  */
