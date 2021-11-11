@@ -50,7 +50,7 @@ app.use((err: MiddlewareError, req: Request, res: Response, next: NextFunction) 
 
 /* INIT SERVER */
 if (process.env.NODE_ENV !== 'test') {
-  //connect(MONGODB_URI).then(() =>
+    connect(MONGODB_URI).then(() =>
     app.listen(PORT, HOST, () => console.log(`Server listening on http://${HOST}:${PORT}`))
 }
 
