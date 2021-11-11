@@ -58,6 +58,9 @@ Data is processed through Gimbap’s clustering algorithm and a dendrogram is ge
 ## Load Graph
 Dive into more in-depth metrics using Gimbap’s load graphs. Developers are able to analyze recommended clusters in addition to monitoring the call times of individual routes within their application. 
 
+# API
+View the API [documentation here](https://www.gimbap.io/). Click Documentation in top nav bar.
+
 # Contributors
 - [Angelynn Truong](https://github.com/vngelynn)
 - [Khandker Islam](https://github.com/khandkerislam)
