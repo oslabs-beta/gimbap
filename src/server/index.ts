@@ -4,7 +4,7 @@ import compression from 'compression';
 import { connect } from './../shared/models/mongoSetup';
 // import gimbap from 'gimbap';
 
-import { MONGODB_URI } from './secrets.json';
+//import { MONGODB_URI } from './secrets.json';
 
 import MiddlewareError from './utils/MiddlewareError';
 import apiRouter from './routes/apiRouter';
@@ -31,6 +31,12 @@ app.use(compression());
 /* ROUTES */
 app.use('/api', apiRouter);
 
+// app.post('/mongo',(req: Request, res: Response, next: NextFunction) => {
+//   console.log(req.body.mongodb);
+//   connect(req.body.mongodb)
+//   return next();
+// });
+
 
 /* GLOBAL 404 */
 app.use('*', (req: Request, res: Response) => res.status(404).sendFile(path.resolve(__dirname, './../client/404.html')));
@@ -50,7 +56,7 @@ app.use((err: MiddlewareError, req: Request, res: Response, next: NextFunction) 
 
 /* INIT SERVER */
 if (process.env.NODE_ENV !== 'test') {
-    connect(MONGODB_URI).then(() =>
+    //connect(MONGODB_URI).then(() =>
     app.listen(PORT, HOST, () => console.log(`Server listening on http://${HOST}:${PORT}`))
 }
 

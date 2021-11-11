@@ -1,4 +1,5 @@
 import { ClientError, Cluster, Route, LoadData, TreeNode } from './../../shared/types';
+import { connect } from './../../shared/models/mongoSetup'
 
 /**
  * Makes a GET fetch request.
@@ -104,3 +105,4 @@ export async function fetchClusterTree(setTreeGraphData: React.Dispatch<React.Se
   const trees: TreeNode | void = await fetchWrapper<TreeNode>('api/graph/cluster/tree');
   if (trees) setTreeGraphData(trees);
 }
+
