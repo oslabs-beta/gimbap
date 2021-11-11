@@ -29,8 +29,9 @@ export function determineClusters(allEndpointBuckets: EndpointBuckets[]): Cluste
 
   const analyzer = new clustering.OPTICS();
 
+  // TODO get better grasp on how the neighborhood distance related to the bucket vectors for optimal clustering
   const averageCallsPerBucket = totalNumCalls / vectors[0].length; // use as neighborhood radius
-  const result: number[][] = analyzer.run(vectors, averageCallsPerBucket, 1);
+  const result: number[][] = analyzer.run(vectors, averageCallsPerBucket / (allEndpointBuckets.length > 12 ? allEndpointBuckets.length / 11.8 : 1), 1);
 
   return result.map(clusterIndices => clusterIndices.map((i): Route => ({ method: allEndpointBuckets[i].method, endpoint: allEndpointBuckets[i].endpoint })));
 }
