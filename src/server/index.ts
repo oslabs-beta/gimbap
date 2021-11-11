@@ -23,9 +23,9 @@ app.use(express.json());
 app.use(compression());
 
 /* STATIC SERVER */
-if (process.env.NODE_ENV === 'production') {
+ //if (process.env.NODE_ENV === 'production') {
   app.use('/', express.static(path.resolve(__dirname, './../client')));
-}
+ //}
 
 
 /* ROUTES */
@@ -50,9 +50,8 @@ app.use((err: MiddlewareError, req: Request, res: Response, next: NextFunction) 
 
 /* INIT SERVER */
 if (process.env.NODE_ENV !== 'test') {
-  connect(MONGODB_URI).then(() =>
+  //connect(MONGODB_URI).then(() =>
     app.listen(PORT, HOST, () => console.log(`Server listening on http://${HOST}:${PORT}`))
-  );
 }
 
 export default app;
